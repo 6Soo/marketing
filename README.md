@@ -15,8 +15,8 @@ cardnews/
   series/        시리즈별 카드 데이터 (한 폴더 = 한 게시물: cards.mjs·캡션·사실-검증)
   photos/        시리즈별 소싱 사진 (출처.md에 Pexels ID·검색어 기록)
   out/           렌더 결과물 1080×1350 PNG (git 포함 — 게시에 바로 쓰는 실물)
-  그들이모르는일본-001-히다.html   ← 비주얼 기준본 (풀블리드 실사진)
-  그들이모르는일본-002-산리쿠.html ← 기록용 검토 페이지 (build-record.mjs 생성)
+  나만몰랐던일본-001-히다.html   ← 비주얼 기준본 (풀블리드 실사진)
+  나만몰랐던일본-002-산리쿠.html ← 기록용 검토 페이지 (build-record.mjs 생성)
 learning/ coursebooks/ strategy/ video/ context/ cafe-kit/ tools/
 ```
 

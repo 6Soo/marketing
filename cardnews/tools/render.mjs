@@ -1,5 +1,5 @@
 // 카드뉴스 렌더러 — 시리즈 데이터(cards.mjs) → 1080×1350 PNG (인스타 실게시 실물).
-// 비주얼은 template.mjs가 기준본(그들이모르는일본-001-히다.html) CSS를 그대로 사용한다.
+// 비주얼은 template.mjs가 기준본(나만몰랐던일본-001-히다.html) CSS를 그대로 사용한다.
 //
 // 사용:
 //   node cardnews/tools/render.mjs cardnews/series/sanriku            # PNG 전 장
