@@ -1,19 +1,35 @@
 // 무료 상업용 사진 검색 (인스타 카드뉴스 자동화용, 2026-07-21).
 // Pexels API 사용 — 상업적 이용·수정(자르기/텍스트 얹기) 전부 허용, 출처 표기 의무 아님.
-// 키는 무료 발급(pexels.com/api, 승인 대기 없음). PEXELS_API_KEY 환경변수로 넘긴다.
+// 키는 리포 루트 .env(PEXELS_API_KEY)에서 자동 로드(사장 결정 2026-07-21: 설정 없이 바로 실행).
+// 환경변수가 이미 있으면 그것이 우선.
 //
 // "japan"처럼 뭉뚱그린 검색어는 오사카성·교토 절 같은 흔한 관광지 사진이 대부분이라
 // "그들이 모르는 일본" 톤에 안 맞는다 — 그래서 이 파일은 후보를 한 장만 자동 확정하지 않고
 // 여러 장을 가져와, 사람(또는 다음 단계 필터)이 톤에 맞는 것을 고르게 한다.
 //
-// CLI: PEXELS_API_KEY=xxx node stock-photo.mjs "japan misty mountain village" --orientation=portrait --n=6
+// CLI: node tools/stock-photo.mjs "japan misty mountain village" --orientation=portrait --n=6
+//      (클라우드 세션 프록시 환경에서는 NODE_USE_ENV_PROXY=1 을 앞에 붙인다)
 // 모듈: import { searchPhotos, CARD_QUERY_BANK } from './stock-photo.mjs'
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const API_BASE = 'https://api.pexels.com/v1/search';
 
+// 리포 루트 .env에서 키 자동 로드 (dotenv 의존성 없이 필요한 한 줄만 파싱)
+function envKey() {
+  if (process.env.PEXELS_API_KEY) return process.env.PEXELS_API_KEY;
+  try {
+    const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+    const m = readFileSync(join(root, '.env'), 'utf8').match(/^PEXELS_API_KEY=(.+)$/m);
+    if (m) return m[1].trim();
+  } catch { /* .env 없으면 아래 에러로 안내 */ }
+  return '';
+}
+
 export async function searchPhotos(query, { orientation = 'portrait', perPage = 6, apiKey } = {}) {
-  const key = apiKey || process.env.PEXELS_API_KEY;
-  if (!key) throw new Error('PEXELS_API_KEY가 없습니다 — pexels.com/api 에서 무료로 발급받아 넘겨주세요.');
+  const key = apiKey || envKey();
+  if (!key) throw new Error('PEXELS_API_KEY가 없습니다 — 리포 루트 .env에 PEXELS_API_KEY=... 한 줄을 넣어주세요.');
 
   const url = `${API_BASE}?query=${encodeURIComponent(query)}&per_page=${perPage}&orientation=${orientation}`;
   const res = await fetch(url, { headers: { Authorization: key } });
