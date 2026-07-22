@@ -2,14 +2,15 @@
 <style>
   :root { --bg: #EFEBE0; --bg2: #E6E1D2; --fg: #221F1A; --dim: #6E6656; --accent: #3F5C3B; --line: #D9D3C2; }
   @media (prefers-color-scheme: dark) { :root { --bg: #18160F; --bg2: #201D15; --fg: #EDE7D8; --dim: #9C9484; --accent: #8FAE8A; --line: #332F24; } }
-  html, body { background: var(--bg); color: var(--fg); font-family: "Pretendard", "Apple SD Gothic Neo", -apple-system, "Malgun Gothic", sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  html, body { background: var(--bg); color: var(--fg); font-family: "Pretendard", "Apple SD Gothic Neo", -apple-system, "Malgun Gothic", sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; }
   .wrap { max-width: 1040px; margin: 0 auto; padding: clamp(28px,6vw,64px) clamp(16px,5vw,40px) 48px; }
   .eyebrow { font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
   h1 { font-size: clamp(1.8rem,5vw,2.7rem); font-weight: 800; line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; margin-bottom: 14px; }
   .brief { max-width: 52ch; font-size: .98rem; line-height: 1.65; color: var(--dim); }
   .brief b { color: var(--fg); }
   .note { margin-top: 16px; font-size: .8rem; color: var(--dim); border-left: 2px solid var(--line); padding-left: 12px; line-height: 1.6; max-width: 52ch; }
-  .card-row { display: flex; gap: 18px; overflow-x: auto; padding: 30px 0 10px; scroll-snap-type: x proximity; }
+  .card-row { display: flex; gap: 18px; overflow-x: auto; padding: 30px 0 10px; scroll-snap-type: x proximity; touch-action: pan-x pan-y; }
+  @media (pointer: coarse) { .card-row { scroll-snap-type: none; } } /* 안드로이드 세로 제스처 가로채기 방지(기준본 동기화) */
   .card-col { flex: 0 0 auto; width: min(78vw, 300px); scroll-snap-align: start; }
   .card-cap { margin-top: 10px; font-size: .74rem; color: var(--dim); display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
   .foot { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); font-size: .85rem; line-height: 1.7; color: var(--dim); max-width: 62ch; }
