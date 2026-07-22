@@ -65,9 +65,17 @@
 
 ## 채널 자산·인프라
 
+- **foresttour.kr — 새 홈 라이브(2026-07-22 실측 검증)**: 2030 신규 유입용 착륙지.
+  필드노트 톤(주간 종이/심야 온천 모드), 설득 동선 = 길의 사실(혼자 가기 어려움 암시) →
+  대장(열 달 현지 체류) → "일정표에 적힌 것이 전부" → 폴라로이드 벽 → 다음 출발(실데이터) →
+  예약(?from=home). 인스타·유튜브 **프로필 링크는 이제 foresttour.kr 사용 가능**(표식은
+  `https://foresttour.kr?from=insta`처럼 — 단 현재 미들웨어가 루트(/)만 새 홈으로 rewrite하므로
+  경로 붙은 딥링크는 reserve 쪽 규칙 유지). 코드 위치: reservation 리포 /home2 + middleware.
+  폴라로이드 벽은 현재 Pexels 임시 — **대장 촬영 원본 수급 시 교체가 1순위**.
 - **reserve.foresttour.kr** — 예약 도우미(Next.js/Vercel). 모든 트래픽 링크에 `?from=<코드>` 표식을
   붙이면 /admin/traffic 방문 통계에 자동 집계된다(insta·band 등 코드 자유, 새 코드는 자동 수집).
-- 프로필 링크 규칙: `https://reserve.foresttour.kr/tour/<fldid>?from=insta` (또는 목록 페이지).
+  새 홈 방문은 `visit_newhome` 이벤트로 별도 집계.
+- 상품 딥링크 규칙: `https://reserve.foresttour.kr/tour/<fldid>?from=insta` (또는 목록 페이지).
 - 밴드: 복원 완료, admin에 '밴드 일정' 생성기 있음. 전략: strategy/밴드-성장전략-0720.md.
 - 유튜브: 편집 SOP·도구 조사 video/ 참조. 짐벌캠(오즈모 포켓3) 도입 예정.
 - 사진 소싱: tools/stock-photo.mjs (Pexels API, 상업 이용 가능). 키는 리포 루트 **.env**에 있고
