@@ -7,11 +7,10 @@
 //   막힐 수 있다 — 이 스크립트의 주 용도는 로컬 윈도우 세션이고, 클라우드에서는 실패할 수 있다.
 // 키는 환경변수 GEMINI_API_KEY 또는 리포 루트 .env의 GEMINI_API_KEY= 줄에서 자동 로드된다.
 //
-// ⚠ 기본 모델(DEFAULT_MODEL)은 현재 최신 최상위 Pro 모델인 'gemini-3.1-pro-preview'다.
-//   이 모델은 API에 무료 등급이 없어 AI Studio에서 Billing(결제) 연결이 안 되어 있으면
-//   호출이 실패한다 — 아래 askGemini의 HTTP 실패 에러(429/403 등)가 뜨면 billing 미설정이
-//   원인일 수 있다는 뜻이다. 무료 등급으로 쓰려면 --model=gemini-3-flash-preview 처럼
-//   --model 옵션으로 다른 모델을 지정하면 된다.
+// ⚠ 기본 모델(DEFAULT_MODEL)은 'gemini-3.6-flash'로 고정한다(사장 지시 2026-07-22, 전사 공통).
+//   무료 등급이 있어 클라우드/로컬 모두 결제 연결 없이 동작한다. 최상위 Pro가 필요할 때만
+//   --model=gemini-3.1-pro-preview 로 지정(이 모델은 무료 등급이 없어 AI Studio Billing 필요 —
+//   붙어 있지 않으면 429/403으로 실패). 그 외 모델도 --model 옵션으로 임시 지정 가능.
 //
 // CLI: node tools/gemini.mjs "질문"
 //      node tools/gemini.mjs "이 코드 검토해줘" --file=src/foo.js --model=gemini-2.5-flash
@@ -22,7 +21,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
-const DEFAULT_MODEL = 'gemini-3.1-pro-preview';
+const DEFAULT_MODEL = 'gemini-3.6-flash';
 const TIMEOUT_MS = 120_000;
 
 // 리포 루트 .env에서 키 자동 로드 (dotenv 의존성 없이 필요한 한 줄만 파싱)
