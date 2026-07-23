@@ -1,0 +1,13 @@
+{
+  "name": "foresttour-marketing",
+  "version": "0.0.0",
+  "private": true,
+  "description": "숲길여행 마케팅 — 카드뉴스 렌더·인스타 자동발행 도구",
+  "optionalDependencies": {
+    "sharp": "^0.34.0"
+  },
+  "scripts": {
+    "render": "node cardnews/tools/render.mjs",
+    "daily-publish": "node cardnews/tools/daily-publish.mjs"
+  }
+}

@@ -1,1 +1,6 @@
 .env
+
+# 인스타 발행 스테이징(전송 산출물, 커밋 안 함)
+cardnews/out/_publish/
+_stage/
+node_modules/

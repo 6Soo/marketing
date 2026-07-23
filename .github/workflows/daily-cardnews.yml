@@ -1,0 +1,70 @@
+name: 일일 카드뉴스 자동발행
+
+# 카드뉴스(캐러셀)를 매일 인스타에 발행하는 파이프라인.
+#   render(PNG) → JPEG 변환(API는 JPEG만 받음) → 공개 호스트 배포 → Content Publishing API 3콜.
+#
+# 지금 상태: 시크릿·호스팅이 연결되기 전까지 '드라이런 스모크 테스트'로만 돈다
+#   (매일 덱이 정상 렌더·변환되는지 확인 + 변환 JPEG를 아티팩트로 업로드). 실게시는 하지 않는다.
+#
+# 실게시로 전환하려면(사장님-가이드 §인스타 참고):
+#   1) 저장소 Secrets 등록: IG_USER_ID, IG_ACCESS_TOKEN(Instagram Login 장기 토큰), PUBLIC_BASE_URL
+#   2) 저장소 Variables: IG_PUBLISH_ENABLED = true
+#   3) 아래 '② JPEG 공개 배포' 자리에 실제 배포 스텝 연결
+#      — 이미지는 발행 호출 전에 반드시 PUBLIC_BASE_URL/파일명 으로 라이브여야 한다.
+#      · 라이브-서빙 폴더(S3 sync·상시 서버)면 stage=live라 한 번에 --publish 가능
+#      · git-push 배포(Vercel)면 stage→배포→배포완료 대기→publish 로 나눠야 한다.
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 11 * * *'   # 매일 11:00 UTC = 20:00 KST (조정 가능)
+
+concurrency:
+  group: daily-cardnews
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: JPEG 변환기(sharp) 설치
+        run: npm install sharp
+
+      - name: Chromium 설치(headless 렌더용)
+        run: npx --yes playwright install --with-deps chromium
+
+      # ① 렌더 + JPEG 변환 + 스테이징 (드라이런 — 실게시 안 함)
+      - name: 렌더·변환 (드라이런 스모크)
+        env:
+          CHROME_BIN: ''                      # render.mjs가 /opt 아래 설치본을 자동 탐색
+          PUBLIC_DIR: ${{ github.workspace }}/_stage
+          PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
+        run: node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku
+
+      - name: 스테이징 JPEG 아티팩트 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: cardnews-jpeg
+          path: _stage/**/*.jpg
+          if-no-files-found: warn
+
+      # ② JPEG 공개 배포 (그들 인프라에 연결 — 실게시 전 필수)
+      #   _stage/*.jpg 를 PUBLIC_BASE_URL 로 라이브 서빙되게 올린다.
+      #   예) aws s3 sync _stage s3://버킷/ig  또는  reservation 리포 public/ig 로 커밋·푸시→Vercel 배포.
+      #   git-push 배포면 여기서 배포 완료를 확인(폴링)한 뒤 ③으로 넘어가야 한다.
+
+      # ③ 인스타 발행 (Variables.IG_PUBLISH_ENABLED == 'true' 일 때만)
+      - name: 인스타 발행(캐러셀)
+        if: ${{ vars.IG_PUBLISH_ENABLED == 'true' }}
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          PUBLIC_DIR: ${{ github.workspace }}/_stage
+          PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
+        run: node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku --skip-render --publish
