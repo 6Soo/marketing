@@ -13,6 +13,7 @@ import { join, resolve, basename } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { tmpdir } from 'node:os';
 import { cardHTML } from './template.mjs';
+import { generateCardPhoto } from '../../tools/gen-image.mjs';
 import { searchPhotos } from '../../tools/stock-photo.mjs';
 
 function findChrome() {
@@ -92,27 +93,39 @@ const numbered = series.cards.filter(c => c.kind !== 'cover');
 const total = numbered.length + 1;
 
 async function ensurePhoto(card, repoRoot, seriesName) {
-  if (card.photo && existsSync(resolve(repoRoot, card.photo))) {
-    return pathToFileURL(resolve(repoRoot, card.photo)).href;
-  }
   if (card.kind === 'paper') return null; // 종이 카드는 사진 없이 종이 텍스처
-  console.log(`· [자동 사진 소싱] ${card.id} 카드 배경 사진 Pexels 수급 중…`);
+  const localPhoto = card.photo ? resolve(repoRoot, card.photo) : join(repoRoot, 'cardnews', 'photos', seriesName, `${card.id}.jpg`);
+  if (existsSync(localPhoto)) {
+    return pathToFileURL(localPhoto).href;
+  }
+
+  // 1순위: AI 나노바나나 / Imagen 생성 파이프라인
+  try {
+    const aiFile = await generateCardPhoto(card, repoRoot, seriesName);
+    if (aiFile && existsSync(aiFile)) {
+      return pathToFileURL(aiFile).href;
+    }
+  } catch (e) {
+    console.warn(`  ⚠ AI 생성 폴백: ${e.message}`);
+  }
+
+  // 2순위: Pexels API 스톡 사진 수급
+  console.log(`· [스톡 사진 소싱] ${card.id} 카드 Pexels 수급 중…`);
   const query = `${seriesName} ${card.title || card.eye || 'japan'}`.replace(/<br>/g, ' ');
   try {
     const photos = await searchPhotos(query, { orientation: 'portrait', perPage: 1 });
     if (photos.length > 0 && photos[0].src?.portrait) {
-      const imgUrl = photos[0].src.portrait;
       const targetDir = join(repoRoot, 'cardnews', 'photos', seriesName);
       mkdirSync(targetDir, { recursive: true });
       const targetFile = join(targetDir, `${card.id}.jpg`);
-      const res = await fetch(imgUrl);
+      const res = await fetch(photos[0].src.portrait);
       const arrayBuffer = await res.arrayBuffer();
       writeFileSync(targetFile, Buffer.from(arrayBuffer));
-      console.log(`  ✓ 자동 수급 저장 완료: cardnews/photos/${seriesName}/${card.id}.jpg`);
+      console.log(`  ✓ 스톡 수급 완료: cardnews/photos/${seriesName}/${card.id}.jpg`);
       return pathToFileURL(targetFile).href;
     }
   } catch (err) {
-    console.warn(`  ⚠ 자동 사진 소싱 실패 (${err.message}) — 기본 템플릿 처리`);
+    console.warn(`  ⚠ 스톡 소싱 실패 (${err.message}) — 기본 템플릿 처리`);
   }
   return null;
 }
