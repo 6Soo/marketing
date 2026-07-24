@@ -18,17 +18,52 @@ function findChrome() {
   if (process.env.CHROME_BIN && existsSync(process.env.CHROME_BIN)) return process.env.CHROME_BIN;
   // headless_shell 우선: 일반 chrome 바이너리는 --headless 스크린샷에서 창 높이의 약 78px을
   // UI 몫으로 떼어 하단이 투명으로 잘린다(실측 2026-07-21).
-  for (const prefix of ['chromium_headless_shell-', 'chromium-']) {
-    const root = '/opt/pw-browsers';
+  const roots = [
+    '/opt/pw-browsers',
+    process.env.HOME ? join(process.env.HOME, '.cache', 'ms-playwright') : null,
+    process.env.LOCALAPPDATA ? join(process.env.LOCALAPPDATA, 'ms-playwright') : null,
+    process.env.USERPROFILE ? join(process.env.USERPROFILE, 'AppData', 'Local', 'ms-playwright') : null,
+  ].filter(Boolean);
+
+  const prefixes = ['chromium_headless_shell-', 'chromium-'];
+  const relBins = [
+    join('chrome-linux', 'headless_shell'),
+    join('chrome-linux', 'chrome'),
+    join('chrome-win', 'headless_shell.exe'),
+    join('chrome-win', 'chrome.exe'),
+    join('chrome-mac', 'Chromium.app', 'Contents', 'MacOS', 'Chromium'),
+  ];
+
+  for (const root of roots) {
     if (!existsSync(root)) continue;
-    for (const d of readdirSync(root)) {
-      if (!d.startsWith(prefix)) continue;
-      for (const bin of ['headless_shell', 'chrome']) {
-        const p = join(root, d, 'chrome-linux', bin);
-        if (existsSync(p)) return p;
+    let entries = [];
+    try { entries = readdirSync(root); } catch { continue; }
+    for (const prefix of prefixes) {
+      for (const d of entries) {
+        if (!d.startsWith(prefix)) continue;
+        for (const bin of relBins) {
+          const p = join(root, d, bin);
+          if (existsSync(p)) return p;
+        }
       }
     }
   }
+
+  const systemCandidates = [
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+    'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  ];
+  for (const sysPath of systemCandidates) {
+    if (existsSync(sysPath)) return sysPath;
+  }
+
   throw new Error('Chromium을 찾지 못했습니다 — CHROME_BIN 환경변수로 경로를 지정하세요.');
 }
 

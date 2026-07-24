@@ -87,6 +87,7 @@ if (cmd === 'carousel') {
   const container = await call(`${IG_USER || '<IG_USER_ID>'}/media`, {
     media_type: 'CAROUSEL', children: children.join(','), caption,
   });
+  await waitReady(container.id);
   const pub = await call(`${IG_USER || '<IG_USER_ID>'}/media_publish`, { creation_id: container.id });
   console.log(live ? `✓ 캐러셀 게시 완료: media_id=${pub.id}` : '※ 캐러셀은 API 사양상 음악 없이 게시됩니다 — 음악은 릴스(reel 커맨드)로.');
 } else if (cmd === 'reel') {

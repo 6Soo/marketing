@@ -42,7 +42,6 @@ jobs:
       # ① 렌더 + JPEG 변환 + 스테이징 (드라이런 — 실게시 안 함)
       - name: 렌더·변환 (드라이런 스모크)
         env:
-          CHROME_BIN: ''                      # render.mjs가 /opt 아래 설치본을 자동 탐색
           PUBLIC_DIR: ${{ github.workspace }}/_stage
           PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
         run: node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku

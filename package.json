@@ -4,7 +4,7 @@
   "private": true,
   "description": "숲길여행 마케팅 — 카드뉴스 렌더·인스타 자동발행 도구",
   "optionalDependencies": {
-    "sharp": "^0.34.0"
+    "sharp": "^0.34.5"
   },
   "scripts": {
     "render": "node cardnews/tools/render.mjs",
