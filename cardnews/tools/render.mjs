@@ -13,6 +13,7 @@ import { join, resolve, basename } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { tmpdir } from 'node:os';
 import { cardHTML } from './template.mjs';
+import { searchPhotos } from '../../tools/stock-photo.mjs';
 
 function findChrome() {
   if (process.env.CHROME_BIN && existsSync(process.env.CHROME_BIN)) return process.env.CHROME_BIN;
@@ -90,11 +91,36 @@ mkdirSync(work, { recursive: true });
 const numbered = series.cards.filter(c => c.kind !== 'cover');
 const total = numbered.length + 1;
 
+async function ensurePhoto(card, repoRoot, seriesName) {
+  if (card.photo && existsSync(resolve(repoRoot, card.photo))) {
+    return pathToFileURL(resolve(repoRoot, card.photo)).href;
+  }
+  if (card.kind === 'paper') return null; // 종이 카드는 사진 없이 종이 텍스처
+  console.log(`· [자동 사진 소싱] ${card.id} 카드 배경 사진 Pexels 수급 중…`);
+  const query = `${seriesName} ${card.title || card.eye || 'japan'}`.replace(/<br>/g, ' ');
+  try {
+    const photos = await searchPhotos(query, { orientation: 'portrait', perPage: 1 });
+    if (photos.length > 0 && photos[0].src?.portrait) {
+      const imgUrl = photos[0].src.portrait;
+      const targetDir = join(repoRoot, 'cardnews', 'photos', seriesName);
+      mkdirSync(targetDir, { recursive: true });
+      const targetFile = join(targetDir, `${card.id}.jpg`);
+      const res = await fetch(imgUrl);
+      const arrayBuffer = await res.arrayBuffer();
+      writeFileSync(targetFile, Buffer.from(arrayBuffer));
+      console.log(`  ✓ 자동 수급 저장 완료: cardnews/photos/${seriesName}/${card.id}.jpg`);
+      return pathToFileURL(targetFile).href;
+    }
+  } catch (err) {
+    console.warn(`  ⚠ 자동 사진 소싱 실패 (${err.message}) — 기본 템플릿 처리`);
+  }
+  return null;
+}
+
 for (const card of series.cards.filter(c => !only || c.id === only)) {
   const page = card.kind === 'cover' ? 1 : numbered.indexOf(card) + 2;
-  const c = card.photo
-    ? { ...card, photoUrl: pathToFileURL(resolve(repoRoot, card.photo)).href }
-    : card;
+  const photoUrl = await ensurePhoto(card, repoRoot, basename(dir));
+  const c = photoUrl ? { ...card, photoUrl } : card;
   const htmlPath = join(work, `${card.id}.html`);
   writeFileSync(htmlPath, cardHTML(series.meta, c, page, total));
   execFileSync(chrome, ['--headless', '--no-sandbox', '--disable-gpu', '--hide-scrollbars',
