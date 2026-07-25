@@ -77,7 +77,8 @@ let converter = null;
 for (const card of order) {
   const src = join(outDir, `${card.id}.png`);
   if (!existsSync(src)) { console.error(`렌더 PNG 없음: ${src} (--skip-render 없이 다시 실행하거나 render 확인)`); process.exit(1); }
-  const fname = `${stamp}-${seriesName}-${card.id}.jpg`;
+  const uniqueId = Date.now().toString(36);
+  const fname = `${stamp}-${uniqueId}-${seriesName}-${card.id}.jpg`;
   const dst = join(outDir, fname);
   const how = await toJpeg(src, dst);
   if (!how) {

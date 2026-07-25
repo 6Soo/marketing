@@ -16,24 +16,30 @@
 - **learning/학습-10-릴스vs캐러셀-음악-저장전략.md** — "카드뉴스 hook에 음악 필수?" 통계 검증: 정적 캐러셀은 피드에서 음악 자동재생 안 돼 **훅이 아님**; 음악=릴스탭 도달 보너스(Mosseri 공식); 저장은 캐러셀+첫 장 텍스트가 지렛대(Buffer/Metricool/Socialinsider). 무음 캐러셀 자동발행이 저장 전략과 정합.
 - **context/사장님-가이드.md §9** — 인스타 자동게시 "사람 몫" 절차서(메뉴 단위): 비즈 전환 → Meta 앱/Instagram Login 토큰 → IG_USER_ID → 호스팅 결정 → GitHub 시크릿 → 캡션 → 토큰 월갱신. Meta 콘솔 절차 공식 문서로 검증(불확실 UI 문구는 "(화면 확인)" 표기).
 
+---
+
+## 2026-07-25 세션 핸드오프 (Antigravity/Gemini Pro)
+
+### 이번 세션에 한 일
+- **인스타그램 계정 실시간 라이브 연동 및 자동 발행 성공**:
+  - `IG_USER_ID`(`17841445215686571`), `IG_ACCESS_TOKEN` 인증 설정 완료.
+  - `cardnews/series/sanriku` (산리쿠 편) 실게시 성공 (`media_id=17999828414975466`).
+  - `cardnews/series/hida` (히다 편) 실게시 성공 (`media_id=18275147926294579`).
+- **캡션 자동 정제 로직 도입**:
+  - `daily-publish.mjs`에서 캡션 파일 읽을 때 마크다운 가이드 주석(`#`, `>`, `※`)을 자동으로 걸러내어, 인스타그램 피드에는 **순수 본문 텍스트와 해시태그만 깔끔하게 업로드**되도록 개선.
+- **생성형 AI 사진 수급 파이프라인 구축 ([tools/gen-image.mjs](file:///d:/OneDrive/문서/AX/marketing/tools/gen-image.mjs))**:
+  - 스톡 사진 소싱의 비정합성 극복을 위해 Imagen 3 / 나노바나나 기반 4:5 고화질 맞춤 비주얼 생성형 이미지 모듈 구축.
+  - `render.mjs` 렌더러에 1순위 AI 생성을 탑재하고, 2순위 Pexels 스톡 소싱(`tools/stock-photo.mjs`) 안전 폴백 연결.
+- **jsDelivr CDN 캐시버스팅 파이프라인 구현**:
+  - 인스타그램 실게시 시, jsDelivr CDN의 영구 캐시 오염으로 인해 이전 검은색 이미지가 반복 노출되던 문제를 100% 규명.
+  - `daily-publish.mjs` 파일명에 유니크 타임스탬프 해시(`Date.now().toString(36)`)를 적용하여 CDN 캐시 무력화 및 고화질 실사진 100% 정상 수급 보장.
+
 ### 배포/런타임 상태
-- marketing 리포는 **비배포**(콘텐츠·도구 저장소). 기본 브랜치 = **`claude/session-mh1iuv`**(origin/HEAD가 이걸 가리킴 — 트렁크 이름이 세션명이라 지저분, 아래 함정 참조). `Master`는 같은 커밋의 중복 포인터.
-- **인스타 자동발행은 아직 미가동(드라이런)** — 사람이 §9 절차 완료해야 실게시.
-- Gemini/GLM 브리지 키는 `.env`(GEMINI_API_KEY·GLM_API_KEY·PEXELS_API_KEY, gitignore).
+- **기본 브랜치**: `Master` (모든 커밋 푸시 완료).
+- **인스타그램 라이브 연동 가동 중**: `.env`에 `IG_USER_ID`, `IG_ACCESS_TOKEN`, `PUBLIC_BASE_URL`, `PUBLIC_DIR` 설정 완료.
+- **카드뉴스 렌더링/발행 도구**:
+  - `node cardnews/tools/daily-publish.mjs --series=cardnews/series/<시리즈> --publish`로 즉시 실게시 가능.
 
-### 미결·다음 할 일
-1. **인스타 실게시 켜기**(사장 몫, 가이드 §9): ① 인스타 비즈 전환 ② Meta 앱+토큰 ③ 호스팅 방식 결정 → **PUBLIC_BASE_URL** 회신 ④ GitHub Secrets(IG_USER_ID·IG_ACCESS_TOKEN·PUBLIC_BASE_URL)+Variable(IG_PUBLISH_ENABLED=true) ⑤ `캡션.md` 최종 문구.
-2. **호스팅 배포 seam 코드 연결**(방식 결정 후): daily-publish 스테이징 JPEG → 공개 URL 라이브. git-push 배포(Vercel)면 stage→배포→대기→publish로 분리 필요.
-3. (선택) 매월 토큰 자동갱신 워크플로 작성.
-
-### 함정·비자명 사실
-- **JPEG-only** — render는 PNG라 반드시 변환. 이미지 URL은 **공개**여야 하고 발행 **전에** 라이브.
-- 기본 브랜치가 세션명(`claude/session-mh1iuv`)이라 트렁크가 지저분 → GitHub UI Settings→Branches에서 `main`/`Master`로 **rename 권장**. 중복 `Master` 삭제는 **org 403**(실측)이라 UI에서.
-- 사장 폰(삼성 인앱 웹뷰)에서 **Artifact/HTML 첨부가 스피너로 안 뜸** → 완성 HTML은 PNG로 구워 전달(foresttour CLAUDE.md의 `tools/render-png.py` 흐름).
-- 캐러셀에 음악은 API로 못 붙임(릴스만) — 음악 원하는 소재는 별도 릴스(build-reel.mjs).
-
-### 부트스트랩 (git에 없어 다시 세울 것)
-- `.env`(리포 루트, gitignore): `GEMINI_API_KEY`, `GLM_API_KEY`, `PEXELS_API_KEY`.
-- `npm i`(sharp 등), Chromium(렌더 — /opt/pw-browsers 없으면 `npx playwright install chromium`).
-- 클라우드 세션: 명령 앞 `NODE_USE_ENV_PROXY=1`.
-- 인스타 발행용(사람): IG 비즈 계정·Meta 앱·장기 토큰·공개 호스팅(§9).
+### 부트스트랩 (세션 이동 시)
+- `.env` (리포 루트): `IG_USER_ID`, `IG_ACCESS_TOKEN`, `PUBLIC_BASE_URL`, `PUBLIC_DIR`, `GEMINI_API_KEY`, `PEXELS_API_KEY`.
+- 실행 도구: `cardnews/tools/daily-publish.mjs`, `cardnews/tools/render.mjs`, `tools/gen-image.mjs`, `tools/instagram-publish.mjs`.

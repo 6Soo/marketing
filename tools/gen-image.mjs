@@ -1,8 +1,8 @@
 // AI 생성 이미지 파이프라인 모듈 (나노바나나 / Imagen 3 / Gemini Visual Generator).
 // 스톡 사진 대신 카드뉴스 카드의 주제, 분위기, 타이틀에 기반하여 4:5 고화질 맞춤 배경 이미지를 생성합니다.
 
-import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
