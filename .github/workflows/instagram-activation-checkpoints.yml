@@ -58,6 +58,8 @@ jobs:
       EXPERIMENT: ${{ matrix.experiment }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-node@v6
         with:
@@ -121,6 +123,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Matrix jobs may have pushed checkpoints after this workflow started.
+          # Read the branch head so learning includes records from this run.
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-node@v6
         with:

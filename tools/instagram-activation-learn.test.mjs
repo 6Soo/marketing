@@ -1,10 +1,22 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 import {
   compareExperiments,
   learnExperiment,
   learningMarkdown,
 } from './instagram-activation-learn.mjs';
+
+const TOOLS = dirname(fileURLToPath(import.meta.url));
+const CHECKPOINT_WORKFLOW = join(
+  TOOLS,
+  '..',
+  '.github',
+  'workflows',
+  'instagram-activation-checkpoints.yml',
+);
 
 const experiment = {
   id: 'sado-003',
@@ -64,4 +76,15 @@ test('측정 완료와 활성화 증거가 있는 실험을 우선 정렬하고 
   const measured = { ...awaiting, experiment: 'other', dataState: 'measured', interactions: 1 };
   assert.equal(compareExperiments([awaiting, measured])[0].experiment, 'other');
   assert.match(learningMarkdown([awaiting, measured]), /Next actions/);
+});
+
+test('체크포인트와 학습 job은 workflow 시작 SHA가 아닌 최신 브랜치를 읽는다', () => {
+  const workflow = readFileSync(CHECKPOINT_WORKFLOW, 'utf8');
+  const checkpointJob = workflow.slice(
+    workflow.indexOf('  checkpoint-status:'),
+    workflow.indexOf('  learn:'),
+  );
+  const learnJob = workflow.slice(workflow.indexOf('  learn:'));
+  assert.match(checkpointJob, /ref: \$\{\{ github\.ref_name \}\}/);
+  assert.match(learnJob, /ref: \$\{\{ github\.ref_name \}\}/);
 });
