@@ -35,6 +35,11 @@ const channels = opt('channels', 'ig').split(',');
 const live = flag('publish');
 const stageOnly = flag('stage-only');
 const validateLive = flag('validate-live');
+const experimentId = opt('experiment', '');
+if ((live || validateLive) && !/^[a-z0-9-]+$/.test(experimentId)) {
+  console.error('실게시 추적을 위해 유효한 --experiment=<id>가 필요합니다.');
+  process.exit(1);
+}
 
 function env(name) {
   if (process.env[name]) return process.env[name];
@@ -158,6 +163,7 @@ const manifestFile = join(stageDir, `_manifest-${seriesName}.json`);
 const publishResultFile = join(stageDir, `_publish-result-${seriesName}.json`);
 writeFileSync(manifestFile, JSON.stringify({
   series: seriesName,
+  experiment: experimentId || null,
   stamp,
   photoStatus: series.meta?.photoStatus || 'unmarked',
   files,
@@ -192,6 +198,18 @@ if (channels.includes('ig')) {
     failed = true;
   } else {
     results.ig = live ? 'published' : 'dry-run';
+    if (live && experimentId) {
+      const ingest = spawnSync('node', [
+        join(REPO, 'tools', 'ingest-instagram-publish-result.mjs'),
+        `--experiment=${experimentId}`,
+        `--result-file=${publishResultFile}`,
+      ], { stdio: 'inherit', env: process.env });
+      if (ingest.status !== 0) {
+        console.error('Instagram 게시 결과 활성화 체크포인트 기록 실패.');
+        results.ig = 'failed';
+        failed = true;
+      }
+    }
   }
 }
 

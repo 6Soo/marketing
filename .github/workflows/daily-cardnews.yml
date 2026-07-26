@@ -30,6 +30,10 @@ on:
         required: true
         type: boolean
         default: false
+      experiment:
+        description: '활성화 측정 실험 ID (실게시 시 필수)'
+        required: false
+        default: ''
 
 # 공개 JPEG 배포와 운영 계정 검증 전에는 예약 실행하지 않는다.
 # 준비 완료 후 schedule을 복구하고 각 단계의 실제 산출물을 먼저 3회 수동 검수한다.
@@ -96,6 +100,7 @@ jobs:
         run: |
           node cardnews/tools/daily-publish.mjs \
             --series="${SERIES_PATH}" \
+            --experiment="${{ inputs.experiment }}" \
             --validate-live
 
       # ① 렌더 + JPEG 변환 + 공개 배포용 스테이징
@@ -174,10 +179,24 @@ jobs:
         run: |
           node cardnews/tools/daily-publish.mjs \
             --series="${SERIES_PATH}" \
+            --experiment="${{ inputs.experiment }}" \
             --stamp="${{ github.run_id }}-${{ github.run_attempt }}" \
             --skip-render \
             --publish \
             --channels=ig
+
+      - name: 활성화 0h 체크포인트 저장
+        if: ${{ inputs.publish_live == true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "data/activation/${{ inputs.experiment }}"
+          git diff --cached --quiet && exit 0
+          git commit -m "data: record Instagram 0h checkpoint"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: 게시 결과 아티팩트
         if: ${{ inputs.publish_live == true }}

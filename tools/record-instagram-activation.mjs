@@ -137,7 +137,7 @@ function loadRecords(experiment, root = REPO) {
   }
 }
 
-function updateIndex(record, root = REPO) {
+export function updateIndex(record, root = REPO) {
   const records = loadRecords(record.experiment, root);
   records.push(record);
   records.sort((a, b) => a.observedAt.localeCompare(b.observedAt));
