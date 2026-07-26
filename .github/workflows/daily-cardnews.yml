@@ -121,6 +121,25 @@ jobs:
           path: _stage/instagram/
           if-no-files-found: error
 
+      - name: Instagram API 연결 사전검사
+        if: ${{ inputs.publish_live == true }}
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: node tools/instagram-publish.mjs doctor
+
+      - name: API 실패 시 브라우저 폴백 안내
+        if: ${{ failure() && inputs.publish_live == true }}
+        shell: bash
+        run: |
+          {
+            echo "## Instagram API preflight failed"
+            echo
+            echo "공개 자산 브랜치에는 배포하지 않았습니다."
+            echo "이미 업로드된 cardnews-jpeg-${GITHUB_RUN_ID} 아티팩트의 JPEG·캡션·manifest를"
+            echo "로그인된 Instagram 브라우저에서 순서대로 업로드한 뒤 permalink를 0h 체크포인트에 기록하세요."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
       # ② 전용 브랜치에 JPEG 공개 배포. 고정 commit SHA URL이라 CDN 캐시 충돌이 없다.
       - name: JPEG 공개 배포
         if: ${{ inputs.publish_live == true }}

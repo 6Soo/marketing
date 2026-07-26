@@ -9,6 +9,7 @@ import test from 'node:test';
 const TOOLS = dirname(fileURLToPath(import.meta.url));
 const SCRIPT = join(TOOLS, 'instagram-publish.mjs');
 const INSIGHTS_SCRIPT = join(TOOLS, 'ig-insights.mjs');
+const WORKFLOW = join(TOOLS, '..', '.github', 'workflows', 'daily-cardnews.yml');
 const FAKE_TOKEN = 'secret-token-must-never-appear';
 
 function fixture() {
@@ -82,4 +83,17 @@ test('carousel rejects an invalid content fingerprint before any publish call', 
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('API 사전검사는 공개 자산 배포보다 먼저 실행되고 폴백 아티팩트는 보존된다', () => {
+  const workflow = readFileSync(WORKFLOW, 'utf8');
+  const artifact = workflow.indexOf('name: 스테이징 JPEG 아티팩트 업로드');
+  const doctor = workflow.indexOf('name: Instagram API 연결 사전검사');
+  const fallback = workflow.indexOf('name: API 실패 시 브라우저 폴백 안내');
+  const deploy = workflow.indexOf('name: JPEG 공개 배포');
+  const publish = workflow.indexOf('name: 인스타 발행');
+  assert.ok(artifact >= 0 && artifact < doctor);
+  assert.ok(doctor < fallback && fallback < deploy);
+  assert.ok(deploy < publish);
+  assert.match(workflow.slice(fallback, deploy), /failure\(\)/);
 });
