@@ -159,13 +159,9 @@ jobs:
           PUBLIC_BASE_URL: ${{ steps.deploy_assets.outputs.public_base_url }}
           ASSET_DIR: ${{ github.workspace }}/_stage/instagram/${{ github.run_id }}-${{ github.run_attempt }}
         run: |
-          set -euo pipefail
-          FIRST_FILE="$(find "$ASSET_DIR" -maxdepth 1 -type f -name '*.jpg' -printf '%f\n' | sort | head -n 1)"
-          test -n "$FIRST_FILE"
-          curl --fail --silent --show-error \
-            --retry 12 --retry-delay 5 --retry-all-errors \
-            --output /dev/null \
-            "${PUBLIC_BASE_URL}/${FIRST_FILE}"
+          node tools/validate-public-jpegs.mjs \
+            --dir="$ASSET_DIR" \
+            --base-url="$PUBLIC_BASE_URL"
 
       # ③ 인스타 발행 (캐러셀)
       - name: 인스타 발행

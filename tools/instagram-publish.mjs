@@ -46,6 +46,7 @@ const opt = (name, dflt) =>
 const flag = (name) => args.includes(`--${name}`);
 const live = flag('publish');
 const resultFile = opt('result-file');
+const contentFingerprint = opt('fingerprint', '');
 
 const IG_USER = env('IG_USER_ID');
 const TOKEN = env('IG_ACCESS_TOKEN');
@@ -89,18 +90,22 @@ async function readJson(response) {
   }
 }
 
-async function graphGet(path, params = {}) {
-  requireCredentials();
+async function graphGetWithToken(path, params, token) {
   const url = new URL(`${BASE}/${path}`);
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, String(value));
   }
   const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${TOKEN}` },
+    headers: { Authorization: `Bearer ${token}` },
   });
   const payload = await readJson(response);
   if (!response.ok || payload.error) throw new Error(formatGraphError(path, payload, response.status));
   return payload;
+}
+
+async function graphGet(path, params = {}) {
+  requireCredentials();
+  return graphGetWithToken(path, params, TOKEN);
 }
 
 async function graphPost(path, params) {
@@ -166,6 +171,7 @@ async function writePublishResult(publishedId, mediaType) {
     permalink: media.permalink || null,
     timestamp: media.timestamp || new Date().toISOString(),
     mediaType: media.media_type || mediaType,
+    contentFingerprint: contentFingerprint || null,
   }, null, 2)}\n`, 'utf8');
   console.log(`✓ 게시 결과 기록 완료 · ${resultFile}`);
 }
@@ -173,6 +179,20 @@ async function writePublishResult(publishedId, mediaType) {
 const caption = opt('caption-file')
   ? readFileSync(opt('caption-file'), 'utf8').trim()
   : opt('caption', '');
+
+async function assertNotDuplicateCaption() {
+  if (!live || !caption) return;
+  const recent = await graphGet(`${IG_USER}/media`, {
+    fields: 'id,caption,permalink,timestamp,media_type',
+    limit: '25',
+  });
+  const duplicate = recent?.data?.find((media) => String(media.caption || '').trim() === caption);
+  if (!duplicate) return;
+  throw new Error(
+    `중복 게시 차단 · 같은 캡션의 기존 미디어 ${duplicate.id}`
+    + `${duplicate.permalink ? ` · ${duplicate.permalink}` : ''}`,
+  );
+}
 
 try {
   if (cmd === 'doctor') {
@@ -190,6 +210,10 @@ try {
     if (urls.length < 2 || urls.length > 10) {
       throw new Error('캐러셀은 이미지 2~10장이 필요합니다(--images=URL,URL,...).');
     }
+    if (contentFingerprint && !/^[a-f0-9]{64}$/i.test(contentFingerprint)) {
+      throw new Error('--fingerprint는 SHA-256 64자리여야 합니다.');
+    }
+    await assertNotDuplicateCaption();
     const children = [];
     for (const url of urls) {
       const item = await graphPost(`${IG_USER || '<IG_USER_ID>'}/media`, {
@@ -253,6 +277,13 @@ try {
     const payload = await readJson(response);
     if (!response.ok || payload.error) {
       throw new Error(formatGraphError('refresh_access_token', payload, response.status));
+    }
+    const refreshedProfile = await graphGetWithToken('me', {
+      fields: 'id,user_id,username',
+    }, payload.access_token);
+    const refreshedUserId = String(refreshedProfile.user_id || refreshedProfile.id || '');
+    if (!refreshedUserId || refreshedUserId !== String(IG_USER)) {
+      throw new Error('갱신 토큰의 Instagram 계정 ID가 기존 설정과 일치하지 않습니다.');
     }
     writeEnvToken(payload.access_token);
     console.log(`✓ Instagram 토큰 갱신 및 .env 저장 완료 · 유효 ${Math.round(payload.expires_in / 86400)}일`);

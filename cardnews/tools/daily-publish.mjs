@@ -22,6 +22,7 @@
 
 import { readFileSync, existsSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { dirname, join, resolve, basename } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -148,6 +149,9 @@ for (const cand of ['캡션.md', 'caption.txt', 'caption.md']) {
   }
 }
 if (!caption) console.warn('⚠ 캡션 파일(캡션.md/caption.txt)이 없어 빈 캡션으로 진행합니다.');
+const fingerprintHash = createHash('sha256').update(caption);
+for (const file of files) fingerprintHash.update(readFileSync(join(stageDir, file)));
+const contentFingerprint = fingerprintHash.digest('hex');
 const capFile = join(stageDir, `_caption-${seriesName}.txt`);
 writeFileSync(capFile, caption);
 const manifestFile = join(stageDir, `_manifest-${seriesName}.json`);
@@ -158,6 +162,7 @@ writeFileSync(manifestFile, JSON.stringify({
   photoStatus: series.meta?.photoStatus || 'unmarked',
   files,
   captionFile: basename(capFile),
+  contentFingerprint,
 }, null, 2));
 
 if (stageOnly) {
@@ -172,7 +177,12 @@ let failed = false;
 
 if (channels.includes('ig')) {
   console.log(`\n· 발행 위임 → instagram-publish.mjs carousel (${live ? '실게시' : '드라이런'})`);
-  const pubArgs = ['carousel', `--images=${urls.join(',')}`, `--caption-file=${capFile}`];
+  const pubArgs = [
+    'carousel',
+    `--images=${urls.join(',')}`,
+    `--caption-file=${capFile}`,
+    `--fingerprint=${contentFingerprint}`,
+  ];
   if (live) pubArgs.push('--publish', `--result-file=${publishResultFile}`);
   const pub = spawnSync('node', [join(REPO, 'tools', 'instagram-publish.mjs'), ...pubArgs],
     { stdio: 'inherit', env: process.env });
