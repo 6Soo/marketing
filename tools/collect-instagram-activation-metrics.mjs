@@ -100,6 +100,7 @@ async function main() {
   const experimentId = option(args, 'experiment');
   const checkpoint = option(args, 'checkpoint');
   const instagramFile = option(args, 'instagram-file');
+  const instagramSource = option(args, 'instagram-source') ?? 'graph-api';
   const foresttourFile = option(args, 'foresttour-file');
   const foresttourLive = args.includes('--foresttour-live');
   if (!experimentId || !checkpoint) {
@@ -122,11 +123,14 @@ async function main() {
 
   const results = [];
   if (instagramFile) {
+    if (!['graph-api', 'instagram-ui'].includes(instagramSource)) {
+      throw new Error('--instagram-source must be graph-api or instagram-ui');
+    }
     const snapshot = JSON.parse(readFileSync(resolve(instagramFile), 'utf8'));
     results.push(saveMetrics({
       experiment: experimentId,
       checkpoint,
-      source: 'graph-api',
+      source: instagramSource,
       metrics: extractInstagramMetrics(snapshot, permalink),
     }));
   }

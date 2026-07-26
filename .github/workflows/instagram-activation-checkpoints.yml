@@ -7,6 +7,10 @@ on:
         description: 'Experiment ID (비우면 게시된 모든 실험)'
         required: false
         default: ''
+      instagram_snapshot_path:
+        description: 'Optional checked-in/UI snapshot JSON path when Graph API is unavailable'
+        required: false
+        default: ''
   schedule:
     - cron: '15 */6 * * *'
 
@@ -90,30 +94,57 @@ jobs:
 
       - name: Collect Instagram Insights
         id: instagram_snapshot
-        if: ${{ vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        if: >-
+          ${{
+            vars.ACTIVATION_COLLECT_ENABLED == 'true'
+            && steps.due.outputs.checkpoint != ''
+            && inputs.instagram_snapshot_path == ''
+          }}
         continue-on-error: true
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: node tools/ig-insights.mjs collect --live
 
+      - name: Use supplied Instagram UI snapshot
+        id: instagram_snapshot_file
+        if: >-
+          ${{
+            steps.due.outputs.checkpoint != ''
+            && inputs.instagram_snapshot_path != ''
+          }}
+        shell: bash
+        run: |
+          test -f "${{ inputs.instagram_snapshot_path }}"
+          echo "path=${{ inputs.instagram_snapshot_path }}" >> "${GITHUB_OUTPUT}"
+
       - name: Record Instagram activation metrics
         id: instagram_record
         if: >-
           ${{
             always()
-            && vars.ACTIVATION_COLLECT_ENABLED == 'true'
+            && (
+              vars.ACTIVATION_COLLECT_ENABLED == 'true'
+              || inputs.instagram_snapshot_path != ''
+            )
             && steps.due.outputs.checkpoint != ''
-            && steps.instagram_snapshot.outcome == 'success'
+            && (
+              steps.instagram_snapshot.outcome == 'success'
+              || steps.instagram_snapshot_file.outcome == 'success'
+            )
           }}
         continue-on-error: true
         shell: bash
         run: |
-          INSIGHTS_FILE="$(find data/insights -type f -name '*.json' -print | sort | tail -n 1)"
+          INSIGHTS_FILE="${{ inputs.instagram_snapshot_path }}"
+          if [[ -z "${INSIGHTS_FILE}" ]]; then
+            INSIGHTS_FILE="$(find data/insights -type f -name '*.json' -print | sort | tail -n 1)"
+          fi
           node tools/collect-instagram-activation-metrics.mjs \
             --experiment="${EXPERIMENT}" \
             --checkpoint="${{ steps.due.outputs.checkpoint }}" \
-            --instagram-file="${INSIGHTS_FILE}"
+            --instagram-file="${INSIGHTS_FILE}" \
+            $([[ -n "${{ inputs.instagram_snapshot_path }}" ]] && echo '--instagram-source=instagram-ui')
 
       - name: Record foresttour activation metrics
         id: foresttour_record
@@ -138,7 +169,15 @@ jobs:
             --foresttour-live
 
       - name: Require at least one collected source
-        if: ${{ always() && vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        if: >-
+          ${{
+            always()
+            && (
+              vars.ACTIVATION_COLLECT_ENABLED == 'true'
+              || inputs.instagram_snapshot_path != ''
+            )
+            && steps.due.outputs.checkpoint != ''
+          }}
         shell: bash
         run: |
           if git diff --quiet -- "data/activation/${EXPERIMENT}"; then
@@ -154,7 +193,10 @@ jobs:
         if: >-
           ${{
             always()
-            && vars.ACTIVATION_COLLECT_ENABLED == 'true'
+            && (
+              vars.ACTIVATION_COLLECT_ENABLED == 'true'
+              || inputs.instagram_snapshot_path != ''
+            )
             && steps.due.outputs.checkpoint != ''
             && (
               steps.instagram_record.outcome == 'success'
