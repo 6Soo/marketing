@@ -7,3 +7,7 @@ data/loop-state/
 *.instagram-token
 /bus/
 node_modules/
+
+# Local agent/runtime state; never part of marketing artifacts.
+.omc/
+.codex-remote-attachments/
