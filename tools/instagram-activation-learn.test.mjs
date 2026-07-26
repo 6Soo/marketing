@@ -28,6 +28,7 @@ const STORY_WORKFLOW = join(
 const experiment = {
   id: 'sado-003',
   destination: '사도',
+  checkpoints: ['0h', '24h', '72h', '7d'],
   foresttourMetrics: ['story_sado_visit'],
 };
 const published = {
@@ -64,6 +65,58 @@ test('반응과 귀속 방문이 있는 측정 실험의 비율과 반복 권고
   assert.equal(result.attributedVisitRate, 0.03);
   assert.equal(result.status, 'initial-activation-evidenced');
   assert.match(result.recommendation, /반복/);
+});
+
+test('필수 출처가 일부만 수집되면 학습과 활성화 판정에서 제외한다', () => {
+  const strictExperiment = {
+    ...experiment,
+    measurementSourceGroups: [
+      ['graph-api', 'instagram-ui'],
+      ['foresttour-admin'],
+    ],
+  };
+  const result = learnExperiment(strictExperiment, [
+    published,
+    {
+      checkpoint: '24h',
+      source: 'instagram-ui',
+      observedAt: '2026-07-27T18:00:00.000Z',
+      metrics: { reach: 100, likes: 4, organicInteractions: 4 },
+    },
+  ]);
+  assert.equal(result.dataState, 'awaiting-checkpoint');
+  assert.equal(result.reach, 0);
+  assert.equal(result.interactions, 0);
+  assert.notEqual(result.status, 'initial-activation-evidenced');
+});
+
+test('필수 출처 그룹이 모두 수집되면 하나의 체크포인트로 학습한다', () => {
+  const strictExperiment = {
+    ...experiment,
+    measurementSourceGroups: [
+      ['graph-api', 'instagram-ui'],
+      ['foresttour-admin'],
+    ],
+  };
+  const result = learnExperiment(strictExperiment, [
+    published,
+    {
+      checkpoint: '24h',
+      source: 'instagram-ui',
+      observedAt: '2026-07-27T18:00:00.000Z',
+      metrics: { reach: 100, likes: 4, organicInteractions: 4 },
+    },
+    {
+      checkpoint: '24h',
+      source: 'foresttour-admin',
+      observedAt: '2026-07-27T18:01:00.000Z',
+      metrics: { story_sado_visit: 2 },
+    },
+  ]);
+  assert.equal(result.dataState, 'measured');
+  assert.equal(result.reach, 100);
+  assert.equal(result.attributedVisits, 2);
+  assert.equal(result.status, 'initial-activation-evidenced');
 });
 
 test('반응은 있지만 방문이 없으면 CTA 개선을 권고한다', () => {

@@ -3,6 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { activationStatus } from './record-instagram-activation.mjs';
 import { discoverActivationExperiments } from './list-instagram-activation-experiments.mjs';
+import { checkpointCoverage } from './instagram-activation-report.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, '..');
@@ -16,13 +17,19 @@ function rate(numerator, denominator) {
 }
 
 export function learnExperiment(experiment, records) {
-  const status = activationStatus(records);
-  const metrics = status.latestMetrics;
-  const hasMeasuredCheckpoint = records.some(
-    (record) =>
-      !['pre', '0h'].includes(record.checkpoint)
-      && Object.keys(record.metrics ?? {}).length > 0,
+  const completeMeasuredCheckpoints = new Set(
+    experiment.checkpoints
+      .filter((checkpoint) => !['pre', '0h'].includes(checkpoint))
+      .filter((checkpoint) => checkpointCoverage(experiment, records, checkpoint).complete),
   );
+  const learningRecords = records.filter(
+    (record) =>
+      ['pre', '0h'].includes(record.checkpoint)
+      || completeMeasuredCheckpoints.has(record.checkpoint),
+  );
+  const status = activationStatus(learningRecords);
+  const metrics = status.latestMetrics;
+  const hasMeasuredCheckpoint = completeMeasuredCheckpoints.size > 0;
   const interactions = sum(metrics, ['likes', 'comments', 'saves', 'shares']);
   const visitMetric = experiment.foresttourMetrics.find((name) => name.endsWith('_visit'));
   const attributedVisits = Number(metrics[visitMetric] ?? 0);

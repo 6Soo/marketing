@@ -16,6 +16,24 @@ function json(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
+export function checkpointCoverage(experiment, records, checkpoint) {
+  const observations = records.filter((record) => record.checkpoint === checkpoint);
+  const observationsWithMetrics = observations.filter(
+    (record) => Object.keys(record.metrics ?? {}).length > 0,
+  );
+  const requiredSourceGroups = checkpoint === '0h'
+    ? []
+    : experiment.measurementSourceGroups ?? [];
+  const missingSourceGroups = requiredSourceGroups.filter(
+    (group) => !observationsWithMetrics.some((record) => group.includes(record.source)),
+  );
+  return {
+    complete: observationsWithMetrics.length > 0 && missingSourceGroups.length === 0,
+    observations: observations.length,
+    missingSourceGroups,
+  };
+}
+
 export function buildActivationReport(experiment, records, now = new Date()) {
   const published = records
     .filter((record) => record.publishedPermalink)
@@ -27,23 +45,13 @@ export function buildActivationReport(experiment, records, now = new Date()) {
     const hours = CHECKPOINT_HOURS[checkpoint];
     if (hours === undefined) throw new Error(`지원하지 않는 체크포인트: ${checkpoint}`);
     const dueAt = new Date(publishedAt.valueOf() + hours * 60 * 60 * 1000);
-    const observations = records.filter((record) => record.checkpoint === checkpoint);
-    const observationsWithMetrics = observations.filter(
-      (record) => Object.keys(record.metrics ?? {}).length > 0,
-    );
-    const requiredSourceGroups = checkpoint === '0h'
-      ? []
-      : experiment.measurementSourceGroups ?? [];
-    const missingSourceGroups = requiredSourceGroups.filter(
-      (group) => !observationsWithMetrics.some((record) => group.includes(record.source)),
-    );
-    const hasMetrics = observationsWithMetrics.length > 0 && missingSourceGroups.length === 0;
+    const coverage = checkpointCoverage(experiment, records, checkpoint);
     return {
       checkpoint,
       dueAt: dueAt.toISOString(),
-      state: hasMetrics ? 'recorded' : now >= dueAt ? 'due' : 'upcoming',
-      observations: observations.length,
-      missingSourceGroups,
+      state: coverage.complete ? 'recorded' : now >= dueAt ? 'due' : 'upcoming',
+      observations: coverage.observations,
+      missingSourceGroups: coverage.missingSourceGroups,
     };
   });
   const next = checkpoints.find((item) => item.state === 'due')
