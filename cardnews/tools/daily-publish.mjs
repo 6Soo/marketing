@@ -64,6 +64,29 @@ const outDir = join(REPO, 'cardnews', 'out', seriesName);
 
 // ── 1) 발행 카드 순서 결정(표지 1장 + 내지 전부, 최대 10장) ──
 const { default: series } = await import(pathToFileURL(join(seriesDir, 'cards.mjs')));
+if (live || validateLive) {
+  const experimentFile = join(REPO, 'data', 'experiments', `${experimentId}.json`);
+  if (!existsSync(experimentFile)) {
+    console.error(`실험 설정을 찾을 수 없습니다: ${experimentFile}`);
+    process.exit(1);
+  }
+  const experiment = JSON.parse(readFileSync(experimentFile, 'utf8'));
+  const configuredSeries = resolve(REPO, experiment.seriesPath || '');
+  const carouselSource = series.meta?.landing?.sources?.carousel;
+  if (configuredSeries !== seriesDir) {
+    console.error(`실험 시리즈 불일치: ${experiment.seriesPath} != ${seriesDir}`);
+    process.exit(1);
+  }
+  if (!carouselSource || experiment.sourceCode !== carouselSource) {
+    console.error(`실험 출처 코드 불일치: ${experiment.sourceCode} != ${carouselSource || '미설정'}`);
+    process.exit(1);
+  }
+  const landing = new URL(experiment.landingUrl);
+  if (landing.hostname !== 'foresttour.kr' || landing.searchParams.get('from') !== carouselSource) {
+    console.error('실험 landingUrl의 호스트 또는 from 출처 코드가 시리즈와 일치하지 않습니다.');
+    process.exit(1);
+  }
+}
 if ((live || validateLive) && series.meta?.photoStatus !== 'verified') {
   console.error(`실게시 차단: 사진 상태가 '${series.meta?.photoStatus || '미표기'}'입니다.`);
   console.error(series.meta?.photoNote || '현지 실사진과 출처를 확인한 뒤 meta.photoStatus를 verified로 바꾸세요.');

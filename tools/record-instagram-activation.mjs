@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, '..');
-const METRICS = [
+const INSTAGRAM_METRICS = new Set([
   'reach',
   'likes',
   'comments',
@@ -15,13 +15,14 @@ const METRICS = [
   'postsTotal',
   'followersTotal',
   'followingTotal',
-  'story_sado_visit',
-  'story_sado_context',
-  'story_sado_related',
-  'story_sado_discoveries',
-  'story_sado_tour',
-];
+]);
+const STORY_METRIC_RE =
+  /^story_[a-z0-9]+(?:-[a-z0-9]+)*_(?:visit|context|related|discoveries|tour)$/;
 const SOURCES = new Set(['instagram-ui', 'graph-api', 'foresttour-admin']);
+
+export function isActivationMetric(name) {
+  return INSTAGRAM_METRICS.has(name) || STORY_METRIC_RE.test(name);
+}
 
 function option(args, name) {
   const prefix = `--${name}=`;
@@ -63,8 +64,10 @@ export function buildCheckpoint({
     throw new Error(`source는 ${[...SOURCES].join(', ')} 중 하나여야 합니다.`);
   }
   const metrics = {};
-  for (const metric of METRICS) {
-    const value = nonNegativeInteger(values[metric], metric);
+  for (const [metric, rawValue] of Object.entries(values)) {
+    if (rawValue === undefined) continue;
+    if (!isActivationMetric(metric)) throw new Error(`지원하지 않는 활성화 지표: ${metric}`);
+    const value = nonNegativeInteger(rawValue, metric);
     if (value !== undefined) metrics[metric] = value;
   }
   if (!permalink && Object.keys(metrics).length === 0) {
@@ -101,7 +104,9 @@ export function activationStatus(records) {
   }
   const organicInteraction =
     (latest.likes ?? 0) + (latest.comments ?? 0) + (latest.saves ?? 0) + (latest.shares ?? 0) > 0;
-  const instagramAttributedStoryVisit = (latest.story_sado_visit ?? 0) > 0;
+  const instagramAttributedStoryVisit = Object.entries(latest).some(
+    ([name, value]) => /^story_.+_visit$/.test(name) && value > 0,
+  );
   return {
     status: permalink && organicInteraction && instagramAttributedStoryVisit
       ? 'initial-activation-evidenced'
@@ -153,7 +158,12 @@ async function main() {
   const source = option(args, 'source');
   const observedAt = option(args, 'observed-at');
   const permalink = option(args, 'permalink');
-  const values = Object.fromEntries(METRICS.map((metric) => [metric, option(args, metric)]));
+  const values = Object.fromEntries(
+    args
+      .map((arg) => arg.match(/^--([^=]+)=(.*)$/))
+      .filter((match) => match && isActivationMetric(match[1]))
+      .map((match) => [match[1], match[2]]),
+  );
   const record = buildCheckpoint({
     experiment,
     checkpoint,

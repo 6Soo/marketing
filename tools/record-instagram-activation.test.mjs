@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { activationStatus, buildCheckpoint } from './record-instagram-activation.mjs';
+import {
+  activationStatus,
+  buildCheckpoint,
+  isActivationMetric,
+} from './record-instagram-activation.mjs';
 
 test('확인하지 않은 수치를 0으로 만들지 않는다', () => {
   const record = buildCheckpoint({
@@ -79,4 +83,39 @@ test('게시·유기적 반응·Instagram 귀속 방문이 모두 있어야 초�
     activationStatus([{ publishedPermalink: records[0].publishedPermalink, metrics: {} }]).status,
     'collecting',
   );
+});
+
+test('하이픈을 포함한 새 여행지 퍼널 지표도 동일하게 기록·판정한다', () => {
+  assert.equal(isActivationMetric('story_northern-alps_visit'), true);
+  const record = buildCheckpoint({
+    experiment: 'northern-alps-001',
+    checkpoint: '24h',
+    source: 'foresttour-admin',
+    values: {
+      'story_northern-alps_visit': '2',
+      'story_northern-alps_context': '1',
+    },
+  });
+  assert.deepEqual(record.metrics, {
+    'story_northern-alps_visit': 2,
+    'story_northern-alps_context': 1,
+  });
+  const status = activationStatus([
+    {
+      checkpoint: '0h',
+      publishedPermalink: 'https://www.instagram.com/p/example/',
+      metrics: { likes: 1 },
+    },
+    record,
+  ]);
+  assert.equal(status.status, 'initial-activation-evidenced');
+});
+
+test('정의되지 않은 지표를 조용히 버리지 않고 거부한다', () => {
+  assert.throws(() => buildCheckpoint({
+    experiment: 'sado-003',
+    checkpoint: '24h',
+    source: 'foresttour-admin',
+    values: { story_typo_bounce: '1' },
+  }), /지원하지 않는 활성화 지표/);
 });
