@@ -203,3 +203,38 @@
 - 외부 경계:
   - 기존 Instagram 게시물·캡션·프로필은 수정하지 않았다.
   - 새 게시·재게시·원격 push·foresttour.kr 배포를 수행하지 않았다.
+
+---
+
+## 2026-07-26 — Instagram → foresttour.kr 공개 운영 반영
+
+- foresttour.kr 프로덕션 배포와 공개 검증기 통과를 확인한 뒤에만 Instagram 외부 수정을 실행했다.
+- 운영 계정: `@foresttour.kr`.
+- 프로필:
+  - 웹사이트 표시 `foresttour.kr` 유지.
+  - 실제 목적지는
+    `https://foresttour.kr/?utm_source=ig&utm_medium=social&utm_content=link_in_bio`.
+  - 소개를 `가이드북 밖의 일본을 걷습니다 / 풍경·역사·마을을 잇는 여행 기록 /
+    ↓ 인스타에서 본 이야기 이어보기`로 변경하고 공개 프로필에서 재확인했다.
+- 대표 링크 실제 클릭:
+  - Instagram의 `l.instagram.com` 경유 후 foresttour.kr 홈 200.
+  - 홈 canonical `https://foresttour.kr/`, 콘솔 오류 0.
+  - 히다·산리쿠 내부 링크는 최초 출처를 `from=insta`로 보존.
+- 기존 게시물 캡션 교정:
+  - 히다 `https://www.instagram.com/foresttour.kr/p/DbMh7tHj_H3/`
+    - 확인되지 않은 `3박 4일`과 잘못된 `#도호쿠여행` 제거.
+    - 고카야마의 도야마현 경계, 프로필 히다 기록 연결, AI 연출 이미지 고지 추가.
+  - 산리쿠 `https://www.instagram.com/foresttour.kr/p/DbPkcaIEwSj/`
+    - 존재하지 않는 `다음 출발` 약속 제거.
+    - 프로필 산리쿠 기록 연결과 `실제 현지 답사 사진 아님` 고지 추가.
+  - 산리쿠 `https://www.instagram.com/foresttour.kr/p/DbMCkYbEsxd/`
+    - 확인되지 않은 `이번 10월`, `4박 5일` 약속 제거.
+    - 프로필 산리쿠 기록 연결과 `실제 현지 답사 사진 아님` 고지 추가.
+- 새 게시·재게시:
+  - 실행하지 않았다. 히다 AI 자산과 산리쿠 Pexels 대역은 모두
+    `photoStatus: placeholder`이며 검증된 현지 원본 교체 전 실게시 차단을 유지한다.
+- API 상태:
+  - 로컬 Instagram Graph API 토큰은 읽기·게시 한도 요청 모두
+    `OAuthException code 200: API access blocked`를 반환했다.
+  - 토큰을 로그에 출력하거나 갱신 결과를 저장하지 않았으며, 이번 교정은 로그인된 Chrome의
+    공식 Instagram 편집 화면에서 수행했다.
