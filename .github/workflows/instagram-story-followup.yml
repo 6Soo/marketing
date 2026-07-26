@@ -1,0 +1,91 @@
+name: Instagram Story follow-up package
+
+on:
+  workflow_dispatch:
+    inputs:
+      experiment:
+        description: 'Activation experiment ID'
+        required: true
+        default: 'sado-003'
+      series:
+        description: 'Cardnews series path'
+        required: true
+        default: 'cardnews/series/sado'
+      manifest:
+        description: 'Story manifest path'
+        required: true
+        default: 'cardnews/out/sado/story/manifest.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: instagram-story-followup-${{ inputs.experiment }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install Story renderer
+        run: npm install --no-save sharp
+
+      - name: Verify Instagram activation tooling
+        run: npm run test:instagram
+
+      - name: Rebuild Story asset
+        run: npm run story:build -- --series="${{ inputs.series }}"
+
+      - name: Enforce measured Story publish gate
+        run: >-
+          npm run story:ready --
+          --experiment="${{ inputs.experiment }}"
+          --manifest="${{ inputs.manifest }}"
+          --live-link
+
+      - name: Write mobile publishing instructions
+        shell: bash
+        env:
+          MANIFEST_PATH: ${{ inputs.manifest }}
+        run: |
+          node --input-type=module - <<'NODE'
+          import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+          import { dirname, join } from 'node:path';
+          const manifest = JSON.parse(readFileSync(process.env.MANIFEST_PATH, 'utf8'));
+          const sourceDir = dirname(process.env.MANIFEST_PATH);
+          const packageDir = '_stage/instagram-story';
+          mkdirSync(packageDir, { recursive: true });
+          const instructions = [
+            '# Instagram Story mobile publish',
+            '',
+            `1. Upload \`${manifest.asset}\` to @foresttour.kr Story.`,
+            `2. Add a link sticker labeled \`${manifest.linkSticker.label}\`.`,
+            `3. Set the sticker URL to \`${manifest.linkSticker.url}\`.`,
+            '4. Do not add reservation dates or an unverified sales claim.',
+            '5. After publishing, record the Story timestamp and URL if Instagram exposes one.',
+            '',
+            `Expected measurement: \`${manifest.measurement.expectedEvent}\``,
+            `Source: \`${manifest.measurement.source}\``,
+            `Environment: \`${manifest.measurement.environment}\``,
+            '',
+          ].join('\n');
+          copyFileSync(join(sourceDir, manifest.asset), join(packageDir, manifest.asset));
+          copyFileSync(process.env.MANIFEST_PATH, join(packageDir, 'manifest.json'));
+          writeFileSync(join(packageDir, 'PUBLISH.md'), instructions, 'utf8');
+          NODE
+
+      - name: Upload verified mobile package
+        uses: actions/upload-artifact@v4
+        with:
+          name: instagram-story-${{ inputs.experiment }}-${{ github.run_id }}
+          path: _stage/instagram-story/
+          if-no-files-found: error
+          retention-days: 7

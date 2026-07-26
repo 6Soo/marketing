@@ -17,6 +17,13 @@ const CHECKPOINT_WORKFLOW = join(
   'workflows',
   'instagram-activation-checkpoints.yml',
 );
+const STORY_WORKFLOW = join(
+  TOOLS,
+  '..',
+  '.github',
+  'workflows',
+  'instagram-story-followup.yml',
+);
 
 const experiment = {
   id: 'sado-003',
@@ -100,4 +107,15 @@ test('도래한 체크포인트를 자동 수집 비활성 상태에서 조용�
   assert.match(guard, /ACTIVATION_COLLECT_ENABLED != 'true'/);
   assert.match(guard, /exit 1/);
   assert.match(report, /if: \$\{\{ always\(\) \}\}/);
+});
+
+test('Story 전달 workflow는 측정 게이트를 통과한 뒤에만 모바일 패키지를 만든다', () => {
+  const workflow = readFileSync(STORY_WORKFLOW, 'utf8');
+  const gate = workflow.indexOf('name: Enforce measured Story publish gate');
+  const instructions = workflow.indexOf('name: Write mobile publishing instructions');
+  const artifact = workflow.indexOf('name: Upload verified mobile package');
+  assert.ok(gate >= 0 && gate < instructions && instructions < artifact);
+  assert.match(workflow.slice(gate, instructions), /--live-link/);
+  assert.match(workflow, /retention-days: 7/);
+  assert.doesNotMatch(workflow, /IG_ACCESS_TOKEN/);
 });
