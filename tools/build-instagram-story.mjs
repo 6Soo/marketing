@@ -1,7 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import sharp from 'sharp';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -52,6 +51,7 @@ export function storyManifest(series, seriesPath, outputFile) {
 }
 
 export async function buildStory({ seriesPath, outputDir }) {
+  const { default: sharp } = await import('sharp');
   const absoluteSeriesPath = resolve(seriesPath);
   const { default: series } = await import(
     `${pathToFileURL(join(absoluteSeriesPath, 'cards.mjs')).href}?v=${Date.now()}`
