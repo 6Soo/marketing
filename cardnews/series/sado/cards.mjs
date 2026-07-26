@@ -11,6 +11,13 @@ export default {
     hookFormula: 'open-reason',
     watermark: '숲길따라 감성여행',
     photoStatus: 'verified',
+    story: {
+      eyebrow: '나만 몰랐던 일본 · 003',
+      subtitle: '광산이 멈춘 뒤에도 이어진 섬의 생활',
+      title: '금광 밖의 사도 이야기',
+      detail: '북택 선광장부터 배 목수의 마을까지',
+      stickerLabel: '사도 이야기 이어보기',
+    },
     photoNote: '사도 현지 촬영 Commons 원본이며 장소·저작자·재사용 라이선스·SHA-256을 확인했습니다.',
     landing: {
       profileUrl: 'https://foresttour.kr/',

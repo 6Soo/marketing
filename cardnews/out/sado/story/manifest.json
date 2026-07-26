@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "series": "sado",
+  "destination": "사도 편",
+  "format": "instagram-story",
+  "dimensions": {
+    "width": 1080,
+    "height": 1920
+  },
+  "asset": "01-discovery-link.jpg",
+  "linkSticker": {
+    "label": "사도 이야기 이어보기",
+    "url": "https://foresttour.kr/stories/sado?from=insta-story-sado"
+  },
+  "publishGate": "24h-checkpoint-recorded",
+  "measurement": {
+    "expectedEvent": "story_sado_visit",
+    "environment": "instagram-app",
+    "source": "insta-story-sado"
+  }
+}
