@@ -16,9 +16,9 @@ export default {
       profileUrl: 'https://foresttour.kr/',
       storyPath: '/stories/northern-alps',
       sources: {
-        carousel: 'insta-carousel-northern-alps',
-        story: 'insta-story-northern-alps',
-        reel: 'insta-reel-northern-alps',
+        carousel: 'insta-carousel-alps',
+        story: 'insta-story-alps',
+        reel: 'insta-reel-alps',
       },
       connectedTour: {
         productId: 'fNod',
