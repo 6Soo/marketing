@@ -10,44 +10,69 @@
 // ── 기준본 카드 CSS 원문 (리뷰 페이지 크롬 제외, 카드 관련 부분만) ──
 const CARD_CSS = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --ink: #242019; --paper: #E9E4D3; --red: #9C2B22; }
+  :root { --ink: #242019; --paper: #E9E4D3; --red: #9C2B22; --forest: #354B36; }
   .card {
     word-break: keep-all;
     width: 100%; aspect-ratio: 4/5; position: relative; overflow: hidden;
     display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   }
   .pc {
     background-size: cover; background-position: center;
-    color: #fff; padding: 20px;
+    color: #fff; padding: 22px;
     font-family: "Noto Serif KR", "Nanum Myeongjo", "Apple SD Gothic Neo", serif;
   }
-  .wm { position: absolute; top: 16px; left: 18px; font-family: "Pretendard", "Noto Sans KR", sans-serif;
-        font-size: .6rem; font-weight: 700; letter-spacing: .08em; color: rgba(255,255,255,.75); }
-  .pg { position: absolute; top: 16px; right: 18px; font-family: ui-monospace, monospace;
-        font-size: .62rem; color: rgba(255,255,255,.7); font-variant-numeric: tabular-nums; }
+  .wm { position: absolute; top: 18px; left: 22px; font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+        font-size: .58rem; font-weight: 700; letter-spacing: .1em; color: rgba(255,255,255,.82);
+        text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+  .pg { position: absolute; top: 18px; right: 22px; font-family: ui-monospace, "SF Mono", monospace;
+        font-size: .6rem; color: rgba(255,255,255,.78); font-variant-numeric: tabular-nums;
+        text-shadow: 0 1px 8px rgba(0,0,0,.45); }
   .wm.dark { color: rgba(36,32,25,.55); }
   .pg.dark { color: rgba(36,32,25,.5); }
-  .pc-bottom { margin-top: auto; }
-  .pc-eye { font-family: ui-monospace, "SF Mono", monospace; font-size: .62rem; letter-spacing: .05em;
-            color: rgba(255,255,255,.85); margin-bottom: 8px; text-shadow: 0 1px 6px rgba(0,0,0,.4); }
-  .pc-title { font-size: 1.62rem; font-weight: 700; line-height: 1.26; text-wrap: balance;
-              text-shadow: 0 1px 10px rgba(0,0,0,.45); margin-bottom: 8px; }
-  .pc-body { font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; font-size: .82rem;
-             line-height: 1.6; color: rgba(255,255,255,.88); text-shadow: 0 1px 6px rgba(0,0,0,.5); }
-  .pc-hand { font-style: italic; font-size: .76rem; color: rgba(255,255,255,.72);
-             margin-top: 10px; text-shadow: 0 1px 6px rgba(0,0,0,.5); }
+  .pc-bottom { margin-top: auto; max-width: 100%; }
+  .pc-bottom::before { content: ""; display: block; width: 24px; height: 2px; margin-bottom: 10px;
+                       background: rgba(255,255,255,.9); }
+  .pc-eye { font-family: "Noto Sans KR", "Malgun Gothic", sans-serif; font-size: .6rem; font-weight: 650;
+            letter-spacing: .06em; color: rgba(255,255,255,.86); margin-bottom: 8px;
+            text-shadow: 0 1px 7px rgba(0,0,0,.55); }
+  .pc-title { font-size: 1.58rem; font-weight: 700; line-height: 1.24; letter-spacing: -.015em;
+              text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,.62); margin-bottom: 9px; }
+  .pc-body { font-family: "Noto Sans KR", "Malgun Gothic", sans-serif; font-size: .8rem;
+             font-weight: 450; line-height: 1.58; color: rgba(255,255,255,.94);
+             text-shadow: 0 1px 7px rgba(0,0,0,.65); max-width: 31ch; }
+  .pc-hand { font-size: .7rem; line-height: 1.45; color: rgba(255,255,255,.78);
+             margin-top: 10px; text-shadow: 0 1px 7px rgba(0,0,0,.6); }
   .cover { justify-content: center; }
-  .cover-mid { margin-top: auto; margin-bottom: auto; }
-  .cover-title { font-size: 2.05rem; font-weight: 700; line-height: 1.22; text-shadow: 0 2px 14px rgba(0,0,0,.5); margin: 10px 0 12px; }
-  .cover-sub { font-family: "Pretendard", "Noto Sans KR", sans-serif; font-size: .78rem; letter-spacing: .02em; color: rgba(255,255,255,.85); text-shadow: 0 1px 6px rgba(0,0,0,.5); }
+  .cover-mid { margin-top: auto; margin-bottom: 28px; }
+  .cover-mid::before { content: ""; display: block; width: 30px; height: 2px; margin-bottom: 11px;
+                       background: rgba(255,255,255,.92); }
+  .cover-title { font-size: 1.94rem; font-weight: 700; line-height: 1.2; letter-spacing: -.018em;
+                 text-wrap: balance; text-shadow: 0 2px 15px rgba(0,0,0,.68); margin: 9px 0 13px; }
+  .cover-sub { font-family: "Noto Sans KR", "Malgun Gothic", sans-serif; font-size: .74rem;
+               line-height: 1.5; letter-spacing: .01em; color: rgba(255,255,255,.9);
+               text-shadow: 0 1px 7px rgba(0,0,0,.65); max-width: 29ch; }
   .paper {
-    background: var(--paper); color: var(--ink); padding: 22px;
+    background-color: var(--paper); color: var(--ink); padding: 24px 22px 22px;
+    background-image: repeating-linear-gradient(180deg, transparent 0, transparent 31px,
+                      rgba(68,75,55,.055) 31px, rgba(68,75,55,.055) 32px);
     font-family: "Noto Serif KR", "Nanum Myeongjo", "Apple SD Gothic Neo", serif;
   }
-  .paper h2 { font-size: 1.5rem; line-height: 1.3; font-weight: 600; text-wrap: balance; margin: 10px 0 8px; }
-  .mono { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .66rem; letter-spacing: .04em; color: #55503F; }
-  .body { font-size: .9rem; line-height: 1.62; margin-top: 8px; text-wrap: balance; }
-  .hand { font-style: italic; font-size: .8rem; color: #6B4A28; margin-top: auto; border-top: 1px dashed #BFB495; padding-top: 9px; }
+  .paper::after { content: ""; position: absolute; top: 0; bottom: 0; left: 12px; width: 1px;
+                  background: rgba(156,43,34,.18); }
+  .paper h2 { font-size: 1.42rem; line-height: 1.28; font-weight: 650; letter-spacing: -.01em;
+              text-wrap: balance; margin: 11px 0 8px; }
+  .mono { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .62rem;
+          letter-spacing: .06em; color: #55503F; }
+  .body { font-size: .84rem; line-height: 1.62; margin-top: 8px; text-wrap: balance; }
+  .summary-list { list-style: none; margin-top: 12px; display: grid; gap: 8px; }
+  .summary-list li { display: grid; grid-template-columns: 24px 1fr; align-items: baseline;
+                     font-family: "Noto Sans KR", "Malgun Gothic", sans-serif; font-size: .7rem;
+                     line-height: 1.4; padding-bottom: 7px; border-bottom: 1px solid rgba(85,80,63,.16); }
+  .summary-list b { color: var(--red); font-family: ui-monospace, "SF Mono", monospace;
+                    font-size: .58rem; letter-spacing: .04em; }
+  .hand { font-size: .7rem; line-height: 1.45; color: #6B4A28; margin-top: auto;
+          border-top: 1px dashed #BFB495; padding-top: 9px; }
   .stamp {
     position: absolute; top: 18px; right: 18px; width: 58px; height: 58px; border-radius: 50%;
     border: 1.4px solid var(--red); color: var(--red); display: flex; align-items: center; justify-content: center;
@@ -57,8 +82,8 @@ const CARD_CSS = `
 `;
 
 // 기준본의 스크림(그라디언트) 원문 — 표지용/내지용 두 가지.
-const SCRIM_COVER = `linear-gradient(180deg, rgba(10,10,12,.46) 0%, rgba(10,10,12,.30) 45%, rgba(8,8,10,.62) 100%)`;
-const SCRIM_BODY = `linear-gradient(180deg, rgba(10,10,12,.34) 0%, rgba(10,10,12,.05) 22%, rgba(10,10,12,0) 42%, rgba(10,10,12,.38) 62%, rgba(8,8,10,.78) 100%)`;
+const SCRIM_COVER = `linear-gradient(180deg, rgba(8,12,10,.34) 0%, rgba(8,12,10,.08) 42%, rgba(8,10,9,.76) 100%)`;
+const SCRIM_BODY = `linear-gradient(180deg, rgba(8,12,10,.28) 0%, rgba(8,12,10,.02) 32%, rgba(8,10,9,.18) 53%, rgba(8,10,9,.86) 100%)`;
 
 const esc = s => (s ?? '');
 
@@ -82,7 +107,9 @@ function cardBody(meta, c, page, total) {
       ${c.stamp ? `<div class="stamp">${esc(c.stamp)}</div>` : wmpg(true)}
       <p class="mono"${c.stamp ? '' : ' style="margin-top:18px;"'}>${esc(c.eye)}</p>
       <h2>${esc(c.title)}</h2>
-      <p class="body" style="margin-top:${c.stamp ? 14 : 10}px;">${esc(c.body)}</p>
+      ${c.items?.length
+        ? `<ul class="summary-list">${c.items.map((item, i) => `<li><b>${String(i + 1).padStart(2, '0')}</b><span>${esc(item)}</span></li>`).join('')}</ul>`
+        : `<p class="body" style="margin-top:${c.stamp ? 14 : 10}px;">${esc(c.body)}</p>`}
       <p class="hand">${esc(c.hand)}</p>
     </div>`;
   }

@@ -82,6 +82,7 @@ if (cmd === 'carousel') {
   const children = [];
   for (const u of urls) {
     const item = await call(`${IG_USER || '<IG_USER_ID>'}/media`, { image_url: u, is_carousel_item: 'true' });
+    await waitReady(item.id);
     children.push(item.id);
   }
   const container = await call(`${IG_USER || '<IG_USER_ID>'}/media`, {

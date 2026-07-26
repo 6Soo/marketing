@@ -1,30 +1,72 @@
-name: 일일 카드뉴스 자동발행
+name: 마케팅 루프 엔진 — 일일 사이클
 
-# 카드뉴스(캐러셀)를 매일 인스타에 발행하는 파이프라인.
-#   render(PNG) → JPEG 변환(API는 JPEG만 받음) → 공개 호스트 배포 → Content Publishing API 3콜.
+# 마케팅 루프 자동화 파이프라인.
+#   Sense(성과 수집) → Think(기획) → Create(렌더) → Publish(멀티채널 배포) → Learn(학습).
 #
-# 지금 상태: 시크릿·호스팅이 연결되기 전까지 '드라이런 스모크 테스트'로만 돈다
-#   (매일 덱이 정상 렌더·변환되는지 확인 + 변환 JPEG를 아티팩트로 업로드). 실게시는 하지 않는다.
+# 워크플로 구성:
+#   daily-sense   — 매일 09:00 KST: 전일 인스타 성과 데이터 수집
+#   daily-publish — 매일 20:00 KST: 렌더 + JPEG 변환 + 멀티채널 게시
+#   weekly-think  — 매주 일요일 18:00 KST: 주간 분석 리포트 + 다음 주 기획
+#   monthly-learn — 매월 1일 09:00 KST: 월간 전략 갱신 + 학습 문서 생성
 #
-# 실게시로 전환하려면(사장님-가이드 §인스타 참고):
-#   1) 저장소 Secrets 등록: IG_USER_ID, IG_ACCESS_TOKEN(Instagram Login 장기 토큰), PUBLIC_BASE_URL
-#   2) 저장소 Variables: IG_PUBLISH_ENABLED = true
-#   3) 아래 '② JPEG 공개 배포' 자리에 실제 배포 스텝 연결
-#      — 이미지는 발행 호출 전에 반드시 PUBLIC_BASE_URL/파일명 으로 라이브여야 한다.
-#      · 라이브-서빙 폴더(S3 sync·상시 서버)면 stage=live라 한 번에 --publish 가능
-#      · git-push 배포(Vercel)면 stage→배포→배포완료 대기→publish 로 나눠야 한다.
+# 실게시 전환(사장님-가이드 §인스타):
+#   1) Secrets: IG_USER_ID, IG_ACCESS_TOKEN, PUBLIC_BASE_URL, GEMINI_API_KEY
+#   2) Variables: IG_PUBLISH_ENABLED = true, LOOP_SENSE_ENABLED = true
+#   3) '② JPEG 공개 배포' 자리에 실제 배포 스텝 연결
 
 on:
-  workflow_dispatch: {}
-  schedule:
-    - cron: '0 11 * * *'   # 매일 11:00 UTC = 20:00 KST (조정 가능)
+  workflow_dispatch:
+    inputs:
+      step:
+        description: '실행할 단계 (full, sense, publish, analyze, strategy)'
+        required: false
+        default: 'full'
+      series:
+        description: '시리즈 경로'
+        required: false
+        default: 'cardnews/series/sanriku'
+
+# 공개 JPEG 배포와 운영 계정 검증 전에는 예약 실행하지 않는다.
+# 준비 완료 후 schedule을 복구하고 각 단계의 실제 산출물을 먼저 3회 수동 검수한다.
 
 concurrency:
-  group: daily-cardnews
+  group: marketing-loop
   cancel-in-progress: false
 
+env:
+  SERIES_PATH: ${{ inputs.series || 'cardnews/series/sanriku' }}
+
 jobs:
+  # ─── Sense: 인스타그램 성과 데이터 수집 ───────────────────
+  sense:
+    if: >-
+      github.event_name == 'workflow_dispatch' && (inputs.step == 'full' || inputs.step == 'sense')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 인스타 Insights 수집
+        if: ${{ vars.LOOP_SENSE_ENABLED == 'true' }}
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: node tools/ig-insights.mjs collect --live
+
+      - name: 수집 데이터 아티팩트
+        if: ${{ vars.LOOP_SENSE_ENABLED == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: instagram-insights-${{ github.run_id }}
+          path: data/insights/
+          if-no-files-found: error
+
+  # ─── Publish: 렌더 + 변환 + 멀티채널 게시 ─────────────────
   publish:
+    if: >-
+      github.event_name == 'workflow_dispatch' && (inputs.step == 'full' || inputs.step == 'publish')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,31 +81,102 @@ jobs:
       - name: Chromium 설치(headless 렌더용)
         run: npx --yes playwright install --with-deps chromium
 
-      # ① 렌더 + JPEG 변환 + 스테이징 (드라이런 — 실게시 안 함)
+      # ① 렌더 + JPEG 변환 + 스테이징
       - name: 렌더·변환 (드라이런 스모크)
         env:
+          CHROME_BIN: ''
           PUBLIC_DIR: ${{ github.workspace }}/_stage
           PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
-        run: node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku
+        run: node cardnews/tools/daily-publish.mjs --series=${{ env.SERIES_PATH }}
 
       - name: 스테이징 JPEG 아티팩트 업로드
         uses: actions/upload-artifact@v4
         with:
-          name: cardnews-jpeg
+          name: cardnews-jpeg-${{ github.run_id }}
           path: _stage/**/*.jpg
           if-no-files-found: warn
 
-      # ② JPEG 공개 배포 (그들 인프라에 연결 — 실게시 전 필수)
+      # ② JPEG 공개 배포 (인프라에 연결 — 실게시 전 필수)
       #   _stage/*.jpg 를 PUBLIC_BASE_URL 로 라이브 서빙되게 올린다.
-      #   예) aws s3 sync _stage s3://버킷/ig  또는  reservation 리포 public/ig 로 커밋·푸시→Vercel 배포.
-      #   git-push 배포면 여기서 배포 완료를 확인(폴링)한 뒤 ③으로 넘어가야 한다.
+      #   예) aws s3 sync _stage s3://버킷/ig
 
-      # ③ 인스타 발행 (Variables.IG_PUBLISH_ENABLED == 'true' 일 때만)
-      - name: 인스타 발행(캐러셀)
+      # ③ 인스타 발행 (캐러셀)
+      - name: 인스타 발행
         if: ${{ vars.IG_PUBLISH_ENABLED == 'true' }}
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           PUBLIC_DIR: ${{ github.workspace }}/_stage
           PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
-        run: node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku --skip-render --publish
+        run: node cardnews/tools/daily-publish.mjs --series=${{ env.SERIES_PATH }} --skip-render --publish --channels=ig
+
+      # ④ 카페/밴드용 콘텐츠 생성 (반자동 — 결과를 아티팩트로 저장)
+      - name: 카페 게시글 생성
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          mkdir -p _stage/cafe _stage/band
+          node tools/cafe-publish.mjs --series=${{ env.SERIES_PATH }} --output=_stage/cafe/post.html || echo "카페 게시글 생성 건너뜀"
+
+      - name: 밴드 게시글 생성
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          DAY=$(date -u +%a | tr '[:upper:]' '[:lower:]')
+          node tools/band-publish.mjs --series=${{ env.SERIES_PATH }} --day=$DAY --output=_stage/band/post.txt || echo "밴드 게시글 생성 건너뜀"
+
+      - name: 멀티채널 콘텐츠 아티팩트 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: multichannel-content-${{ github.run_id }}
+          path: |
+            _stage/cafe/
+            _stage/band/
+          if-no-files-found: warn
+
+  # ─── Analyze: 주간 분석 리포트 ─────────────────────────────
+  analyze:
+    if: >-
+      github.event_name == 'workflow_dispatch' && (inputs.step == 'full' || inputs.step == 'analyze')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 주간 성과 분석
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node tools/analyzer.mjs report
+
+      - name: 분석 결과 아티팩트
+        uses: actions/upload-artifact@v4
+        with:
+          name: marketing-analysis-${{ github.run_id }}
+          path: |
+            strategy/주간리포트-*.md
+            data/performance.json
+          if-no-files-found: error
+
+  # ─── Strategy: 월간 전략 갱신 ──────────────────────────────
+  strategy:
+    if: >-
+      github.event_name == 'workflow_dispatch' && inputs.step == 'strategy'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 월간 전략 갱신 + 학습 문서 생성
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node tools/strategy-updater.mjs
+
+      - name: 전략 결과 아티팩트
+        uses: actions/upload-artifact@v4
+        with:
+          name: marketing-strategy-${{ github.run_id }}
+          path: learning/

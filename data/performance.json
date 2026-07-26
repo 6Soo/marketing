@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "hookFormulas": {
+    "open-reason": { "name": "열린 이유형", "uses": 0, "avgSaves": 0, "avgReach": 0 },
+    "half-negative": { "name": "반쪽 부정형", "uses": 0, "avgSaves": 0, "avgReach": 0 },
+    "sensory-statement": { "name": "감각 선언형", "uses": 0, "avgSaves": 0, "avgReach": 0 },
+    "precise-number": { "name": "정밀 숫자형", "uses": 0, "avgSaves": 0, "avgReach": 0 },
+    "rank-unique": { "name": "순위·유일형", "uses": 0, "avgSaves": 0, "avgReach": 0 },
+    "blank-map": { "name": "빈칸 지도형", "uses": 0, "avgSaves": 0, "avgReach": 0 }
+  },
+  "seriesPerformance": {},
+  "channelPerformance": {},
+  "lastUpdated": null
+}

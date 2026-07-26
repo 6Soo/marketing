@@ -1,5 +1,23 @@
 // 일일 카드뉴스 자동 발행 오케스트레이터 (2026-07-23).
-// HTML(cards.mjs) → render.mjs(PNG) → JPEG 변환 → 공개 정적 폴더/GitHub raw 서빙 → instagram-publish.mjs 캐러셀 게시.
+// HTML(cards.mjs) → render.mjs(PNG) → JPEG 변환 → 공개 정적 폴더로 스테이징 → instagram-publish.mjs 캐러셀 게시.
+//
+// ⚠ 핵심 사실(공식 문서 실측 2026-07-23): 인스타 Content Publishing API는 **JPEG만** 받는다
+//   ("JPEG is the only image format supported"). render.mjs 산출물은 PNG이므로 이 단계에서
+//   반드시 JPEG로 변환한 뒤 공개 URL로 올려야 한다. 미디어는 공개 URL 필수(Graph API가 URL에서 받아감).
+//
+// 발행 자체는 tools/instagram-publish.mjs(carousel)에 위임 — 여기서는 render→변환→스테이징→캡션까지 조립.
+//
+// 설정(.env 또는 환경변수):
+//   SERIES           오늘 발행할 시리즈 폴더 (예: cardnews/series/sanriku)   [--series= 로도 지정]
+//   PUBLIC_DIR       Vercel 등으로 공개 서빙되는 정적 폴더의 로컬 경로(변환 JPEG를 여기에 씀)
+//   PUBLIC_BASE_URL  위 폴더가 매핑되는 공개 URL (예: https://reserve.foresttour.kr/ig)
+//   IG_USER_ID, IG_ACCESS_TOKEN   instagram-publish.mjs가 실게시(--publish) 때 사용
+//
+// 사용(기본은 드라이런 — 실제 전송은 --publish):
+//   node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku
+//   node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku --cover=cover-a --publish
+//   옵션: --cover=<표지 카드 id>(기본 첫 cover) · --skip-render(기존 out/ 재사용) · --stamp=YYYYMMDD
+//   (클라우드/CI 프록시 환경에서는 NODE_USE_ENV_PROXY=1 접두)
 
 import { readFileSync, existsSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -11,13 +29,14 @@ const REPO = resolve(HERE, '..', '..');            // marketing 리포 루트
 const args = process.argv.slice(2);
 const opt = (name, dflt) => args.find(a => a.startsWith(`--${name}=`))?.split('=').slice(1).join('=') ?? dflt;
 const flag = name => args.includes(`--${name}`);
+const channels = opt('channels', 'ig').split(',');
 const live = flag('publish');
 
 function env(name) {
   if (process.env[name]) return process.env[name];
   try {
     const m = readFileSync(join(REPO, '.env'), 'utf8').match(new RegExp(`^${name}=(.+)$`, 'm'));
-    if (m) { process.env[name] = m[1].trim(); return process.env[name]; }
+    if (m) { process.env[name] = m[1].trim(); return process.env[name]; }  // 자식 프로세스에도 전파되도록 process.env에 반영
   } catch { /* 아래에서 안내 */ }
   return '';
 }
@@ -28,12 +47,25 @@ if (!opt('series', env('SERIES')) || !existsSync(join(seriesDir, 'cards.mjs'))) 
   console.error('시리즈 폴더가 없습니다 — --series=cardnews/series/<이름> (cards.mjs 포함) 지정');
   process.exit(1);
 }
+const publicDir = env('PUBLIC_DIR');
+const publicBase = (env('PUBLIC_BASE_URL') || '').replace(/\/$/, '');
 const stamp = opt('stamp', new Date().toISOString().slice(0, 10).replace(/-/g, ''));
 const seriesName = basename(seriesDir);
 const outDir = join(REPO, 'cardnews', 'out', seriesName);
 
+// 실게시엔 공개 호스팅 설정이 필수(드라이런은 없어도 흐름만 보여줌)
+if (live && (!publicDir || !publicBase)) {
+  console.error('실게시(--publish)에는 PUBLIC_DIR·PUBLIC_BASE_URL이 필요합니다(변환 JPEG를 공개 URL로 올려야 함).');
+  process.exit(1);
+}
+
 // ── 1) 발행 카드 순서 결정(표지 1장 + 내지 전부, 최대 10장) ──
 const { default: series } = await import(pathToFileURL(join(seriesDir, 'cards.mjs')));
+if (live && series.meta?.photoStatus !== 'verified' && !flag('allow-placeholder')) {
+  console.error(`실게시 차단: 사진 상태가 '${series.meta?.photoStatus || '미표기'}'입니다.`);
+  console.error(series.meta?.photoNote || '현지 실사진과 출처를 확인한 뒤 meta.photoStatus를 verified로 바꾸세요.');
+  process.exit(1);
+}
 const covers = series.cards.filter(c => c.kind === 'cover');
 const coverId = opt('cover', covers[0]?.id);
 const cover = covers.find(c => c.id === coverId);
@@ -55,8 +87,9 @@ if (!flag('skip-render')) {
 }
 
 // ── 3) PNG → JPEG 변환(API가 JPEG만 받음) ──
+// 변환기 우선순위: sharp(권장·CI에 npm i) → magick → convert → ffmpeg → python3 Pillow.
 async function toJpeg(srcPng, destJpg) {
-  try { rmSync(destJpg, { force: true }); } catch { /* 이전 시도의 깨진 잔여 파일 제거 */ }
+  try { rmSync(destJpg, { force: true }); } catch { /* 이전 시도의 깨진 잔여 파일 제거 — existsSync 오탐 방지 */ }
   try {
     const sharp = (await import('sharp')).default;
     await sharp(srcPng).jpeg({ quality: 88, chromaSubsampling: '4:4:4' }).toFile(destJpg);
@@ -70,31 +103,23 @@ async function toJpeg(srcPng, destJpg) {
   return null;
 }
 
-const stageDir = join(REPO, 'cardnews', 'out', '_publish', stamp);
+const stageDir = live ? publicDir : join(REPO, 'cardnews', 'out', '_publish', stamp);
 mkdirSync(stageDir, { recursive: true });
 const urls = [];
 let converter = null;
 for (const card of order) {
   const src = join(outDir, `${card.id}.png`);
   if (!existsSync(src)) { console.error(`렌더 PNG 없음: ${src} (--skip-render 없이 다시 실행하거나 render 확인)`); process.exit(1); }
-  const uniqueId = Date.now().toString(36);
-  const fname = `${stamp}-${uniqueId}-${seriesName}-${card.id}.jpg`;
-  const dst = join(outDir, fname);
+  const fname = `${stamp}-${seriesName}-${card.id}.jpg`;
+  const dst = join(stageDir, fname);
   const how = await toJpeg(src, dst);
   if (!how) {
-    if (live) { console.error('JPEG 변환기가 없습니다 — CI/서버에 `npm i sharp`(권장) 설치 필요.'); process.exit(1); }
-    console.warn(`⚠ [드라이런] 변환기 없음 → ${fname} 변환 건너뜀(흐름만 표시).`);
+    if (live) { console.error('JPEG 변환기가 없습니다 — CI/서버에 `npm i sharp`(권장) 또는 ImageMagick/ffmpeg 설치 필요.'); process.exit(1); }
+    console.warn(`⚠ [드라이런] 변환기 없음 → ${fname} 변환 건너뜀(흐름만 표시). 실게시 전 sharp 설치 필요.`);
   } else { converter = how; }
-  urls.push(`https://cdn.jsdelivr.net/gh/6Soo/marketing@Master/cardnews/out/${seriesName}/${fname}`);
+  urls.push(publicBase ? `${publicBase}/${fname}` : `<PUBLIC_BASE_URL>/${fname}`);
 }
-
-if (live) {
-  console.log('· GitHub raw 호스팅으로 JPEG 커밋 및 푸시 중 …');
-  spawnSync('git', ['add', join(outDir, '*.jpg')], { stdio: 'inherit', cwd: REPO });
-  spawnSync('git', ['commit', '-m', `build: cardnews JPEGs for ${seriesName}`], { stdio: 'inherit', cwd: REPO });
-  spawnSync('git', ['push'], { stdio: 'inherit', cwd: REPO });
-}
-if (converter) console.log(`· JPEG 변환 완료(${converter}) → ${outDir}`);
+if (converter) console.log(`· JPEG 변환 완료(${converter}) → ${stageDir}`);
 
 // ── 4) 캡션 로드(시리즈 폴더의 캡션.md 또는 caption.txt) ──
 let caption = '';
@@ -102,15 +127,9 @@ for (const cand of ['캡션.md', 'caption.txt', 'caption.md']) {
   const p = join(seriesDir, cand);
   if (existsSync(p)) {
     const raw = readFileSync(p, 'utf8').trim();
-    // 캡션 자동 정제 (마크다운 가이드 주석 및 검토 메모 제거)
-    let text = raw;
-    if (text.includes('---')) {
-      const parts = text.split(/---+/).map(pt => pt.trim()).filter(Boolean);
-      const main = parts.find(pt => !pt.startsWith('#') && !pt.startsWith('>') && !pt.startsWith('※'));
-      if (main) text = main;
-    }
-    caption = text.split('\n').filter(line => !line.trim().startsWith('> ') && !line.trim().startsWith('※ ')).join('\n').trim();
-    console.log(`· 캡션 정제 로드 완료: ${cand}`);
+    const sections = raw.split(/\r?\n---\r?\n/);
+    caption = (sections.length >= 3 ? sections[1] : raw).trim();
+    console.log(`· 캡션: ${cand} (게시 본문만 추출)`);
     break;
   }
 }
@@ -118,13 +137,68 @@ if (!caption) console.warn('⚠ 캡션 파일(캡션.md/caption.txt)이 없어 �
 const capFile = join(stageDir, `_caption-${seriesName}.txt`);
 writeFileSync(capFile, caption);
 
-// ── 5) 게시 위임(instagram-publish.mjs carousel) ──
-console.log(`\n· 발행 위임 → instagram-publish.mjs carousel (${live ? '실게시' : '드라이런'})`);
-const pubArgs = ['carousel', `--images=${urls.join(',')}`, `--caption-file=${capFile}`];
-if (live) pubArgs.push('--publish');
-const pub = spawnSync('node', [join(REPO, 'tools', 'instagram-publish.mjs'), ...pubArgs],
-  { stdio: 'inherit', env: process.env });
-if (pub.status !== 0) { console.error('발행 단계 실패 — 위 로그 확인.'); process.exit(1); }
+// ── 5) 다채널 발행 위임 ──
+const results = { ig: 'skipped', cafe: 'skipped', band: 'skipped' };
+let failed = false;
+
+if (channels.includes('ig')) {
+  console.log(`\n· 발행 위임 → instagram-publish.mjs carousel (${live ? '실게시' : '드라이런'})`);
+  const pubArgs = ['carousel', `--images=${urls.join(',')}`, `--caption-file=${capFile}`];
+  if (live) pubArgs.push('--publish');
+  const pub = spawnSync('node', [join(REPO, 'tools', 'instagram-publish.mjs'), ...pubArgs],
+    { stdio: 'inherit', env: process.env });
+  if (pub.status !== 0) {
+    console.error('인스타그램 발행 단계 실패 — 위 로그 확인.');
+    results.ig = 'failed';
+    failed = true;
+  } else {
+    results.ig = live ? 'published' : 'dry-run';
+  }
+}
+
+if (channels.includes('cafe')) {
+  console.log('\n· 카페용 게시글 생성 → cafe-publish.mjs');
+  const cafeArgs = [`--series=${seriesDir}`];
+  const pub = spawnSync('node', [join(REPO, 'tools', 'cafe-publish.mjs'), ...cafeArgs],
+    { stdio: 'inherit', env: process.env });
+  if (pub.status !== 0) {
+    console.error('다음 카페 발행 실패 — 위 로그 확인.');
+    results.cafe = 'failed';
+    failed = true;
+  } else {
+    results.cafe = 'generated';
+  }
+}
+
+if (channels.includes('band')) {
+  console.log('\n· 밴드용 게시글 생성 → band-publish.mjs');
+  const dayStr = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][new Date().getDay()];
+  const bandArgs = [`--series=${seriesDir}`, `--day=${dayStr}`];
+  const pub = spawnSync('node', [join(REPO, 'tools', 'band-publish.mjs'), ...bandArgs],
+    { stdio: 'inherit', env: process.env });
+  if (pub.status !== 0) {
+    console.error('네이버 밴드 발행 실패 — 위 로그 확인.');
+    results.band = 'failed';
+    failed = true;
+  } else {
+    results.band = 'generated';
+  }
+}
+
+// 루프 상태 저장 (Phase 4 학습 데이터용)
+if (live) {
+  const stateDir = join(REPO, 'data', 'loop-state');
+  mkdirSync(stateDir, { recursive: true });
+  const stateFile = join(stateDir, `${stamp}-${seriesName}.json`);
+  writeFileSync(stateFile, JSON.stringify({ series: seriesName, stamp, channels: results, live }, null, 2));
+  console.log(`\n· 발행 상태 저장 완료: ${stateFile}`);
+}
 
 console.log(`\n✓ 완료(${live ? '실게시' : '드라이런'}). 공개 URL ${urls.length}건:`);
 urls.forEach(u => console.log('   ' + u));
+console.log('채널별 처리 결과:', results);
+if (!live) console.log('※ 실게시하려면: 호스팅(PUBLIC_DIR/BASE) 연결 + JPEG 배포 라이브 확인 후 --publish');
+if (live && channels.some(channel => channel !== 'ig')) {
+  console.warn('※ 카페·밴드는 게시글 파일만 생성합니다. 외부 채널 자동 게시는 수행하지 않습니다.');
+}
+if (failed) process.exit(1);

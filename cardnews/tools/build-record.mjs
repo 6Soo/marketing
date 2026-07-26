@@ -22,7 +22,7 @@ const meta = series.meta;
 let caption = '';
 const capPath = join(dir, '캡션.md');
 if (existsSync(capPath)) {
-  const m = readFileSync(capPath, 'utf8').split(/\n---\n/);
+  const m = readFileSync(capPath, 'utf8').split(/\r?\n---\r?\n/);
   if (m[1]) caption = m[1].trim();
 }
 
@@ -70,8 +70,8 @@ const html = `<title>${meta.series} ${meta.number} ${meta.episode} — 인스타
     <p class="eyebrow">숲길따라 감성여행 · Instagram — ${meta.series} ${meta.number}</p>
     <h1>${meta.episode} — 여행지 소개판</h1>
     <p class="brief"><b>제0원칙 + 훅 독트린 적용.</b> 표지는 "구체적 대상 + 숨긴 결론"(궁금증 갭)으로 세우고,
-    본문 사실은 전부 출처 검증(series/sanriku/사실-검증.md — 독립 반박 검증 오류 0건). 상품 연결은 마지막
-    한 줄과 캡션·프로필 링크만 담당합니다. 표지는 3안 중 1안을 골라 게시합니다.</p>
+    본문 사실은 전부 출처 검증(series/sanriku/사실-검증.md — 독립 반박 검증 오류 0건). 상품 연결은
+    캡션·프로필 링크만 담당합니다. 마지막 장은 저장할 수 있는 핵심 요약으로 구성했습니다.</p>
     <p class="note">실게시 PNG(1080×1350)는 cardnews/out/${basename(dir)}/ — 렌더는
     <b>node cardnews/tools/render.mjs cardnews/series/${basename(dir)}</b>. 사진은 전부 Pexels 분위기
     대역(photos/${basename(dir)}/출처.md) — 모객글·대장 실사진 확보 시 교체 1순위.</p>
@@ -84,8 +84,9 @@ ${cols}
     <div style="background:var(--bg2);border:1px solid var(--line);padding:18px 20px;font-size:.92rem;line-height:1.75;white-space:pre-wrap;">${caption}</div>
   </section>` : ''}
   <footer class="foot">
-    <p><b>게시 전 확인</b> — ① 표지 1안 선택(A 추천). ② 사진 전부 Pexels 대역이므로 실사진 확보 시 교체
-    (검색어·출처: photos/${basename(dir)}/출처.md). ③ 사실 검증은 완료(사실-검증.md), 캡션 링크에 ?from=insta 표식.</p>
+    <p><b>게시 전 확인</b> — ① 사진 전부 Pexels 대역이므로 실사진 확보 시 교체
+    (검색어·출처: photos/${basename(dir)}/출처.md). ② 사실 검증은 완료(사실-검증.md).
+    ③ 프로필 링크는 https://foresttour.kr.</p>
   </footer>
 </div>
 `;

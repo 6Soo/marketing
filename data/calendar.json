@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "channels": {
+    "instagram": { "frequency": "3-5/week", "time": "20:00", "timezone": "Asia/Seoul" },
+    "cafe": { "frequency": "1-2/week", "time": "10:00", "timezone": "Asia/Seoul" },
+    "band": { "frequency": "mon,wed,fri-sun", "time": "09:00", "timezone": "Asia/Seoul" }
+  },
+  "queue": [],
+  "history": []
+}

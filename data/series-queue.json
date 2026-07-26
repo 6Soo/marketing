@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "queue": [],
+  "completed": [],
+  "coursebooks": [
+    { "file": "coursebooks/코스북-사도가섬.md", "status": "pending", "priority": null },
+    { "file": "coursebooks/코스북-산리쿠-1편.md", "status": "in-progress", "priority": 1 },
+    { "file": "coursebooks/코스북-산티아고전-파티마.md", "status": "pending", "priority": null },
+    { "file": "coursebooks/코스북-산티아고후-땅끝휴식.md", "status": "pending", "priority": null },
+    { "file": "coursebooks/코스북-아리산.md", "status": "pending", "priority": null },
+    { "file": "coursebooks/코스북-이야계곡.md", "status": "pending", "priority": null }
+  ]
+}

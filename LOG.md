@@ -42,4 +42,76 @@
 
 ### 부트스트랩 (세션 이동 시)
 - `.env` (리포 루트): `IG_USER_ID`, `IG_ACCESS_TOKEN`, `PUBLIC_BASE_URL`, `PUBLIC_DIR`, `GEMINI_API_KEY`, `PEXELS_API_KEY`.
-- 실행 도구: `cardnews/tools/daily-publish.mjs`, `cardnews/tools/render.mjs`, `tools/gen-image.mjs`, `tools/instagram-publish.mjs`.
+- 실행 도구: `cardnews/tools/daily-publish.mjs`, `cardnews/tools/render.mjs`, `tools/instagram-publish.mjs`.
+
+### 2026-07-26 직접 검토 정정
+
+- 7/25 로컬 수동 실게시 성공 기록은 유효하지만, GitHub Actions의 공개 JPEG 배포 단계는 아직
+  연결되지 않았으므로 예약 자동 게시 상태는 아님.
+- 생성형 AI 이미지를 실제 여행지 사진의 1순위로 쓰는 경로는 회사 비주얼 계약과 충돌해 렌더러에서 제외.
+- 산리쿠 현행 사진은 Pexels 분위기 대역이므로 `photoStatus: placeholder`로 표시하고 재게시 차단.
+
+### 함정·비자명 사실
+- **JPEG-only** — render는 PNG라 반드시 변환. 이미지 URL은 **공개**여야 하고 발행 **전에** 라이브.
+- 사장 폰(삼성 인앱 웹뷰)에서 **Artifact/HTML 첨부가 스피너로 안 뜸** → 완성 HTML은 PNG로 구워 전달(foresttour CLAUDE.md의 `tools/render-png.py` 흐름).
+- 캐러셀에 음악은 API로 못 붙임(릴스만) — 음악 원하는 소재는 별도 릴스(build-reel.mjs).
+
+### 로컬 도구
+
+- `npm i`(sharp 등), Chromium(렌더 — /opt/pw-browsers 없으면 `npx playwright install chromium`).
+- 클라우드 세션: 명령 앞 `NODE_USE_ENV_PROXY=1`.
+
+---
+
+## 2026-07-26 세션 핸드오프 — 인스타그램 전체 검토·카드뉴스 개선
+
+### 이번 세션에 한 일
+
+- `나만 몰랐던 일본 002 — 산리쿠` 카드뉴스 디자인 개선:
+  - 표지·내지의 타이포 위계, 안전여백, 스크림, 인덱스 라인 정리.
+  - 종이 카드에 필드노트 가로선·붉은 세로선 추가.
+  - 마지막 장을 CTA 문구에서 `산리쿠 핵심 5장면` 저장형 요약으로 전환.
+  - 표지 3개 후보를 확정안 1개로 정리하고 문구의 정차 과장을 완화.
+  - 9장 PNG와 기록용 HTML 재렌더 완료.
+- 캡션을 장소 이야기 → 여행 방식 → 저장 → 프로필 확인 순서로 전면 수정.
+  프로필 링크 규칙을 `https://foresttour.kr`로 바로잡고 해시태그를 7개로 축소.
+- 자동 게시 안전성 개선:
+  - `캡션.md`의 검토 메모가 아니라 `---` 사이 게시 본문만 추출.
+  - 캐러셀 자식·부모 컨테이너가 준비될 때까지 기다린 후 게시.
+  - 현지 사진 미검증(`photoStatus !== verified`)이면 실게시 차단.
+  - Windows Chrome/Edge에서도 로컬 PNG 렌더 가능.
+- 전체 진단·우선순위 문서:
+  `strategy/인스타그램-전체-검토-개선-0726.md`.
+
+### 검증
+
+- 관련 `.mjs` 전부 구문 검사 통과.
+- 1080×1350 PNG 9장 렌더 및 표지·2장·9장 육안 검수 완료.
+- 자동 게시 드라이런 성공: 9장 순서와 캡션 본문만 전달되는 것 확인.
+- 대역 사진 상태에서 실게시 명령이 종료 코드 1로 차단되는 것 확인.
+- `git diff --check` 통과.
+
+### 게시 전 미결
+
+1. 산리쿠 Pexels 분위기 대역 9장을 실제 현지 촬영 원본으로 교체.
+2. 교체·출처 확인 후 `cards.mjs`의 `meta.photoStatus`를 `verified`로 변경.
+3. 공개 JPEG 호스팅 단계와 IG 계정 시크릿 연결.
+4. `.github/workflows/loop-workflows.yml` 초안의 토큰 평문 로그·아티팩트 문제를 해결하기 전 활성화 금지.
+5. 로컬에는 JPEG 변환기(`sharp`)가 설치돼 있지 않음. PNG 렌더는 완료됐고 CI는 의존성 설치 후 변환 가능.
+
+### 주의
+
+- 세션 시작 전부터 자동화·멀티채널 관련 수정/신규 파일이 다수 존재해 이번 변경을 별도 커밋하지 않음.
+  특히 `daily-cardnews.yml`, `daily-publish.mjs`, `data/`, 루프 도구는 기존 작업과 섞여 있으므로
+  커밋 전 소유자 검토가 필요함.
+
+### 2026-07-26 커밋 전 직접 검토 보완
+
+- 별도 Git 저장소인 `bus/`는 marketing 커밋에서 제외하도록 `.gitignore`에 등록.
+- 공개 호스팅·실계정 검증 전 자동 스케줄과 Actions의 자동 커밋·푸시를 중단하고 수동 실행으로 제한.
+- 갱신 토큰을 로그·평문 아티팩트로 남기던 보조 워크플로 초안 제거.
+- 실제 동작 없이 성공으로 기록하던 루프 엔진과 가짜 이미지를 만들 수 있던 사진 소싱·AI 사실검증
+  프로토타입은 커밋 대상에서 제거.
+- 카페·밴드 변환기가 존재하지 않는 `card.text`를 읽어 빈 글을 만들던 문제와 `--output` 경로
+  처리 오류 수정. 두 도구는 외부 자동 게시기가 아니라 게시용 파일 생성기임을 명확히 함.
+- Insights 드라이런의 가상 성과값을 제거하고, 분석기는 실측값이 없으면 추정하지 않도록 교체.
