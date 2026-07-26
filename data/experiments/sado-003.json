@@ -13,7 +13,10 @@
     "saves",
     "shares",
     "profileVisits",
-    "follows"
+    "follows",
+    "postsTotal",
+    "followersTotal",
+    "followingTotal"
   ],
   "foresttourMetrics": [
     "story_sado_visit",

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "experiment": "sado-003",
+  "checkpoint": "pre",
+  "source": "instagram-ui",
+  "observedAt": "2026-07-26T18:48:47.663Z",
+  "metrics": {
+    "postsTotal": 3,
+    "followersTotal": 0,
+    "followingTotal": 0
+  }
+}

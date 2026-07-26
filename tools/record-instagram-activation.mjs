@@ -12,6 +12,9 @@ const METRICS = [
   'shares',
   'profileVisits',
   'follows',
+  'postsTotal',
+  'followersTotal',
+  'followingTotal',
   'story_sado_visit',
   'story_sado_context',
   'story_sado_related',
@@ -87,7 +90,13 @@ export function buildCheckpoint({
 export function activationStatus(records) {
   const permalink = records.find((record) => record.publishedPermalink)?.publishedPermalink;
   const latest = {};
-  for (const record of records) {
+  const checkpointOrder = { pre: -1, '0h': 0, '24h': 24, '72h': 72, '7d': 168 };
+  const orderedRecords = [...records].sort((a, b) => {
+    const phaseDifference =
+      (checkpointOrder[a.checkpoint] ?? 0) - (checkpointOrder[b.checkpoint] ?? 0);
+    return phaseDifference || (a.observedAt ?? '').localeCompare(b.observedAt ?? '');
+  });
+  for (const record of orderedRecords) {
     for (const [name, value] of Object.entries(record.metrics ?? {})) latest[name] = value;
   }
   const organicInteraction =
