@@ -82,7 +82,12 @@ jobs:
           echo "checkpoint=${CHECKPOINT}" >> "${GITHUB_OUTPUT}"
 
       - name: Refuse silent checkpoint miss
-        if: ${{ steps.due.outputs.checkpoint != '' && vars.ACTIVATION_COLLECT_ENABLED != 'true' }}
+        if: >-
+          ${{
+            steps.due.outputs.checkpoint != ''
+            && vars.ACTIVATION_COLLECT_ENABLED != 'true'
+            && inputs.instagram_snapshot_path == ''
+          }}
         shell: bash
         run: |
           {
