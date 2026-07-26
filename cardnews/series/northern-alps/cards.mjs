@@ -1,0 +1,102 @@
+// 나만 몰랐던 일본 · 004 — 북알프스 편
+// 검증된 현지 사진 8장: Wikimedia Commons CC BY 원본.
+// 출처·라이선스·고정 리비전·해시: cardnews/photos/northern-alps/출처.md
+
+export default {
+  meta: {
+    series: '나만 몰랐던 일본',
+    number: '004',
+    episode: '북알프스 편',
+    tag: '#나만몰랐던일본',
+    hookFormula: 'open-question',
+    watermark: '숲길따라 감성여행',
+    photoStatus: 'verified',
+    photoNote: '다테야마·구로베·가미코치·히라유 현지 Commons 원본이며 장소·저작자·CC BY 라이선스·SHA-256을 확인했습니다.',
+    landing: {
+      profileUrl: 'https://foresttour.kr/',
+      storyPath: '/stories/northern-alps',
+      sources: {
+        carousel: 'insta-carousel-northern-alps',
+        story: 'insta-story-northern-alps',
+        reel: 'insta-reel-northern-alps',
+      },
+      connectedTour: {
+        productId: 'fNod',
+        requiredTitleTerms: ['알펜루트', '가미코지', '노리쿠라'],
+        policy: 'reservation-api-runtime-fail-closed',
+      },
+    },
+  },
+  cards: [
+    {
+      id: 'cover-a',
+      kind: 'cover',
+      title: '북알프스는<br>꼭 정상에 올라야만 볼 수 있을까?',
+      sub: '정상보다 먼저 열리는 길 · 다테야마에서 가미코치까지',
+      photo: 'cardnews/photos/northern-alps/01-kappa-bridge.jpg',
+    },
+    {
+      id: '02-mikurigaike',
+      kind: 'pc',
+      eye: '무로도 — 해발 2,450m',
+      title: '걷기는 15분부터<br>시작할 수 있습니다',
+      body: '무로도 터미널 옥상 출구에서<br>미쿠리가이케 포토스폿까지 약 15분.<br>정상 대신 호숫가에 서도<br>다테야마 능선이 물 위에 열립니다.',
+      hand: '— 다음 기록: 산을 교통으로 건너는 길',
+      photo: 'cardnews/photos/northern-alps/02-mikurigaike.jpg',
+    },
+    {
+      id: '03-ropeway',
+      kind: 'pc',
+      eye: '다테야마 구로베 알펜루트',
+      title: '산을 오르는 대신<br>교통을 갈아탑니다',
+      body: '다테야마역과 오기사와 사이에는<br>자동차가 들어갈 수 없습니다.<br>버스와 케이블카, 로프웨이를 갈아타며<br>고도 2,000m의 변화를 건넙니다.',
+      hand: '— 다음 기록: 한 창에 세 계절이 겹치는 곳',
+      photo: 'cardnews/photos/northern-alps/03-ropeway.jpg',
+    },
+    {
+      id: '04-three-seasons',
+      kind: 'pc',
+      eye: '다이칸보 — 구름 위 테라스',
+      title: '단풍은 올려다보는 대신<br>내려다봅니다',
+      body: '산 중턱의 절벽 위에 놓인 전망대.<br>발아래에는 구로베호가 펼쳐지고,<br>가을이면 호수를 둘러싼 산의 색이<br>높이 차를 따라 내려갑니다.',
+      hand: '— 다음 기록: 산속에 세운 186m의 벽',
+      photo: 'cardnews/photos/northern-alps/04-daikanbo-autumn.jpg',
+    },
+    {
+      id: '05-kurobe-dam',
+      kind: 'pc',
+      eye: '구로베댐 — 높이 186m',
+      title: '산의 물이 모인 곳을<br>걸어서 건넙니다',
+      body: '일본에서 가장 높은 댐의 꼭대기에는<br>사람이 건너는 길이 놓여 있습니다.<br>아래를 내려다보는 대신,<br>호수와 능선을 천천히 이어 봅니다.',
+      hand: '— 다음 기록: 강을 따라 걷는 북알프스',
+      photo: 'cardnews/photos/northern-alps/04-kurobe-dam.jpg',
+    },
+    {
+      id: '06-kamikochi',
+      kind: 'pc',
+      eye: '가미코치 — 아즈사가와',
+      title: '정상 대신<br>강을 따라 걷습니다',
+      body: '해발 1,500m의 계곡에서<br>아즈사가와와 호타카 연봉을 나란히 봅니다.<br>난도가 높지 않은 강변 코스도 있어<br>풍경이 걷는 속도를 정합니다.',
+      hand: '— 다음 기록: 능선 밖에 놓인 쉼표',
+      photo: 'cardnews/photos/northern-alps/06-azusa-river.jpg',
+    },
+    {
+      id: '07-hirayu',
+      kind: 'pc',
+      eye: '히라유 — 산과 온천 사이',
+      title: '폭포와 온천은<br>능선 밖의 쉼표입니다',
+      body: '가미코치와 노리쿠라로 갈라지는 산자락.<br>숲 안쪽에는 히라유 폭포가 흐르고,<br>고개를 넘기 전후의 몸은<br>온천 마을에서 속도를 늦춥니다.',
+      hand: '— 여섯 장면을 한 장에 모았습니다',
+      photo: 'cardnews/photos/northern-alps/07-hirayu-falls.jpg',
+    },
+    {
+      id: '08-outro',
+      kind: 'pc',
+      stamp: '004<br>북알프스',
+      eye: 'NORTHERN ALPS FIELD NOTE — SAVE 01',
+      title: '북알프스를 기억할<br>다섯 가지 단서',
+      body: '01 · 해발 2,450m의 미쿠리가이케<br>02 · 교통으로 건너는 알펜루트<br>03 · 단풍을 내려다보는 다이칸보<br>04 · 꼭대기를 걷는 186m 구로베댐<br>05 · 강변의 속도로 만나는 가미코치',
+      photo: 'cardnews/photos/northern-alps/09-trees-autumn.jpg',
+    },
+  ],
+};

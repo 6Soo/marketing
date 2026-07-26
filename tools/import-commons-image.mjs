@@ -34,9 +34,12 @@ const api = new URL('https://commons.wikimedia.org/w/api.php');
 api.searchParams.set('action', 'query');
 api.searchParams.set('format', 'json');
 api.searchParams.set('formatversion', '2');
-api.searchParams.set('prop', 'imageinfo');
+api.searchParams.set('prop', 'imageinfo|revisions|categories');
 api.searchParams.set('iiprop', 'url|size|mime|sha1|extmetadata');
 api.searchParams.set('iiurlwidth', String(requestedWidth));
+api.searchParams.set('rvprop', 'ids|timestamp');
+api.searchParams.set('rvlimit', '1');
+api.searchParams.set('cllimit', 'max');
 api.searchParams.set('titles', title);
 
 const response = await fetch(api, {
@@ -52,7 +55,7 @@ if (!page || page.missing || !info?.url) throw new Error(`Commons 파일을 찾�
 
 const metadata = info.extmetadata || {};
 const license = metadata.LicenseShortName?.value || '';
-const allowed = /^(Public domain|CC0|CC BY(?:-SA)?(?: \d(?:\.\d)?)?)$/i.test(license);
+const allowed = /^(Public domain|CC0|CC BY(?: \d(?:\.\d)?)?)$/i.test(license);
 if (!allowed) {
   throw new Error(`자동 허용 목록에 없는 라이선스입니다: ${license || '미표기'}`);
 }
@@ -87,13 +90,32 @@ const stripHtml = (value = '') =>
     .trim();
 
 const output = resolve(outputArg);
+const revision = page.revisions?.[0];
+const revisionUrl = revision?.revid
+  ? `https://commons.wikimedia.org/w/index.php?title=${encodeURIComponent(page.title)}&oldid=${revision.revid}`
+  : null;
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, bytes);
 writeFileSync(`${output}.source.json`, `${JSON.stringify({
   commonsTitle: page.title,
   descriptionPage: info.descriptionurl,
+  revisionId: revision?.revid || null,
+  revisionTimestamp: revision?.timestamp || null,
+  revisionUrl,
   originalUrl: info.url,
   downloadUrl,
+  description: stripHtml(
+    metadata.ImageDescription?.value
+    || metadata.ObjectName?.value
+    || metadata.Categories?.value,
+  ),
+  categories: (page.categories || []).map((category) =>
+    String(category.title || '').replace(/^Category:/, '')
+  ),
+  gps: {
+    latitude: metadata.GPSLatitude?.value || null,
+    longitude: metadata.GPSLongitude?.value || null,
+  },
   author: stripHtml(metadata.Artist?.value),
   credit: stripHtml(metadata.Credit?.value),
   license,
@@ -108,6 +130,9 @@ writeFileSync(`${output}.source.json`, `${JSON.stringify({
   height: info.thumbheight || info.height,
   commonsSha1: info.sha1,
   sha256,
+  importModification: info.thumburl
+    ? `Wikimedia Commons가 원본을 ${info.thumbwidth}×${info.thumbheight} 썸네일로 축소`
+    : '원본 바이트 그대로 저장',
 }, null, 2)}\n`, 'utf8');
 
 console.log(`✓ Commons 원본 저장: ${output}`);
