@@ -114,3 +114,17 @@ jobs:
           set -o pipefail
           node tools/instagram-activation-report.mjs \
             --experiment="${EXPERIMENT}" | tee -a "${GITHUB_STEP_SUMMARY}"
+
+  learn:
+    if: ${{ always() }}
+    needs: [discover, checkpoint-status]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Compare experiments and recommend next actions
+        run: node tools/instagram-activation-learn.mjs | tee -a "${GITHUB_STEP_SUMMARY}"
