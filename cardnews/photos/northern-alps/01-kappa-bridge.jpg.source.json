@@ -33,9 +33,9 @@
   "mime": "image/jpeg",
   "originalWidth": 6000,
   "originalHeight": 4000,
-  "width": 2400,
-  "height": 1600,
+  "width": 3840,
+  "height": 2560,
   "commonsSha1": "d978fb4285f125cddd95270731ee27ecd717a52d",
   "sha256": "0460d5dd0a1ebe28fea40c5630d0914280bee5378a0aea25f7344a8af21aaefc",
-  "importModification": "Wikimedia Commons가 원본을 2400×1600 썸네일로 축소"
+  "importModification": "Wikimedia Commons가 원본을 3840×2560 썸네일로 축소"
 }

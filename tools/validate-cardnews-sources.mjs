@@ -34,6 +34,38 @@ const isJpeg = (bytes) =>
   && bytes[bytes.length - 2] === 0xff
   && bytes[bytes.length - 1] === 0xd9;
 
+function jpegDimensions(bytes) {
+  const startOfFrame = new Set([
+    0xc0, 0xc1, 0xc2, 0xc3,
+    0xc5, 0xc6, 0xc7,
+    0xc9, 0xca, 0xcb,
+    0xcd, 0xce, 0xcf,
+  ]);
+  let offset = 2;
+  while (offset + 8 < bytes.length) {
+    if (bytes[offset] !== 0xff) {
+      offset += 1;
+      continue;
+    }
+    while (bytes[offset] === 0xff) offset += 1;
+    const marker = bytes[offset];
+    offset += 1;
+    if (marker === 0xd8 || marker === 0xd9) continue;
+    if (marker === 0xda) break;
+    if (offset + 2 > bytes.length) break;
+    const segmentLength = bytes.readUInt16BE(offset);
+    if (segmentLength < 2 || offset + segmentLength > bytes.length) break;
+    if (startOfFrame.has(marker)) {
+      return {
+        height: bytes.readUInt16BE(offset + 3),
+        width: bytes.readUInt16BE(offset + 5),
+      };
+    }
+    offset += segmentLength;
+  }
+  return null;
+}
+
 for (const photo of photos) {
   const local = resolve(repo, photo);
   const sourceFile = `${local}.source.json`;
@@ -60,6 +92,17 @@ for (const photo of photos) {
   }
   if (source.width < 1080 || source.height < 1067) {
     throw new Error(`게시 크기가 부족합니다: ${photo} · ${source.width}×${source.height}`);
+  }
+  const dimensions = jpegDimensions(bytes);
+  if (!dimensions) {
+    throw new Error(`JPEG 픽셀 크기를 읽지 못했습니다: ${photo}`);
+  }
+  if (dimensions.width !== source.width || dimensions.height !== source.height) {
+    throw new Error(
+      `JPEG 픽셀 크기가 출처 기록과 다릅니다: ${photo}`
+      + ` · 실제 ${dimensions.width}×${dimensions.height}`
+      + ` · 기록 ${source.width}×${source.height}`,
+    );
   }
   if (digest(bytes) !== source.sha256) {
     throw new Error(`SHA-256이 출처 기록과 다릅니다: ${photo}`);
