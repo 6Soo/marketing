@@ -16,8 +16,8 @@
 //        [--audio-name="숲길 필드노트"] [--publish]
 //   (클라우드 세션 프록시 환경에서는 NODE_USE_ENV_PROXY=1 접두)
 
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // 기본은 2024-07 신설 "Instagram API with Instagram Login" — 페이스북 페이지 연결이 필요 없다.
@@ -62,6 +62,39 @@ async function call(path, params) {
   return json;
 }
 
+function normalizeCaption(value) {
+  return value.replace(/\r\n/g, '\n').trim();
+}
+
+async function assertNotDuplicateCaption(caption) {
+  if (!live) return;
+  const normalized = normalizeCaption(caption);
+  if (!normalized) {
+    throw new Error('실게시 차단: 캡션이 비어 있습니다.');
+  }
+
+  const query = new URLSearchParams({
+    fields: 'id,caption,timestamp',
+    limit: '100',
+    access_token: TOKEN,
+  });
+  const res = await fetch(`${BASE}/${IG_USER}/media?${query}`);
+  const json = await res.json();
+  if (!res.ok || json.error || !Array.isArray(json.data)) {
+    throw new Error(`중복 게시 검사 실패: ${JSON.stringify(json.error || { status: res.status })}`);
+  }
+
+  const duplicate = json.data.find(media =>
+    typeof media.caption === 'string' && normalizeCaption(media.caption) === normalized
+  );
+  if (duplicate) {
+    throw new Error(
+      `중복 게시 차단: 동일한 캡션의 기존 게시물(media_id=${duplicate.id}, timestamp=${duplicate.timestamp || '미상'})이 있습니다.`
+    );
+  }
+  console.log(`✓ 중복 게시 검사 통과(최근 ${json.data.length}건)`);
+}
+
 async function waitReady(containerId) {
   if (!live) { console.log(`[드라이런] GET ${BASE}/${containerId}?fields=status_code (FINISHED까지 10초 간격 폴링)`); return; }
   for (let i = 0; i < 60; i++) { // 최대 10분
@@ -79,6 +112,7 @@ const caption = opt('caption-file') ? readFileSync(opt('caption-file'), 'utf8').
 if (cmd === 'carousel') {
   const urls = (opt('images', '') || '').split(',').filter(Boolean);
   if (urls.length < 2 || urls.length > 10) { console.error('캐러셀은 이미지 2~10장(--images=URL,URL,...)'); process.exit(1); }
+  await assertNotDuplicateCaption(caption);
   const children = [];
   for (const u of urls) {
     const item = await call(`${IG_USER || '<IG_USER_ID>'}/media`, { image_url: u, is_carousel_item: 'true' });
@@ -94,6 +128,7 @@ if (cmd === 'carousel') {
 } else if (cmd === 'reel') {
   const video = opt('video');
   if (!video) { console.error('--video=<공개 URL> 필요'); process.exit(1); }
+  await assertNotDuplicateCaption(caption);
   const params = {
     media_type: 'REELS', video_url: video, caption,
     share_to_feed: flag('no-feed') ? 'false' : 'true',
@@ -107,10 +142,17 @@ if (cmd === 'carousel') {
 } else if (cmd === 'refresh-token') {
   // 장기 토큰은 60일 유효 — 만료 전(발급 24시간 후부터) 이 커맨드로 갱신하면 다시 60일.
   if (!TOKEN) { console.error('IG_ACCESS_TOKEN이 없습니다.'); process.exit(1); }
+  const outputFile = opt('output-file');
+  if (!outputFile) {
+    console.error('토큰 노출 방지를 위해 --output-file=<비공개 경로>가 필요합니다. 새 토큰은 표준 출력에 표시하지 않습니다.');
+    process.exit(1);
+  }
   const res = await fetch(`https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${TOKEN}`);
   const json = await res.json();
   if (json.error) throw new Error(JSON.stringify(json.error));
-  console.log(`새 토큰(유효 ${Math.round(json.expires_in / 86400)}일) — .env의 IG_ACCESS_TOKEN을 교체하세요:\n${json.access_token}`);
+  const target = resolve(outputFile);
+  writeFileSync(target, `${json.access_token}\n`, { mode: 0o600, flag: 'wx' });
+  console.log(`✓ 새 토큰을 지정 파일에 저장했습니다(유효 ${Math.round(json.expires_in / 86400)}일). 표준 출력에는 노출하지 않았습니다.`);
 } else if (cmd === 'limit') {
   // 게시 한도: 24시간 이동 창 기준 100회.
   const res = await fetch(`${BASE}/${IG_USER}/content_publishing_limit?access_token=${TOKEN}`);

@@ -165,6 +165,28 @@ if (stageOnly) {
   process.exit(0);
 }
 
+// 로컬 직접 실행도 CI와 같은 불변식을 지킨다. 공개 JPEG가 실제로 준비되기 전에
+// Graph API 컨테이너를 만들면 실패하거나 재시도 과정에서 중복 게시 위험이 생긴다.
+if (live) {
+  if (!caption) {
+    console.error('실게시 차단: 캡션 게시 본문이 비어 있습니다.');
+    process.exit(1);
+  }
+  console.log('\n· 첫 공개 JPEG 접근 확인 …');
+  try {
+    const res = await fetch(urls[0], { redirect: 'follow' });
+    const contentType = res.headers.get('content-type') || '';
+    if (!res.ok || !contentType.toLowerCase().includes('image/jpeg')) {
+      throw new Error(`HTTP ${res.status}, content-type=${contentType || '없음'}`);
+    }
+    await res.body?.cancel();
+    console.log('✓ 첫 공개 JPEG 접근 확인 통과');
+  } catch (error) {
+    console.error(`실게시 차단: 첫 공개 JPEG를 확인하지 못했습니다(${error.message}).`);
+    process.exit(1);
+  }
+}
+
 // ── 5) 다채널 발행 위임 ──
 const results = { ig: 'skipped', cafe: 'skipped', band: 'skipped' };
 let failed = false;
