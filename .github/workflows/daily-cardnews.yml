@@ -10,9 +10,9 @@ name: 마케팅 루프 엔진 — 일일 사이클
 #   monthly-learn — 매월 1일 09:00 KST: 월간 전략 갱신 + 학습 문서 생성
 #
 # 실게시 전환(사장님-가이드 §인스타):
-#   1) Secrets: IG_USER_ID, IG_ACCESS_TOKEN, PUBLIC_BASE_URL, GEMINI_API_KEY
-#   2) Variables: IG_PUBLISH_ENABLED = true, LOOP_SENSE_ENABLED = true
-#   3) '② JPEG 공개 배포' 자리에 실제 배포 스텝 연결
+#   1) Secrets: IG_USER_ID, IG_ACCESS_TOKEN
+#   2) workflow_dispatch에서 step=publish, publish_live=true
+#   3) 사진이 검증 완료 상태인지 확인(대역 사진은 기본 차단)
 
 on:
   workflow_dispatch:
@@ -25,6 +25,11 @@ on:
         description: '시리즈 경로'
         required: false
         default: 'cardnews/series/sanriku'
+      publish_live:
+        description: 'Instagram API로 실제 게시'
+        required: true
+        type: boolean
+        default: false
 
 # 공개 JPEG 배포와 운영 계정 검증 전에는 예약 실행하지 않는다.
 # 준비 완료 후 schedule을 복구하고 각 단계의 실제 산출물을 먼저 3회 수동 검수한다.
@@ -32,6 +37,9 @@ on:
 concurrency:
   group: marketing-loop
   cancel-in-progress: false
+
+permissions:
+  contents: read
 
 env:
   SERIES_PATH: ${{ inputs.series || 'cardnews/series/sanriku' }}
@@ -68,6 +76,8 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' && (inputs.step == 'full' || inputs.step == 'publish')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -81,34 +91,97 @@ jobs:
       - name: Chromium 설치(headless 렌더용)
         run: npx --yes playwright install --with-deps chromium
 
-      # ① 렌더 + JPEG 변환 + 스테이징
-      - name: 렌더·변환 (드라이런 스모크)
+      - name: 실게시 안전조건 검사
+        if: ${{ inputs.publish_live == true }}
+        run: |
+          node cardnews/tools/daily-publish.mjs \
+            --series="${SERIES_PATH}" \
+            --validate-live
+
+      # ① 렌더 + JPEG 변환 + 공개 배포용 스테이징
+      - name: 렌더·JPEG 스테이징
         env:
           CHROME_BIN: ''
-          PUBLIC_DIR: ${{ github.workspace }}/_stage
-          PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
-        run: node cardnews/tools/daily-publish.mjs --series=${{ env.SERIES_PATH }}
+          PUBLIC_DIR: ${{ github.workspace }}/_stage/instagram/${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          node cardnews/tools/daily-publish.mjs \
+            --series="${SERIES_PATH}" \
+            --stamp="${{ github.run_id }}-${{ github.run_attempt }}" \
+            --stage-only
 
       - name: 스테이징 JPEG 아티팩트 업로드
         uses: actions/upload-artifact@v4
         with:
           name: cardnews-jpeg-${{ github.run_id }}
-          path: _stage/**/*.jpg
-          if-no-files-found: warn
+          path: _stage/instagram/
+          if-no-files-found: error
 
-      # ② JPEG 공개 배포 (인프라에 연결 — 실게시 전 필수)
-      #   _stage/*.jpg 를 PUBLIC_BASE_URL 로 라이브 서빙되게 올린다.
-      #   예) aws s3 sync _stage s3://버킷/ig
+      # ② 전용 브랜치에 JPEG 공개 배포. 고정 commit SHA URL이라 CDN 캐시 충돌이 없다.
+      - name: JPEG 공개 배포
+        if: ${{ inputs.publish_live == true }}
+        id: deploy_assets
+        env:
+          ASSET_DIR: ${{ github.workspace }}/_stage/instagram/${{ github.run_id }}-${{ github.run_attempt }}
+          ASSET_KEY: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          ASSET_WORKTREE="${RUNNER_TEMP}/instagram-assets"
+
+          if git ls-remote --exit-code origin refs/heads/instagram-assets >/dev/null 2>&1; then
+            git fetch origin instagram-assets
+            git worktree add -B instagram-assets "$ASSET_WORKTREE" origin/instagram-assets
+          else
+            git worktree add --detach "$ASSET_WORKTREE"
+            cd "$ASSET_WORKTREE"
+            git checkout --orphan instagram-assets
+            git rm -rf .
+            cd "$GITHUB_WORKSPACE"
+          fi
+
+          mkdir -p "$ASSET_WORKTREE/instagram/$ASSET_KEY"
+          cp "$ASSET_DIR"/*.jpg "$ASSET_WORKTREE/instagram/$ASSET_KEY/"
+
+          cd "$ASSET_WORKTREE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "instagram/$ASSET_KEY"
+          git commit -m "assets: Instagram ${ASSET_KEY}"
+          git push origin HEAD:instagram-assets
+
+          ASSET_SHA="$(git rev-parse HEAD)"
+          PUBLIC_BASE_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${ASSET_SHA}/instagram/${ASSET_KEY}"
+          echo "asset_sha=$ASSET_SHA" >> "$GITHUB_OUTPUT"
+          echo "public_base_url=$PUBLIC_BASE_URL" >> "$GITHUB_OUTPUT"
+
+      - name: 공개 JPEG 접근 확인
+        if: ${{ inputs.publish_live == true }}
+        env:
+          PUBLIC_BASE_URL: ${{ steps.deploy_assets.outputs.public_base_url }}
+          ASSET_DIR: ${{ github.workspace }}/_stage/instagram/${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          FIRST_FILE="$(find "$ASSET_DIR" -maxdepth 1 -type f -name '*.jpg' -printf '%f\n' | sort | head -n 1)"
+          test -n "$FIRST_FILE"
+          curl --fail --silent --show-error \
+            --retry 12 --retry-delay 5 --retry-all-errors \
+            --output /dev/null \
+            "${PUBLIC_BASE_URL}/${FIRST_FILE}"
 
       # ③ 인스타 발행 (캐러셀)
       - name: 인스타 발행
-        if: ${{ vars.IG_PUBLISH_ENABLED == 'true' }}
+        if: ${{ inputs.publish_live == true }}
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-          PUBLIC_DIR: ${{ github.workspace }}/_stage
-          PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
-        run: node cardnews/tools/daily-publish.mjs --series=${{ env.SERIES_PATH }} --skip-render --publish --channels=ig
+          PUBLIC_DIR: ${{ github.workspace }}/_stage/instagram/${{ github.run_id }}-${{ github.run_attempt }}
+          PUBLIC_BASE_URL: ${{ steps.deploy_assets.outputs.public_base_url }}
+        run: |
+          node cardnews/tools/daily-publish.mjs \
+            --series="${SERIES_PATH}" \
+            --stamp="${{ github.run_id }}-${{ github.run_attempt }}" \
+            --skip-render \
+            --publish \
+            --channels=ig
 
       # ④ 카페/밴드용 콘텐츠 생성 (반자동 — 결과를 아티팩트로 저장)
       - name: 카페 게시글 생성

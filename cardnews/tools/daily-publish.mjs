@@ -17,6 +17,7 @@
 //   node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku
 //   node cardnews/tools/daily-publish.mjs --series=cardnews/series/sanriku --cover=cover-a --publish
 //   옵션: --cover=<표지 카드 id>(기본 첫 cover) · --skip-render(기존 out/ 재사용) · --stamp=YYYYMMDD
+//         --stage-only(PUBLIC_DIR에 JPEG·캡션·manifest만 준비) · --validate-live(실게시 안전조건만 검사)
 //   (클라우드/CI 프록시 환경에서는 NODE_USE_ENV_PROXY=1 접두)
 
 import { readFileSync, existsSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
@@ -31,6 +32,8 @@ const opt = (name, dflt) => args.find(a => a.startsWith(`--${name}=`))?.split('=
 const flag = name => args.includes(`--${name}`);
 const channels = opt('channels', 'ig').split(',');
 const live = flag('publish');
+const stageOnly = flag('stage-only');
+const validateLive = flag('validate-live');
 
 function env(name) {
   if (process.env[name]) return process.env[name];
@@ -53,15 +56,9 @@ const stamp = opt('stamp', new Date().toISOString().slice(0, 10).replace(/-/g, '
 const seriesName = basename(seriesDir);
 const outDir = join(REPO, 'cardnews', 'out', seriesName);
 
-// 실게시엔 공개 호스팅 설정이 필수(드라이런은 없어도 흐름만 보여줌)
-if (live && (!publicDir || !publicBase)) {
-  console.error('실게시(--publish)에는 PUBLIC_DIR·PUBLIC_BASE_URL이 필요합니다(변환 JPEG를 공개 URL로 올려야 함).');
-  process.exit(1);
-}
-
 // ── 1) 발행 카드 순서 결정(표지 1장 + 내지 전부, 최대 10장) ──
 const { default: series } = await import(pathToFileURL(join(seriesDir, 'cards.mjs')));
-if (live && series.meta?.photoStatus !== 'verified' && !flag('allow-placeholder')) {
+if ((live || validateLive) && series.meta?.photoStatus !== 'verified' && !flag('allow-placeholder')) {
   console.error(`실게시 차단: 사진 상태가 '${series.meta?.photoStatus || '미표기'}'입니다.`);
   console.error(series.meta?.photoNote || '현지 실사진과 출처를 확인한 뒤 meta.photoStatus를 verified로 바꾸세요.');
   process.exit(1);
@@ -77,6 +74,21 @@ if (order.length > 10) {
 }
 console.log(`시리즈: ${series.meta.series} ${series.meta.number} — ${series.meta.episode}`);
 console.log(`게시 카드 ${order.length}장: ${order.map(c => c.id).join(' → ')} (표지=${cover.id})`);
+
+if (validateLive) {
+  console.log('✓ 실게시 안전조건 검사 통과');
+  process.exit(0);
+}
+
+// 실게시엔 공개 호스팅 설정이 필수. stage-only는 공개 배포 전 로컬 스테이징이라 PUBLIC_DIR만 필요.
+if (live && (!publicDir || !publicBase)) {
+  console.error('실게시(--publish)에는 PUBLIC_DIR·PUBLIC_BASE_URL이 필요합니다(변환 JPEG를 공개 URL로 올려야 함).');
+  process.exit(1);
+}
+if (stageOnly && !publicDir) {
+  console.error('스테이징(--stage-only)에는 PUBLIC_DIR이 필요합니다.');
+  process.exit(1);
+}
 
 // ── 2) 렌더(PNG). --skip-render면 기존 out/ 재사용 ──
 if (!flag('skip-render')) {
@@ -103,9 +115,10 @@ async function toJpeg(srcPng, destJpg) {
   return null;
 }
 
-const stageDir = live ? publicDir : join(REPO, 'cardnews', 'out', '_publish', stamp);
+const stageDir = (live || stageOnly) ? publicDir : join(REPO, 'cardnews', 'out', '_publish', stamp);
 mkdirSync(stageDir, { recursive: true });
 const urls = [];
+const files = [];
 let converter = null;
 for (const card of order) {
   const src = join(outDir, `${card.id}.png`);
@@ -114,9 +127,10 @@ for (const card of order) {
   const dst = join(stageDir, fname);
   const how = await toJpeg(src, dst);
   if (!how) {
-    if (live) { console.error('JPEG 변환기가 없습니다 — CI/서버에 `npm i sharp`(권장) 또는 ImageMagick/ffmpeg 설치 필요.'); process.exit(1); }
+    if (live || stageOnly) { console.error('JPEG 변환기가 없습니다 — CI/서버에 `npm i sharp`(권장) 또는 ImageMagick/ffmpeg 설치 필요.'); process.exit(1); }
     console.warn(`⚠ [드라이런] 변환기 없음 → ${fname} 변환 건너뜀(흐름만 표시). 실게시 전 sharp 설치 필요.`);
   } else { converter = how; }
+  files.push(fname);
   urls.push(publicBase ? `${publicBase}/${fname}` : `<PUBLIC_BASE_URL>/${fname}`);
 }
 if (converter) console.log(`· JPEG 변환 완료(${converter}) → ${stageDir}`);
@@ -136,6 +150,20 @@ for (const cand of ['캡션.md', 'caption.txt', 'caption.md']) {
 if (!caption) console.warn('⚠ 캡션 파일(캡션.md/caption.txt)이 없어 빈 캡션으로 진행합니다.');
 const capFile = join(stageDir, `_caption-${seriesName}.txt`);
 writeFileSync(capFile, caption);
+const manifestFile = join(stageDir, `_manifest-${seriesName}.json`);
+writeFileSync(manifestFile, JSON.stringify({
+  series: seriesName,
+  stamp,
+  photoStatus: series.meta?.photoStatus || 'unmarked',
+  files,
+  captionFile: basename(capFile),
+}, null, 2));
+
+if (stageOnly) {
+  console.log(`\n✓ 공개 배포용 스테이징 완료: ${stageDir}`);
+  console.log(`· manifest: ${manifestFile}`);
+  process.exit(0);
+}
 
 // ── 5) 다채널 발행 위임 ──
 const results = { ig: 'skipped', cafe: 'skipped', band: 'skipped' };

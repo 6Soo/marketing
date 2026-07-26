@@ -115,3 +115,17 @@
 - 카페·밴드 변환기가 존재하지 않는 `card.text`를 읽어 빈 글을 만들던 문제와 `--output` 경로
   처리 오류 수정. 두 도구는 외부 자동 게시기가 아니라 게시용 파일 생성기임을 명확히 함.
 - Insights 드라이런의 가상 성과값을 제거하고, 분석기는 실측값이 없으면 추정하지 않도록 교체.
+
+### 2026-07-26 자동 게시 파이프라인 정상화
+
+- Chrome 수동 게시를 운영 경로로 쓰지 않고 GitHub Actions 기반 자동 게시 경로를 완결함.
+- `daily-publish.mjs`에 `--validate-live`, `--stage-only`를 추가:
+  - 실게시 전 사진 검증 상태를 별도 검사.
+  - 공개 배포용 JPEG 9장·캡션·manifest를 지정 폴더에 준비.
+- `daily-cardnews.yml`의 비어 있던 공개 배포 단계를 연결:
+  - 전용 `instagram-assets` 브랜치에 실행별 JPEG 배포.
+  - 배포 커밋 SHA 기반 raw GitHub URL 생성.
+  - 첫 JPEG 공개 접근 성공 후에만 Instagram API 게시.
+- 운영 워크플로는 `photoStatus: verified`만 허용하며 대역 사진 우회 입력을 제공하지 않음.
+- 수동 실행 입력 `publish_live=false`가 기본값이라 명시적으로 켜야 실게시됨. 예약 실행은 아직 비활성.
+- 로컬 검증: 구문·YAML 파싱, 대역 사진 차단, 명시적 CLI 예외 검사, sharp JPEG 9장 스테이징 성공.
