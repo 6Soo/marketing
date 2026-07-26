@@ -261,3 +261,58 @@
   - 최종 콘텐츠 지문: `bb22508a3b6f990c43f23b805250413195aa78059069845b27a829730f47ecb7`
   - 출처 검증, Instagram 자동화 테스트 4건, `git diff --check` 통과.
 - 실제 Instagram 게시와 공개 랜딩 배포 결과는 다음 운영 체크포인트에 기록한다.
+
+---
+
+## 2026-07-27 세션 핸드오프 — Instagram 활성화 측정·Story 후속
+
+### 사용자 확정·공개 상태
+
+- 운영 계정은 `@foresttour.kr`이며 사도·북알프스 검증 사진 캐러셀을 공개했다.
+  - 사도: `https://www.instagram.com/p/DbRD-fWkyUL/`
+  - 북알프스: `https://www.instagram.com/p/DbRGuL5kwEU/`
+- 프로필 링크는
+  `https://foresttour.kr/?utm_source=ig&utm_medium=social&utm_content=link_in_bio`다.
+- 0h에서 확인 가능한 좋아요·댓글·저장·공유·프로필 방문·팔로우는 모두 0이었다.
+  조회수·도달은 화면에서 미산출 상태였으므로 기록하지 않았다.
+- 성공은 게시 링크만으로 판정하지 않는다. 소유자 외 유기적 반응과 Instagram 인앱 귀속
+  `story_*_visit`가 함께 확인돼야 초기 활성화 증거다.
+
+### 완료
+
+- Graph API 사전검사, 공개 자산 배포, 브라우저 폴백, 게시 결과→0h 기록,
+  0h/24h/72h/7d 보고·학습 체계를 구축했다.
+- 실제 프로필 bio 유입에 맞춰 `insta` 또는 `insta-*` + `instagram-app` + 여행지별 이벤트가
+  함께 일치할 때만 foresttour 방문을 귀속한다.
+- Instagram과 foresttour 수집을 독립 실행한다. 한쪽 성공 데이터는 보존하지만
+  `graph-api|instagram-ui` 그룹과 `foresttour-admin`이 모두 모여야 체크포인트가 완료된다.
+- 학습기도 완전한 체크포인트만 사용한다. 부분 수집으로 성과·순위·활성화를 추정하지 않는다.
+- 사도 1080×1920 Story 후속 자산과 manifest를 만들었다.
+  `cardnews/out/sado/story/01-discovery-link.jpg`
+- Story 게시 준비 게이트는 24h 실측, JPEG 규격, 링크, source, 이벤트, 환경을 검사한다.
+- 전용 GitHub Actions `Instagram Story follow-up package`는 게이트 통과 후
+  JPEG·manifest·모바일 링크 스티커 지침을 7일 아티팩트로 만든다.
+- 최신 테스트: 41개 통과. 비소유 `.omc/`와 `.codex-remote-attachments/`는 커밋하지 않는다.
+
+### 외부 연결·제약
+
+- GitHub secret에는 `IG_USER_ID`, `IG_ACCESS_TOKEN`만 있다.
+- `FORESTTOUR_ADMIN_KEY`와 `ACTIVATION_COLLECT_ENABLED`는 없다.
+- foresttour 운영 `/api/health`는 `adminKey: true`를 반환하므로 production에는 키가 있다.
+  단, 값을 문서·로그에 노출하거나 기존 값을 추정·복사하지 않는다.
+- Graph API는 `OAuthException code 200: API access blocked` 상태다.
+- Meta 공식 API는 Business Story 게시를 지원하지만 링크 스티커 파라미터는 문서화돼 있지 않다.
+  클릭 전환 Story는 모바일에서 링크 스티커를 추가한다.
+
+### 미완료·첫 실행 순서
+
+1. 사도 24h: `2026-07-27T18:47:02.033Z`, 북알프스 24h:
+   `2026-07-27T19:15:31.598Z` 이후 Instagram UI 수치를 확인해 각각 기록한다.
+2. 운영 ADMIN_KEY를 안전하게 재발급하거나 권한 있는 비밀 저장소에서 전달받아
+   GitHub secret `FORESTTOUR_ADMIN_KEY`로 설정한다. 값은 채팅·문서·로그에 쓰지 않는다.
+3. 두 데이터원이 준비된 뒤에만 repository variable `ACTIVATION_COLLECT_ENABLED=true`를 설정한다.
+4. `npm run activation:status -- --experiment=sado-003`에서 24h가 `recorded`인지 확인한다.
+5. `npm run story:ready -- --experiment=sado-003 --manifest=cardnews/out/sado/story/manifest.json --live-link`
+   통과 후 `Instagram Story follow-up package`를 실행한다.
+6. 모바일에서 `사도 이야기 이어보기` 링크 스티커를 추가해 Story를 게시하고,
+   이후 `story_sado_visit`을 같은 귀속 규칙으로 측정한다.
