@@ -72,7 +72,7 @@ test('게시·유기적 반응·Instagram 귀속 방문이 모두 있어야 초�
   const records = [
     {
       publishedPermalink: 'https://www.instagram.com/p/example/',
-      metrics: { likes: 1 },
+      metrics: { likes: 1, organicInteractions: 1 },
     },
     {
       metrics: { story_sado_visit: 1 },
@@ -83,6 +83,22 @@ test('게시·유기적 반응·Instagram 귀속 방문이 모두 있어야 초�
     activationStatus([{ publishedPermalink: records[0].publishedPermalink, metrics: {} }]).status,
     'collecting',
   );
+});
+
+test('좋아요 합계만으로 소유자 외 유기적 반응을 추정하지 않는다', () => {
+  const status = activationStatus([
+    {
+      checkpoint: '0h',
+      publishedPermalink: 'https://www.instagram.com/p/example/',
+      metrics: { likes: 10, comments: 2, saves: 1, shares: 1 },
+    },
+    {
+      checkpoint: '24h',
+      metrics: { story_sado_visit: 3 },
+    },
+  ]);
+  assert.equal(status.evidence.organicInteraction, false);
+  assert.equal(status.status, 'collecting');
 });
 
 test('하이픈을 포함한 새 여행지 퍼널 지표도 동일하게 기록·판정한다', () => {
@@ -104,7 +120,7 @@ test('하이픈을 포함한 새 여행지 퍼널 지표도 동일하게 기록�
     {
       checkpoint: '0h',
       publishedPermalink: 'https://www.instagram.com/p/example/',
-      metrics: { likes: 1 },
+      metrics: { likes: 1, organicInteractions: 1 },
     },
     record,
   ]);

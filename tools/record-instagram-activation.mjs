@@ -10,6 +10,7 @@ const INSTAGRAM_METRICS = new Set([
   'comments',
   'saves',
   'shares',
+  'organicInteractions',
   'profileVisits',
   'follows',
   'postsTotal',
@@ -102,8 +103,7 @@ export function activationStatus(records) {
   for (const record of orderedRecords) {
     for (const [name, value] of Object.entries(record.metrics ?? {})) latest[name] = value;
   }
-  const organicInteraction =
-    (latest.likes ?? 0) + (latest.comments ?? 0) + (latest.saves ?? 0) + (latest.shares ?? 0) > 0;
+  const organicInteraction = (latest.organicInteractions ?? 0) > 0;
   const instagramAttributedStoryVisit = Object.entries(latest).some(
     ([name, value]) => /^story_.+_visit$/.test(name) && value > 0,
   );

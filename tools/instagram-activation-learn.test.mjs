@@ -30,7 +30,13 @@ test('반응과 귀속 방문이 있는 측정 실험의 비율과 반복 권고
     {
       checkpoint: '24h',
       observedAt: '2026-07-27T18:00:00.000Z',
-      metrics: { reach: 100, likes: 4, saves: 2, story_sado_visit: 3 },
+      metrics: {
+        reach: 100,
+        likes: 4,
+        saves: 2,
+        organicInteractions: 6,
+        story_sado_visit: 3,
+      },
     },
   ]);
   assert.equal(result.dataState, 'measured');
