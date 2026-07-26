@@ -11,7 +11,7 @@ on:
     - cron: '15 */6 * * *'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: instagram-activation-checkpoints
@@ -31,6 +31,51 @@ jobs:
 
       - name: Verify activation tooling
         run: npm run test:instagram
+
+      - name: Determine due checkpoint
+        id: due
+        shell: bash
+        run: |
+          CHECKPOINT="$(
+            node tools/instagram-activation-report.mjs \
+              --experiment="${EXPERIMENT}" \
+              --json 2>/dev/null |
+              jq -r 'if .nextAction.action == "collect-now" then .nextAction.checkpoint else "" end'
+          )"
+          echo "checkpoint=${CHECKPOINT}" >> "${GITHUB_OUTPUT}"
+
+      - name: Collect Instagram Insights
+        if: ${{ vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: node tools/ig-insights.mjs collect --live
+
+      - name: Record due activation metrics
+        if: ${{ vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        env:
+          FORESTTOUR_ADMIN_KEY: ${{ secrets.FORESTTOUR_ADMIN_KEY }}
+        shell: bash
+        run: |
+          INSIGHTS_FILE="$(find data/insights -type f -name '*.json' -print | sort | tail -n 1)"
+          node tools/collect-instagram-activation-metrics.mjs \
+            --experiment="${EXPERIMENT}" \
+            --checkpoint="${{ steps.due.outputs.checkpoint }}" \
+            --instagram-file="${INSIGHTS_FILE}" \
+            --foresttour-live
+
+      - name: Persist collected checkpoint
+        if: ${{ vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "data/activation/${EXPERIMENT}"
+          git diff --cached --quiet && exit 0
+          git commit -m "data: record ${EXPERIMENT} ${{ steps.due.outputs.checkpoint }} checkpoint"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Report due checkpoints
         shell: bash

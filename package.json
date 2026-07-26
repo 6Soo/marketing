@@ -9,7 +9,7 @@
   "scripts": {
     "render": "node cardnews/tools/render.mjs",
     "daily-publish": "node cardnews/tools/daily-publish.mjs",
-    "test:instagram": "node --test tools/instagram-publish.test.mjs tools/record-instagram-activation.test.mjs tools/instagram-activation-report.test.mjs tools/ingest-instagram-publish-result.test.mjs",
+    "test:instagram": "node --test tools/instagram-publish.test.mjs tools/record-instagram-activation.test.mjs tools/instagram-activation-report.test.mjs tools/ingest-instagram-publish-result.test.mjs tools/collect-instagram-activation-metrics.test.mjs",
     "activation:status": "node tools/instagram-activation-report.mjs"
   }
 }

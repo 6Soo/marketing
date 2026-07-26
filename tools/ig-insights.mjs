@@ -121,7 +121,7 @@ export async function collectInsights(live = false) {
     accountData = await getAccountInsights(true);
     // 미디어 목록 조회
     const mediaUrl = graphUrl(`${IG_USER_ID}/media`, {
-      fields: 'id,caption,timestamp,media_type,like_count,comments_count',
+      fields: 'id,permalink,caption,timestamp,media_type,like_count,comments_count',
     });
     const mediaList = await fetchJson(mediaUrl);
 
