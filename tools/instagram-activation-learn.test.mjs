@@ -88,3 +88,16 @@ test('체크포인트와 학습 job은 workflow 시작 SHA가 아닌 최신 브�
   assert.match(checkpointJob, /ref: \$\{\{ github\.ref_name \}\}/);
   assert.match(learnJob, /ref: \$\{\{ github\.ref_name \}\}/);
 });
+
+test('도래한 체크포인트를 자동 수집 비활성 상태에서 조용히 성공 처리하지 않는다', () => {
+  const workflow = readFileSync(CHECKPOINT_WORKFLOW, 'utf8');
+  const guard = workflow.slice(
+    workflow.indexOf('name: Refuse silent checkpoint miss'),
+    workflow.indexOf('name: Collect Instagram Insights'),
+  );
+  const report = workflow.slice(workflow.indexOf('name: Report due checkpoints'));
+  assert.match(guard, /steps\.due\.outputs\.checkpoint != ''/);
+  assert.match(guard, /ACTIVATION_COLLECT_ENABLED != 'true'/);
+  assert.match(guard, /exit 1/);
+  assert.match(report, /if: \$\{\{ always\(\) \}\}/);
+});
