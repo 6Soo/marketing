@@ -195,3 +195,18 @@
 3. `publish_live=false`로 아티팩트 1회 생성·검수 후, 사람 승인 하에 첫 `instagram-assets` 배포와
    공개 JPEG GET을 확인.
 4. 같은 훅으로 `evidence-v2` 캐러셀과 12~18초 Trial Reel을 짝지어 4주 원자료 수집.
+
+---
+
+## 2026-07-26 데스크톱 이전 핸드오프 — 렌더러 WIP 보존
+
+- 노트북 CPU/RAM 포화로 사용자가 새 실질 작업 중단과 데스크톱 이전을 지시했다.
+- 최우선 인계서는 `docs/CODEX_DESKTOP_MIGRATION_HANDOFF_2026-07-26.md`.
+- 원격 완료 커밋: `27531297f67669c24be7fcb381a408ab296a4aae`,
+  브랜치 `codex/instagram-evidence-safety`.
+- Windows Edge가 PNG 생성 뒤 종료하지 않는 문제를 위한 비동기 캡처 실행기와 회귀 테스트는 WIP다.
+- 첫 새 테스트는 fixture 최소 바이트 조건 불일치로 실패하고 프로세스가 남아, 직접 시작한 Node PID
+  `2776`, `18508`, `25556`만 종료했다. 이후 수정은 CPU/RAM 이전 지시로 재테스트하지 않았다.
+- 현재 WIP 파일·실제 자동화 상태·미완료·데스크톱 첫 5개 명령은 위 인계서에 무손실 기록했다.
+- 실제 Instagram 게시 없음. 사용자 Edge·다른 작업 프로세스는 건드리지 않았고 첨부파일·비밀정보·
+  생성 PNG는 커밋 대상에서 제외한다.

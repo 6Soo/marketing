@@ -1,5 +1,5 @@
 // 카드뉴스 렌더러 — 시리즈 데이터(cards.mjs) → 1080×1350 PNG (인스타 실게시 실물).
-// 비주얼은 template.mjs가 기준본(나만몰랐던일본-001-히다.html) CSS를 그대로 사용한다.
+// 비주얼은 template.mjs의 현행 디자인 시스템(evidence-v2)을 사용한다.
 //
 // 사용:
 //   node cardnews/tools/render.mjs cardnews/series/sanriku            # PNG 전 장
@@ -8,11 +8,11 @@
 // 산출물 전달 규칙: 이미지형 산출물은 PDF로 묶지 말고 PNG 원본을 직접 전달(사장 지적 2026-07-21).
 
 import { writeFileSync, mkdirSync, readdirSync, existsSync, rmSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
 import { join, resolve, basename } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { tmpdir } from 'node:os';
 import { cardHTML } from './template.mjs';
+import { captureScreenshot } from './chrome-capture.mjs';
 
 function findChrome() {
   if (process.env.CHROME_BIN && existsSync(process.env.CHROME_BIN)) return process.env.CHROME_BIN;
@@ -88,10 +88,13 @@ for (const card of series.cards.filter(c => !only || c.id === only)) {
     ? { ...card, photoUrl: pathToFileURL(resolve(repoRoot, card.photo)).href }
     : card;
   const htmlPath = join(work, `${card.id}.html`);
+  const screenshotPath = join(outDir, card.id + '.png');
   writeFileSync(htmlPath, cardHTML(series.meta, c, page, total));
-  execFileSync(chrome, ['--headless', '--no-sandbox', '--disable-gpu', '--hide-scrollbars',
+  const result = await captureScreenshot(chrome, [
+    '--headless', '--no-sandbox', '--disable-gpu', '--hide-scrollbars',
+    '--disable-background-networking', '--no-first-run',
     '--force-device-scale-factor=1', '--disable-dev-shm-usage',
-    `--screenshot=${join(outDir, card.id + '.png')}`, '--window-size=1080,1350', htmlPath],
-    { stdio: 'pipe' });
-  console.log(`✓ ${card.id}.png`);
+    `--screenshot=${screenshotPath}`, '--window-size=1080,1350', htmlPath,
+  ], screenshotPath);
+  console.log(`✓ ${card.id}.png (${result.width}×${result.height}, ${Math.round(result.bytes / 1024)}KB${result.forcedShutdown ? ', 지연 프로세스 정리' : ''})`);
 }
