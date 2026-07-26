@@ -58,7 +58,7 @@ const outDir = join(REPO, 'cardnews', 'out', seriesName);
 
 // ── 1) 발행 카드 순서 결정(표지 1장 + 내지 전부, 최대 10장) ──
 const { default: series } = await import(pathToFileURL(join(seriesDir, 'cards.mjs')));
-if ((live || validateLive) && series.meta?.photoStatus !== 'verified' && !flag('allow-placeholder')) {
+if ((live || validateLive) && series.meta?.photoStatus !== 'verified') {
   console.error(`실게시 차단: 사진 상태가 '${series.meta?.photoStatus || '미표기'}'입니다.`);
   console.error(series.meta?.photoNote || '현지 실사진과 출처를 확인한 뒤 meta.photoStatus를 verified로 바꾸세요.');
   process.exit(1);

@@ -15,6 +15,16 @@ export default {
     watermark: '숲길따라 감성여행',
     photoStatus: 'placeholder',
     photoNote: 'Pexels 분위기 대역입니다. 산리쿠 현지 촬영 원본으로 교체 전에는 게시할 수 없습니다.',
+    landing: {
+      profileUrl: 'https://foresttour.kr/',
+      storyPath: '/stories/sanriku',
+      sources: {
+        carousel: 'insta-carousel-sanriku',
+        story: 'insta-story-sanriku',
+        reel: 'insta-reel-sanriku',
+      },
+      connectedTour: null,
+    },
   },
   cards: [
     // ── 표지 확정안 ────────────────────────────────────────────────
