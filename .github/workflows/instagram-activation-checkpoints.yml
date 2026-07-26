@@ -1,0 +1,40 @@
+name: Instagram activation checkpoints
+
+on:
+  workflow_dispatch:
+    inputs:
+      experiment:
+        description: Experiment ID
+        required: true
+        default: sado-003
+  schedule:
+    - cron: '15 */6 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: instagram-activation-checkpoints
+  cancel-in-progress: true
+
+jobs:
+  checkpoint-status:
+    runs-on: ubuntu-latest
+    env:
+      EXPERIMENT: ${{ inputs.experiment || 'sado-003' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify activation tooling
+        run: npm run test:instagram
+
+      - name: Report due checkpoints
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/instagram-activation-report.mjs \
+            --experiment="${EXPERIMENT}" | tee -a "${GITHUB_STEP_SUMMARY}"
