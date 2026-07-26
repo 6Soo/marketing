@@ -258,9 +258,51 @@
 - `validate-cardnews-sources.mjs`가 JPEG SOF 픽셀 크기와 출처 JSON을 직접 대조하도록
   강화해 동일한 기록 오류가 다시 통과하지 않게 했다.
 - 8장 1080×1350 PNG 재렌더와 게시용 JPEG 변환·드라이런을 완료했다.
-  - 최종 콘텐츠 지문: `bb22508a3b6f990c43f23b805250413195aa78059069845b27a829730f47ecb7`
+  - 최종 UI 업로드 스테이징 지문: `0c7fc1e8567aed024f4a097f8cfc3134be2b7b5904b4fb1c3a1203f2377e6c1d`
   - 출처 검증, Instagram 자동화 테스트 4건, `git diff --check` 통과.
-- 실제 Instagram 게시와 공개 랜딩 배포 결과는 다음 운영 체크포인트에 기록한다.
+- 실제 Instagram 게시와 공개 랜딩 배포 결과는 아래 운영 체크포인트에 기록한다.
+
+---
+
+## 2026-07-27 — 북알프스 004 실게시·공개 퍼널 운영 체크포인트
+
+- Instagram 공식 웹 UI로 `foresttour.kr` 계정에 8장 4:5 캐러셀을 게시했다.
+  - 최종 퍼머링크: `https://www.instagram.com/p/DbRGuL5kwEU/`
+  - 0h 관측 시각: `2026-07-26T19:15:31.598Z` (`2026-07-27 04:15:31 KST`)
+  - 캡션 569자와 8장 전체 순서를 실게시 화면에서 확인했다.
+  - 첫 장의 `나만 몰랐던 일본 · 004`, 마지막 장의 `여섯 가지 단서`,
+    `06 · 11월 눈의 히라유`, 서로 다른 해·계절 사진 고지를 확인했다.
+  - 게시 직후 프로필은 북알프스 1건을 포함한 총 5건이며, 팔로워·팔로우는
+    화면에 실제 표시된 값인 0·0으로만 기록했다.
+- 첫 UI 게시 `DbRFfObk56K`는 이전 캐시 스테이징의 마지막 장이
+  `다섯 가지 단서`로 남은 것을 실게시 8장 전수 검사에서 발견했다.
+  수정 렌더를 새로 스테이징해 위 최종 게시물을 먼저 검증한 뒤,
+  잘못된 중복 게시를 삭제하고 프로필 5건·최종 퍼머링크 존속을 재확인했다.
+- `data/activation/northern-alps-004/`에 퍼머링크와 0h 관측값을 저장했다.
+  아직 소유자 외 반응과 Instagram 귀속 스토리 방문은 관측되지 않아
+  활성화 상태는 추정 없이 `collecting`으로 유지한다.
+- GitHub Actions 실게시 자격증명 `IG_USER_ID`, `IG_ACCESS_TOKEN`을 저장소
+  Secrets에 값 노출 없이 등록했다.
+  - 라이브 검증 실행: `https://github.com/6Soo/marketing/actions/runs/30216370194`
+  - 안전조건, 8장 렌더, JPEG 아티팩트, 공개 자산 배포,
+    HTTP/MIME/JPEG/SHA 검증은 모두 통과했다.
+  - 공개 자산 커밋: `7c6f315828284a5dcaa15c5ff5c60d647b18e895`
+  - CI 공개 자산 콘텐츠 지문:
+    `67c2ee3c3f16ac77cb8da30656bdc4a41078d9e1c844c393a912e4e6520a1106`
+  - Meta Graph API는 자격증명을 정상 수신한 뒤
+    `OAuthException code 200: API access blocked`로 앱 접근 자체를 거부했다.
+    토큰은 로그에서 마스킹됐고 API 게시·중복 게시 모두 발생하지 않았다.
+    따라서 목표에 정의한 로그인된 공식 웹 UI 대체 경로를 사용했다.
+- foresttour 공개 퍼널을 실환경에서 확인했다.
+  - 스토리: `https://foresttour.kr/stories/northern-alps`
+  - 프로필 링크는 UTM을 보존한 foresttour 홈으로 연결되고,
+    홈의 북알프스 발견 카드가 동일한 스토리 맥락으로 이어진다.
+  - 정확한 활성 상품 `fNod`가 런타임에서 검증될 때만
+    `https://reserve.foresttour.kr/tour/fNod?from=insta` CTA가 표시된다.
+  - API 오류·지연·불일치에서는 CTA가 fail-closed로 숨겨짐을 확인했다.
+  - Vercel production 배포 `dpl_96otr4Y6fTjRD5QfQ7CyUoUtigpB`가 READY이며,
+    모바일 390×844에서 canonical·메타데이터·8개 출처 링크·Norikura 문맥·
+    홈 발견 카드·CTA·가로 넘침 없음·콘솔 오류 없음까지 확인했다.
 
 ---
 
