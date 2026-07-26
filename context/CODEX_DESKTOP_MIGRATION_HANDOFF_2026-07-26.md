@@ -137,3 +137,14 @@
 ## 8. 첨부파일
 
 - Git에 넣지 못하는 사용자 첨부파일은 이번 작업에 없다. SHA-256 대상도 없다.
+
+## 9. 노트북 종료 시 최종 보존 상태
+
+- marketing: `codex/cafe-desktop-handoff-20260726`,
+  HEAD `d5eb8f693ea672f07b2b9fa3fc5eccd20675c478`, 원격 차이 `0/0`, clean.
+- reservation: `codex/cafe-desktop-handoff-20260726`,
+  HEAD `dd0cf8471238fc1f35d7761c68a180c918153478`, 원격 차이 `0/0`, clean.
+- foresttour: 다른 작업이 `codex/desktop-migration-2026-07-26`,
+  HEAD `28c9c947cbf1058eaec5e4cc0658502227fa24ba`로 전환·푸시했다.
+  현재 작업의 `docs/사장님-가이드.md`와 신규회원 파일 3개는 미커밋이며,
+  기존 사용자 문서 3개도 미추적 상태다. 혼합 방지를 위해 아무것도 stage하지 않았다.
