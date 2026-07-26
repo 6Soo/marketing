@@ -96,4 +96,6 @@ test('API 사전검사는 공개 자산 배포보다 먼저 실행되고 폴백 
   assert.ok(doctor < fallback && fallback < deploy);
   assert.ok(deploy < publish);
   assert.match(workflow.slice(fallback, deploy), /failure\(\)/);
+  assert.match(workflow, /preflight_only:/);
+  assert.match(workflow.slice(doctor, fallback), /preflight_only == true/);
 });

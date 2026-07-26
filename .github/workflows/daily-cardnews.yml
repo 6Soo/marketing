@@ -30,6 +30,11 @@ on:
         required: true
         type: boolean
         default: false
+      preflight_only:
+        description: '게시 없이 Instagram API 연결과 브라우저 폴백만 점검'
+        required: true
+        type: boolean
+        default: false
       experiment:
         description: '활성화 측정 실험 ID (실게시 시 필수)'
         required: false
@@ -96,7 +101,7 @@ jobs:
         run: npx --yes playwright install --with-deps chromium
 
       - name: 실게시 안전조건 검사
-        if: ${{ inputs.publish_live == true }}
+        if: ${{ inputs.publish_live == true || inputs.preflight_only == true }}
         run: |
           node cardnews/tools/daily-publish.mjs \
             --series="${SERIES_PATH}" \
@@ -122,14 +127,14 @@ jobs:
           if-no-files-found: error
 
       - name: Instagram API 연결 사전검사
-        if: ${{ inputs.publish_live == true }}
+        if: ${{ inputs.publish_live == true || inputs.preflight_only == true }}
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: node tools/instagram-publish.mjs doctor
 
       - name: API 실패 시 브라우저 폴백 안내
-        if: ${{ failure() && inputs.publish_live == true }}
+        if: ${{ failure() && (inputs.publish_live == true || inputs.preflight_only == true) }}
         shell: bash
         run: |
           {
