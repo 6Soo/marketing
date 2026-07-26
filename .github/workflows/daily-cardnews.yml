@@ -55,10 +55,10 @@ jobs:
       github.event_name == 'workflow_dispatch' && (inputs.step == 'full' || inputs.step == 'sense')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: 인스타 Insights 수집
         if: ${{ vars.LOOP_SENSE_ENABLED == 'true' }}
@@ -83,11 +83,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: JPEG 변환기(sharp) 설치
         run: npm install sharp
@@ -237,10 +237,10 @@ jobs:
       github.event_name == 'workflow_dispatch' && (inputs.step == 'full' || inputs.step == 'analyze')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: 주간 성과 분석
         env:
@@ -262,10 +262,10 @@ jobs:
       github.event_name == 'workflow_dispatch' && inputs.step == 'strategy'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: 월간 전략 갱신 + 학습 문서 생성
         env:
