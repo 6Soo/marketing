@@ -8,6 +8,10 @@
   "attributionEnvironment": "instagram-app",
   "hypothesis": "검증된 현지 사진으로 고산 풍경과 이동 동선을 연결하면 저장·공유와 foresttour 후속 읽기가 함께 발생한다.",
   "checkpoints": ["0h", "24h", "72h", "7d"],
+  "measurementSourceGroups": [
+    ["graph-api", "instagram-ui"],
+    ["foresttour-admin"]
+  ],
   "instagramMetrics": [
     "reach",
     "likes",

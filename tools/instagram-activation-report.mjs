@@ -28,14 +28,22 @@ export function buildActivationReport(experiment, records, now = new Date()) {
     if (hours === undefined) throw new Error(`지원하지 않는 체크포인트: ${checkpoint}`);
     const dueAt = new Date(publishedAt.valueOf() + hours * 60 * 60 * 1000);
     const observations = records.filter((record) => record.checkpoint === checkpoint);
-    const hasMetrics = observations.some(
+    const observationsWithMetrics = observations.filter(
       (record) => Object.keys(record.metrics ?? {}).length > 0,
     );
+    const requiredSourceGroups = checkpoint === '0h'
+      ? []
+      : experiment.measurementSourceGroups ?? [];
+    const missingSourceGroups = requiredSourceGroups.filter(
+      (group) => !observationsWithMetrics.some((record) => group.includes(record.source)),
+    );
+    const hasMetrics = observationsWithMetrics.length > 0 && missingSourceGroups.length === 0;
     return {
       checkpoint,
       dueAt: dueAt.toISOString(),
       state: hasMetrics ? 'recorded' : now >= dueAt ? 'due' : 'upcoming',
       observations: observations.length,
+      missingSourceGroups,
     };
   });
   const next = checkpoints.find((item) => item.state === 'due')
@@ -61,7 +69,9 @@ export function buildActivationReport(experiment, records, now = new Date()) {
 
 export function reportMarkdown(report) {
   const rows = report.checkpoints.map(
-    (item) => `| ${item.checkpoint} | ${item.dueAt} | ${item.state} | ${item.observations} |`,
+    (item) => `| ${item.checkpoint} | ${item.dueAt} | ${item.state} | ${item.observations} | ${
+      item.missingSourceGroups.map((group) => group.join(' or ')).join('; ') || '—'
+    } |`,
   );
   return [
     `# Instagram activation · ${report.experiment}`,
@@ -72,8 +82,8 @@ export function reportMarkdown(report) {
       ? `${report.nextAction.checkpoint} · ${report.nextAction.action} · ${report.nextAction.dueAt}`
       : 'complete'}`,
     '',
-    '| Checkpoint | Due (UTC) | State | Records |',
-    '| --- | --- | --- | ---: |',
+    '| Checkpoint | Due (UTC) | State | Records | Missing source groups |',
+    '| --- | --- | --- | ---: | --- |',
     ...rows,
     '',
   ].join('\n');

@@ -89,27 +89,78 @@ jobs:
           exit 1
 
       - name: Collect Instagram Insights
+        id: instagram_snapshot
         if: ${{ vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        continue-on-error: true
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: node tools/ig-insights.mjs collect --live
 
-      - name: Record due activation metrics
-        if: ${{ vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
-        env:
-          FORESTTOUR_ADMIN_KEY: ${{ secrets.FORESTTOUR_ADMIN_KEY }}
+      - name: Record Instagram activation metrics
+        id: instagram_record
+        if: >-
+          ${{
+            always()
+            && vars.ACTIVATION_COLLECT_ENABLED == 'true'
+            && steps.due.outputs.checkpoint != ''
+            && steps.instagram_snapshot.outcome == 'success'
+          }}
+        continue-on-error: true
         shell: bash
         run: |
           INSIGHTS_FILE="$(find data/insights -type f -name '*.json' -print | sort | tail -n 1)"
           node tools/collect-instagram-activation-metrics.mjs \
             --experiment="${EXPERIMENT}" \
             --checkpoint="${{ steps.due.outputs.checkpoint }}" \
-            --instagram-file="${INSIGHTS_FILE}" \
+            --instagram-file="${INSIGHTS_FILE}"
+
+      - name: Record foresttour activation metrics
+        id: foresttour_record
+        if: >-
+          ${{
+            always()
+            && vars.ACTIVATION_COLLECT_ENABLED == 'true'
+            && steps.due.outputs.checkpoint != ''
+          }}
+        continue-on-error: true
+        env:
+          FORESTTOUR_ADMIN_KEY: ${{ secrets.FORESTTOUR_ADMIN_KEY }}
+        shell: bash
+        run: |
+          if [[ -z "${FORESTTOUR_ADMIN_KEY}" ]]; then
+            echo "::warning::FORESTTOUR_ADMIN_KEY is not configured."
+            exit 1
+          fi
+          node tools/collect-instagram-activation-metrics.mjs \
+            --experiment="${EXPERIMENT}" \
+            --checkpoint="${{ steps.due.outputs.checkpoint }}" \
             --foresttour-live
 
+      - name: Require at least one collected source
+        if: ${{ always() && vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        shell: bash
+        run: |
+          if git diff --quiet -- "data/activation/${EXPERIMENT}"; then
+            {
+              echo "No activation source was collected for ${EXPERIMENT}."
+              echo "Instagram outcome: ${{ steps.instagram_record.outcome }}"
+              echo "foresttour outcome: ${{ steps.foresttour_record.outcome }}"
+            } | tee -a "${GITHUB_STEP_SUMMARY}"
+            exit 1
+          fi
+
       - name: Persist collected checkpoint
-        if: ${{ vars.ACTIVATION_COLLECT_ENABLED == 'true' && steps.due.outputs.checkpoint != '' }}
+        if: >-
+          ${{
+            always()
+            && vars.ACTIVATION_COLLECT_ENABLED == 'true'
+            && steps.due.outputs.checkpoint != ''
+            && (
+              steps.instagram_record.outcome == 'success'
+              || steps.foresttour_record.outcome == 'success'
+            )
+          }}
         shell: bash
         run: |
           set -euo pipefail

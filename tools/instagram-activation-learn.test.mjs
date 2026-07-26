@@ -109,6 +109,20 @@ test('도래한 체크포인트를 자동 수집 비활성 상태에서 조용�
   assert.match(report, /if: \$\{\{ always\(\) \}\}/);
 });
 
+test('Instagram과 foresttour 수집은 독립 실행되고 부분 성공 데이터도 보존한다', () => {
+  const workflow = readFileSync(CHECKPOINT_WORKFLOW, 'utf8');
+  const instagram = workflow.indexOf('name: Record Instagram activation metrics');
+  const foresttour = workflow.indexOf('name: Record foresttour activation metrics');
+  const atLeastOne = workflow.indexOf('name: Require at least one collected source');
+  const persist = workflow.indexOf('name: Persist collected checkpoint');
+  assert.ok(instagram >= 0 && instagram < foresttour && foresttour < atLeastOne && atLeastOne < persist);
+  assert.match(workflow.slice(instagram, foresttour), /continue-on-error: true/);
+  assert.match(workflow.slice(foresttour, atLeastOne), /continue-on-error: true/);
+  assert.match(workflow.slice(atLeastOne, persist), /git diff --quiet/);
+  assert.match(workflow.slice(persist), /instagram_record\.outcome == 'success'/);
+  assert.match(workflow.slice(persist), /foresttour_record\.outcome == 'success'/);
+});
+
 test('Story 전달 workflow는 측정 게이트를 통과한 뒤에만 모바일 패키지를 만든다', () => {
   const workflow = readFileSync(STORY_WORKFLOW, 'utf8');
   const gate = workflow.indexOf('name: Enforce measured Story publish gate');

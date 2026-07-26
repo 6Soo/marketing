@@ -5,6 +5,10 @@ import { buildActivationReport, reportMarkdown } from './instagram-activation-re
 const experiment = {
   id: 'sado-003',
   checkpoints: ['0h', '24h', '72h', '7d'],
+  measurementSourceGroups: [
+    ['graph-api', 'instagram-ui'],
+    ['foresttour-admin'],
+  ],
 };
 const published = {
   checkpoint: '0h',
@@ -39,6 +43,45 @@ test('체크포인트 파일만 있고 지표가 없으면 수집 완료로 보�
     new Date('2026-07-26T18:01:00.000Z'),
   );
   assert.equal(report.checkpoints[0].state, 'due');
+});
+
+test('24h는 Instagram과 foresttour 출처 그룹이 모두 있어야 기록 완료다', () => {
+  const instagramOnly = buildActivationReport(
+    experiment,
+    [
+      published,
+      {
+        checkpoint: '24h',
+        source: 'instagram-ui',
+        observedAt: '2026-07-27T18:01:00.000Z',
+        metrics: { reach: 3 },
+      },
+    ],
+    new Date('2026-07-27T19:00:00.000Z'),
+  );
+  assert.equal(instagramOnly.checkpoints[1].state, 'due');
+  assert.deepEqual(instagramOnly.checkpoints[1].missingSourceGroups, [['foresttour-admin']]);
+
+  const complete = buildActivationReport(
+    experiment,
+    [
+      published,
+      {
+        checkpoint: '24h',
+        source: 'instagram-ui',
+        observedAt: '2026-07-27T18:01:00.000Z',
+        metrics: { reach: 3 },
+      },
+      {
+        checkpoint: '24h',
+        source: 'foresttour-admin',
+        observedAt: '2026-07-27T18:02:00.000Z',
+        metrics: { story_sado_visit: 0 },
+      },
+    ],
+    new Date('2026-07-27T19:00:00.000Z'),
+  );
+  assert.equal(complete.checkpoints[1].state, 'recorded');
 });
 
 test('마크다운 보고서에 상태와 다음 행동을 포함한다', () => {
