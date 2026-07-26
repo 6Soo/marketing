@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       experiment:
-        description: Experiment ID
-        required: true
-        default: sado-003
+        description: 'Experiment ID (비우면 게시된 모든 실험)'
+        required: false
+        default: ''
   schedule:
     - cron: '15 */6 * * *'
 
@@ -18,10 +18,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  checkpoint-status:
+  discover:
     runs-on: ubuntu-latest
-    env:
-      EXPERIMENT: ${{ inputs.experiment || 'sado-003' }}
+    outputs:
+      experiments: ${{ steps.list.outputs.experiments }}
     steps:
       - uses: actions/checkout@v7
 
@@ -31,6 +31,37 @@ jobs:
 
       - name: Verify activation tooling
         run: npm run test:instagram
+
+      - name: Discover published experiments
+        id: list
+        shell: bash
+        env:
+          REQUESTED_EXPERIMENT: ${{ inputs.experiment }}
+        run: |
+          if [[ -n "${REQUESTED_EXPERIMENT}" ]]; then
+            EXPERIMENTS="$(node tools/list-instagram-activation-experiments.mjs \
+              --experiment="${REQUESTED_EXPERIMENT}" --json)"
+          else
+            EXPERIMENTS="$(node tools/list-instagram-activation-experiments.mjs --json)"
+          fi
+          echo "experiments=${EXPERIMENTS}" >> "${GITHUB_OUTPUT}"
+
+  checkpoint-status:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        experiment: ${{ fromJSON(needs.discover.outputs.experiments) }}
+    env:
+      EXPERIMENT: ${{ matrix.experiment }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
 
       - name: Determine due checkpoint
         id: due
