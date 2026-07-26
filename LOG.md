@@ -170,3 +170,36 @@
   `context/인스타그램-foresttour-콘텐츠-연결-규칙-2026-07-26.md`
 - reservation 로컬 체크포인트: `d9455e8`.
 - 외부 Instagram 캡션 수정·새 게시·사이트 배포·Git push는 수행하지 않았다.
+
+---
+
+## 2026-07-26 — 히다 Instagram ↔ foresttour 연결 사실 보정
+
+- 기준선:
+  - 히다 001은 이미 Instagram에 게시됐지만 로컬 원본에 `3박 4일`, `10월`,
+    `자세한 여행 일정과 출발일` 약속이 남아 있었다.
+  - 공개 예약 API 65건에는 히다·다카야마·시라카와고·게로와 정확히 연결되는 모집 일정이 없었다.
+  - 히다 사진은 생성형 AI 연출 자산인데 시리즈 메타와 출처 문서에 그 상태가 없었다.
+- 수정:
+  - `photoStatus: placeholder`와 AI 연출 고지를 추가하고, 실제 현지 촬영 원본으로
+    교체되기 전 새 게시·재게시를 차단하는 계약을 적용했다.
+  - foresttour 히다 slug와 프로필·캐러셀·스토리·릴스 source 값을 시리즈 메타에 고정했다.
+  - 카드와 캡션에서 확인되지 않은 `3박 4일·10월·출발일` 약속을 제거했다.
+  - 다카야마 보존지구, 시라카와고·고카야마의 지리 구분, 게로 온천,
+    히다규 인증 기준을 공식 자료에 맞춰 보정했다.
+  - 생성형 AI 자산 7개의 최초 커밋, 크기, SHA-256, 역할, 미보존 provenance를
+    `cardnews/photos/hida/출처.md`에 기록했다.
+  - 통합 연결 규칙에 히다 001 상태와 운영 링크를 추가했다.
+- 로컬 landing:
+  - canonical: `https://foresttour.kr/stories/hida`
+  - reservation 체크포인트: `a1b51a3`
+  - 공개 모집 일정: 없음, `connectedTour: null`
+- 검증:
+  - 히다 시리즈와 `daily-publish.mjs` 구문 검사 통과.
+  - `photoStatus`, landing path, 24자 이내 source, 일정 약속 제거, 게시용 캡션 추출 계약 통과.
+  - `--validate-live --allow-placeholder`도 exit 1로 실게시 차단됨.
+  - 임시 복제본에서 7장 1080×1350 렌더 성공, 제목·본문 잘림 없음.
+  - 임시 렌더는 삭제했고 기존 `cardnews/out/hida` 실게시 산출물은 수정하지 않았다.
+- 외부 경계:
+  - 기존 Instagram 게시물·캡션·프로필은 수정하지 않았다.
+  - 새 게시·재게시·원격 push·foresttour.kr 배포를 수행하지 않았다.
