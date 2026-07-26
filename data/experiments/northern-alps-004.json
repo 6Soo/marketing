@@ -4,6 +4,7 @@
   "destination": "북알프스",
   "landingUrl": "https://foresttour.kr/stories/northern-alps?from=insta-carousel-alps",
   "sourceCode": "insta-carousel-alps",
+  "attributionSourcePrefix": "insta",
   "attributionEnvironment": "instagram-app",
   "hypothesis": "검증된 현지 사진으로 고산 풍경과 이동 동선을 연결하면 저장·공유와 foresttour 후속 읽기가 함께 발생한다.",
   "checkpoints": ["0h", "24h", "72h", "7d"],
@@ -33,12 +34,12 @@
       "organicInteraction",
       "instagramAttributedStoryVisit"
     ],
-    "note": "도달 수만으로 성공으로 간주하지 않는다. 게시 영구링크, 소유자 외 반응 1건 이상, insta-carousel-alps 최초 유입의 story_northern-alps_visit 1건 이상이 함께 확인돼야 초기 활성화 증거로 판정한다."
+    "note": "도달 수만으로 성공으로 간주하지 않는다. 게시 영구링크, 소유자 외 반응 1건 이상, Instagram 인앱 최초 유입의 story_northern-alps_visit 1건 이상이 함께 확인돼야 초기 활성화 증거로 판정한다."
   },
   "guardrails": [
     "확인하지 않은 수치를 0으로 추정하지 않고 필드를 생략한다.",
     "화면·Graph API·foresttour 관리자 화면 중 실제 확인한 출처만 기록한다.",
-    "귀속 방문은 sourceCode와 instagram-app 환경이 함께 일치한 집계만 인정한다.",
+    "귀속 방문은 insta 계열 출처와 instagram-app 환경이 함께 일치한 여행지별 이벤트만 인정한다.",
     "개별 사용자의 이름·댓글 내용·연락처 등 개인정보를 저장하지 않는다.",
     "공개 모집 일정이 생기기 전 story_northern-alps_tour=0은 실패로 해석하지 않는다."
   ]

@@ -38,19 +38,20 @@ test('다른 게시물 지표를 대신 사용하지 않는다', () => {
 test('고유 sourceCode의 foresttour 퍼널만 합산하고 관측된 0을 보존한다', () => {
   const experiment = {
     sourceCode: 'insta-carousel-sado',
+    attributionSourcePrefix: 'insta',
     attributionEnvironment: 'instagram-app',
     foresttourMetrics: ['story_sado_visit', 'story_sado_context', 'story_sado_tour'],
   };
   const payload = {
     funnelRows: [
       {
-        source: 'insta-carousel-sado',
+        source: 'insta',
         event: 'story_sado_visit',
         environment: 'instagram-app',
         count: 2,
       },
       {
-        source: 'insta-carousel-sado',
+        source: 'insta-bio',
         event: 'story_sado_visit',
         environment: 'instagram-app',
         count: 1,
@@ -62,7 +63,7 @@ test('고유 sourceCode의 foresttour 퍼널만 합산하고 관측된 0을 보�
         count: 50,
       },
       {
-        source: 'insta',
+        source: 'band',
         event: 'story_sado_visit',
         environment: 'instagram-app',
         count: 99,

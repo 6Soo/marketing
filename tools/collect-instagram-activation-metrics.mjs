@@ -63,7 +63,14 @@ export function extractForesttourMetrics(payload, experiment) {
       event,
       payload.funnelRows
         .filter((row) =>
-          row.source === experiment.sourceCode
+          (
+            experiment.attributionSourcePrefix
+              ? (
+                  row.source === experiment.attributionSourcePrefix
+                  || row.source.startsWith(`${experiment.attributionSourcePrefix}-`)
+                )
+              : row.source === experiment.sourceCode
+          )
           && row.event === event
           && (
             !experiment.attributionEnvironment
