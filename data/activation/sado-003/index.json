@@ -31,5 +31,21 @@
       "followersTotal": 0,
       "followingTotal": 0
     }
+  },
+  {
+    "schemaVersion": 1,
+    "experiment": "sado-003",
+    "checkpoint": "0h",
+    "source": "instagram-ui",
+    "observedAt": "2026-07-26T19:35:32.040Z",
+    "metrics": {
+      "likes": 0,
+      "comments": 0,
+      "saves": 0,
+      "shares": 0,
+      "organicInteractions": 0,
+      "profileVisits": 0,
+      "follows": 0
+    }
   }
 ]
