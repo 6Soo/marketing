@@ -183,6 +183,15 @@ jobs:
             --publish \
             --channels=ig
 
+      - name: 게시 결과 아티팩트
+        if: ${{ inputs.publish_live == true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: instagram-publish-result-${{ github.run_id }}
+          path: _stage/instagram/${{ github.run_id }}-${{ github.run_attempt }}/_publish-result-*.json
+          if-no-files-found: error
+          retention-days: 90
+
       # ④ 카페/밴드용 콘텐츠 생성 (반자동 — 결과를 아티팩트로 저장)
       - name: 카페 게시글 생성
         env:

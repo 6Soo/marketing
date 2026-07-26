@@ -151,6 +151,7 @@ if (!caption) console.warn('⚠ 캡션 파일(캡션.md/caption.txt)이 없어 �
 const capFile = join(stageDir, `_caption-${seriesName}.txt`);
 writeFileSync(capFile, caption);
 const manifestFile = join(stageDir, `_manifest-${seriesName}.json`);
+const publishResultFile = join(stageDir, `_publish-result-${seriesName}.json`);
 writeFileSync(manifestFile, JSON.stringify({
   series: seriesName,
   stamp,
@@ -172,7 +173,7 @@ let failed = false;
 if (channels.includes('ig')) {
   console.log(`\n· 발행 위임 → instagram-publish.mjs carousel (${live ? '실게시' : '드라이런'})`);
   const pubArgs = ['carousel', `--images=${urls.join(',')}`, `--caption-file=${capFile}`];
-  if (live) pubArgs.push('--publish');
+  if (live) pubArgs.push('--publish', `--result-file=${publishResultFile}`);
   const pub = spawnSync('node', [join(REPO, 'tools', 'instagram-publish.mjs'), ...pubArgs],
     { stdio: 'inherit', env: process.env });
   if (pub.status !== 0) {
@@ -218,7 +219,16 @@ if (live) {
   const stateDir = join(REPO, 'data', 'loop-state');
   mkdirSync(stateDir, { recursive: true });
   const stateFile = join(stateDir, `${stamp}-${seriesName}.json`);
-  writeFileSync(stateFile, JSON.stringify({ series: seriesName, stamp, channels: results, live }, null, 2));
+  const publishResult = existsSync(publishResultFile)
+    ? JSON.parse(readFileSync(publishResultFile, 'utf8'))
+    : null;
+  writeFileSync(stateFile, JSON.stringify({
+    series: seriesName,
+    stamp,
+    channels: results,
+    live,
+    publishResult,
+  }, null, 2));
   console.log(`\n· 발행 상태 저장 완료: ${stateFile}`);
 }
 

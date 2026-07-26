@@ -8,6 +8,7 @@
   },
   "scripts": {
     "render": "node cardnews/tools/render.mjs",
-    "daily-publish": "node cardnews/tools/daily-publish.mjs"
+    "daily-publish": "node cardnews/tools/daily-publish.mjs",
+    "test:instagram": "node --test tools/instagram-publish.test.mjs"
   }
 }
