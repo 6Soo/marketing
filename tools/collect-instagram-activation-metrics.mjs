@@ -62,7 +62,13 @@ export function extractForesttourMetrics(payload, experiment) {
     experiment.foresttourMetrics.map((event) => [
       event,
       payload.funnelRows
-        .filter((row) => row.source === experiment.sourceCode && row.event === event)
+        .filter((row) =>
+          row.source === experiment.sourceCode
+          && row.event === event
+          && (
+            !experiment.attributionEnvironment
+            || row.environment === experiment.attributionEnvironment
+          ))
         .reduce((sum, row) => sum + Number(row.count || 0), 0),
     ]),
   );

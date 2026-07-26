@@ -4,6 +4,7 @@
   "destination": "사도",
   "landingUrl": "https://foresttour.kr/stories/sado?from=insta-carousel-sado",
   "sourceCode": "insta-carousel-sado",
+  "attributionEnvironment": "instagram-app",
   "hypothesis": "검증된 현지 사진으로 산업유산과 섬 생활을 연결하면 저장·공유와 foresttour 후속 읽기가 함께 발생한다.",
   "checkpoints": ["0h", "24h", "72h", "7d"],
   "instagramMetrics": [
@@ -37,6 +38,7 @@
   "guardrails": [
     "수치가 없으면 0으로 추정하지 않고 필드를 생략한다.",
     "화면·Graph API·foresttour 관리자 화면 중 실제 확인한 출처만 기록한다.",
+    "귀속 방문은 sourceCode와 instagram-app 환경이 함께 일치한 집계만 인정한다.",
     "개별 사용자 이름·댓글 내용·연락처 등 개인정보를 저장하지 않는다.",
     "공개 모집 일정이 생기기 전 story_sado_tour=0은 실패로 해석하지 않는다."
   ]
