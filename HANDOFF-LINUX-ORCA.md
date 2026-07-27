@@ -150,6 +150,22 @@ Instagram 카드뉴스 관리, Instagram 홍보, `foresttour.kr` 착륙 콘텐�
 - Linux 이전 전 이 detached 체인을 별도 보존 브랜치로 push한다.
 - 이 체인은 감사·복구용이며 §0의 최종 goal로 자동 재개하지 않는다.
 
+### orcastration
+
+- Windows 경로: `D:\OneDrive\문서\AX\orcastration`
+- 원격: `https://github.com/6Soo/orcastration`
+- 브랜치/HEAD: `codex/orca-agent-orchestrator` / `0f9dcde`
+- 기존 추적 수정 10개와 미추적 Linux handoff가 있으며 이 marketing 작업에서 stage하지 않았다.
+- 로컬 Linux Orca 인계서:
+  `LINUX_ORCA_MIGRATION_HANDOFF_2026-07-27.md`
+- SHA-256:
+  `8FA341DC91C2BAB5724EAB0752B81C39C7B3C5788C170853CAFBE1DF5FB8F623`
+- 이 파일에는 Windows 전용 `powershell.exe`, `Start-Process`, `%APPDATA%`, mutex,
+  Orca desktop runtime 의존성을 Linux process group/XDG 경로로 이식하는 계약과
+  중단 run 감사표가 있다.
+- orcastration dirty worktree는 다른 작업이므로 이 세션에서 커밋·푸시하지 않는다.
+  Linux로 옮길 때 해시를 대조해 별도 보존한다.
+
 ## 3. 잘못 복원된 카페 작업 범위 — 역사적 기록, 최종 goal 아님
 
 아래 범위는 다른 지시가 섞이면서 실행된 카페 작업이다. 결과와 체크포인트는 보존하지만,
@@ -447,9 +463,13 @@ gh variable list --repo 6Soo/marketing
 git clone https://github.com/6Soo/foresttour.git
 cd foresttour
 git fetch --all --prune
-git checkout codex/linux-agent-handoff-2026-07-27
+git checkout master
+git pull --ff-only
 git status --short --branch
 git log --oneline -8
+
+# 카페 오진 경로의 감사 기록이 필요할 때만 읽기 전용으로 확인
+git log --oneline codex/linux-agent-handoff-2026-07-27 -8
 ```
 
 읽기 순서:
@@ -458,8 +478,9 @@ git log --oneline -8
 2. `HANDOFF.md`
 3. `LOG.md`
 4. `docs/CODEX_DESKTOP_MIGRATION_HANDOFF_2026-07-26.md`
-5. `docs/ORCA_LINUX_HANDOFF_2026-07-27.md`
-6. 위 §4의 카페 검증 문서
+5. marketing의 `context/인스타그램-foresttour-콘텐츠-연결-규칙-2026-07-26.md`
+6. 카페 오진 경위를 감사해야 할 때만
+   `codex/linux-agent-handoff-2026-07-27`의 `docs/ORCA_LINUX_HANDOFF_2026-07-27.md`
 
 ## 11. Linux Orca 운영 규칙
 
@@ -472,7 +493,7 @@ git log --oneline -8
 - 사용량 일부가 없으면 “총 확인 가능 토큰”이라고만 표시한다.
 - hidden chain-of-thought는 노출하지 않고 공개용 rationale만 기록한다.
 
-기본 full workflow:
+Windows handoff 시점의 기본 full workflow 기록(실행 전 Linux `orchestrator.yaml`을 정본으로 재확인):
 
 - 설계: Claude Opus High
 - 설계 검증: GPT-5.6 Sol High
@@ -486,16 +507,19 @@ git log --oneline -8
 
 ## 12. Linux 첫 재개 순서
 
+아래는 사용자가 작업 재개를 지시한 뒤에만 실행한다.
+
 1. 두 저장소를 clone/fetch하고 Git 상태·원격 커밋을 확인한다.
 2. 이 문서와 각 저장소의 최신 LOG를 대조한다.
 3. 모든 기존 변경과 미추적 파일의 소유 범위를 먼저 확인한다.
-4. due 시간이 지났다면 Instagram UI 수치를 읽기 전용으로 수집하되,
-   외부 게시·수정은 새 승인 없이는 하지 않는다.
-5. secret 값 없이 가능한 상태·테스트만 검증한다.
-6. `FORESTTOUR_ADMIN_KEY`가 운영자에 의해 안전하게 등록된 후에만
-   수집 변수를 활성화한다.
-7. 카페 작업은 기존 메뉴·댓글·전화 습관 보존을 acceptance criterion으로 고정한다.
-8. 단위 작업마다 검증하고 체크포인트 커밋을 남긴다.
+4. §0과 §7-A를 active goal로 사용하고 BAND/카페 goal을 자동 복원하지 않는다.
+5. due 시간이 지났다면 Instagram UI 수치를 읽기 전용으로 수집한다.
+   현재 stop 상태에서는 외부 게시·수정을 실행하지 않는다.
+6. secret 값 없이 가능한 상태·테스트를 먼저 검증한다.
+7. `FORESTTOUR_ADMIN_KEY`는 운영자가 안전하게 등록한 사실만 확인하며 값을 읽거나 복사하지 않는다.
+8. 두 측정 source가 준비된 뒤에만 수집 변수를 활성화한다.
+9. 다음 편집 단위는 검증된 현지 사진·공식 사실·웹 landing·측정 계약을 함께 준비한다.
+10. 단위 작업마다 검증하고 체크포인트 커밋을 남긴다.
 
 ## 13. 하지 말아야 할 일
 
@@ -505,7 +529,8 @@ git log --oneline -8
 - Graph API 실패를 게시 성공으로 보고
 - 부분 체크포인트로 성과 추정
 - placeholder/AI/Pexels 대역 사진을 검증된 현지 사진처럼 새 게시
-- 카페 게시·쪽지·외부 전송·메뉴·권한 변경을 승인 없이 실행
+- BAND/카페 작업을 Instagram → foresttour.kr 최종 goal로 복원
+- Instagram 신규 방문자를 다음 카페 가입으로 우선 유도
 - browser automation 차단을 사이트 접속 장애로 오인
 - detached foresttour 체크포인트를 push 전에 잃어버림
 
