@@ -198,11 +198,11 @@ No cafe post, edit, deletion, pinned notice, comment, message, email, phone acti
 menu/board/join-question/permission change, upload, account/security/payment/PII change,
 or external transmission was performed.
 
-### Complete instruction chronology
+### Supplemental chronology of the mistaken cafe detour
 
-This chronology is included so a new Linux session does not need the original chat prompt.
+This chronology preserves the cafe detour without overriding the full-thread chronology in §0-A.
 
-1. The initial delegated task targeted `m.cafe.daum.net/sixsungwon`. It required reading each repository’s `AGENTS.md`, `CLAUDE.md`, `LOG.md`, and migration handoffs before acting; checking Git and remote branches; comparing the senior-friendly gradual cafe redesign, seven-day newcomer settling flow, and booking-conversion context; and validating newcomer guidance assets and the owner guide separately from concurrent work.
+1. A later, mistaken task restoration targeted `m.cafe.daum.net/sixsungwon`. It required reading each repository’s `AGENTS.md`, `CLAUDE.md`, `LOG.md`, and migration handoffs before acting; checking Git and remote branches; comparing the senior-friendly gradual cafe redesign, seven-day newcomer settling flow, and booking-conversion context; and validating newcomer guidance assets and the owner guide separately from concurrent work.
 2. Existing mobile-member behavior had to remain intact: current menu names, latest-post flow, comments, and telephone booking habits. Real cafe posts, messages, uploads, menu changes, board changes, permission decisions, or other external transmission were prohibited without explicit approval. Each local unit required validation and a checkpoint commit.
 3. After a system reboot, the user instructed the agent to inspect Git/worktree state non-destructively and resume.
 4. Automated browser control reported a URL-policy block. The user correctly objected that the site itself opened normally and supplied a screenshot. The correct conclusion is that human browser access worked while the automation surface was blocked; never describe the cafe as unavailable.
