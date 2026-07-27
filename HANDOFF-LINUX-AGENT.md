@@ -34,6 +34,60 @@ Goal status at stop: `blocked`, not complete. The repeated blocker is that `FORE
 - New authority, secret changes, public publishing, or external transmission require explicit user approval.
 - The user supplied a screenshot showing a failed “Instagram activation checkpoints” workflow: discovery failed, learning succeeded, checkpoint-status skipped. This led to the fail-closed and partial-source-preservation work described below.
 
+### Complete instruction chronology
+
+This chronology is included so a new Linux session does not need the original chat prompt.
+
+1. The initial delegated task targeted `m.cafe.daum.net/sixsungwon`. It required reading each repository’s `AGENTS.md`, `CLAUDE.md`, `LOG.md`, and migration handoffs before acting; checking Git and remote branches; comparing the senior-friendly gradual cafe redesign, seven-day newcomer settling flow, and booking-conversion context; and validating newcomer guidance assets and the owner guide separately from concurrent work.
+2. Existing mobile-member behavior had to remain intact: current menu names, latest-post flow, comments, and telephone booking habits. Real cafe posts, messages, uploads, menu changes, board changes, permission decisions, or other external transmission were prohibited without explicit approval. Each local unit required validation and a checkpoint commit.
+3. After a system reboot, the user instructed the agent to inspect Git/worktree state non-destructively and resume.
+4. Automated browser control reported a URL-policy block. The user correctly objected that the site itself opened normally and supplied a screenshot. The correct conclusion is that human browser access worked while the automation surface was blocked; never describe the cafe as unavailable.
+5. The user asked to resume work in parallel, then superseded that request by ordering all work stopped and requesting a Linux migration handoff and Git push. The stop instruction remains authoritative until the user explicitly resumes.
+6. The user’s latest instruction requires all implementation-runtime-specific material to be removed from documentation. The handoff therefore preserves business context, evidence, Git recovery, and safety boundaries without preserving those runtime instructions.
+
+### Cafe screenshot and read-only evidence
+
+- User-provided URL: `https://m.cafe.daum.net/sixsungwon`
+- Screenshot URL: `https://m.cafe.daum.net/sixsungwon/_rec`
+- Cafe name: `숲길따라 감성여행`
+- Visible tabs: `게시판`, `최신글`, `이미지`
+- A `가입하기` button, current latest-post list, and comment counts were visible.
+- The banner displayed “지금 가장 인기 있는 여행지는 어디일까요?” and an “인기글 보기” route.
+- The screenshot demonstrates that the mobile cafe opened successfully in the user’s browser.
+- No bypass, raw browser-control workaround, cafe mutation, comment, message, or upload was performed.
+
+### Cafe-local artifacts preserved in foresttour
+
+The audit branch `codex/linux-agent-handoff-2026-07-27` preserves these commits:
+
+- `da9eaa9` — newcomer guidance asset validation
+- `6a8b8ce` — owner-guide operating-safety validation
+- `9d8208c` — seven-day newcomer onboarding pre-publication draft
+- `78373ee` — mobile cafe read-only audit block record
+- `a3f8112` — initial Linux migration handoff checkpoint
+
+Relevant documents on that branch:
+
+- `docs/카페-신규회원-안내자산-선별검증-2026-07-26.md`
+- `docs/카페-사장님가이드-운영안전-선별검증-2026-07-26.md`
+- `docs/카페-신규회원-7일안착-게시전초안-2026-07-26.md`
+- `docs/카페-모바일-읽기전용점검-차단기록-2026-07-26.md`
+- `docs/LINUX_AGENT_HANDOFF_2026-07-27.md`
+
+These cafe artifacts are audit/recovery material, not the active Instagram-to-`foresttour.kr` Goal. Do not redirect new Instagram visitors to cafe signup or restore the cafe work as the primary goal.
+
+### Unified editorial direction
+
+The persistent business direction is a unified Instagram → `foresttour.kr` discovery funnel:
+
+1. Card news, reels, or Stories create curiosity about a specific region, landscape, or culture.
+2. `foresttour.kr/stories/<slug>` immediately answers the cover question and adds location, season, walking feel, transport gaps, baggage movement, booking, and language context.
+3. Local-stay experience and the company’s travel method establish trust.
+4. A low-pressure booking connection appears only when a real matching itinerary is verified.
+5. Landing, article depth, next-story movement, and itinerary selection are measured anonymously; incomplete checkpoints are never treated as proof of success.
+
+Instagram creative, promotion, landing-page promise, slug, metadata, photo/fact provenance, itinerary connection, and measurement contract should be managed as one editorial unit. BAND cleanup and cafe modernization remain separate historical workstreams.
+
 ## 5. Completed implementation (pushed)
 
 1. `tools/ingest-instagram-publish-result.mjs`
@@ -96,6 +150,7 @@ At a due checkpoint:
 ## 8. Safe invariants and handoff boundaries
 
 - No public Instagram post/Story, secret creation, secret rotation, or external message was performed in this session.
+- No cafe post, comment, message, upload, menu/board change, permission change, telephone call, or email was performed.
 - Do not use `/api/health` as a key-retrieval mechanism.
 - Do not treat a partial checkpoint as learnable or activated; both measurement source groups are required.
 - Preserve all untracked user artifacts. Before any commit, review `git diff` and `git status`; never stage ignored runtime directories.
