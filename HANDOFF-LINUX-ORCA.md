@@ -147,7 +147,9 @@ Instagram 카드뉴스 관리, Instagram 홍보, `foresttour.kr` 착륙 콘텐�
   - `9d8208c` — 신규회원 7일 안착 게시 전 초안
   - `78373ee` — 모바일 카페 읽기 전용 점검 차단 기록
   - `a3f8112` — Linux Orca migration handoff
-- Linux 이전 전 이 detached 체인을 별도 보존 브랜치로 push한다.
+- detached 체인은 원격 감사 브랜치
+  `origin/codex/linux-agent-handoff-2026-07-27`에
+  `a3f811284e30ba65eee1574c4fcb09ca76e1af72`로 보존됐다.
 - 이 체인은 감사·복구용이며 §0의 최종 goal로 자동 재개하지 않는다.
 
 ### orcastration
