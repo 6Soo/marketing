@@ -561,3 +561,18 @@
 - **피드 콘텐츠 5편**: 무관한 일상글 5편 전문 및 CC BY 크레딧/사진 규칙 100% 보존. 월간 출발 색인은 2주 뒤 필요 시에만 별도 1편.
 - **foresttour 정책 충돌**: foresttour 구 밴드 실행안은 `superseded_pending_sync` 취급 및 메인 세션 단일 실행 권위 명시.
 - **외부 경계**: 외부 BAND 쓰기 및 foresttour 저장소 변경 없음. PII 기록 0.
+---
+
+## 2026-07-28~29 — foresttour.kr 브랜드 심볼 교체 (reservation 리포 작업, 미완)
+
+홈(`/home2`)·여행지 상세(`/stories/[slug]`)의 한글 `숲길` 원형 텍스트 마크를 그림형 SVG 심볼로
+교체하는 작업. **코드·문서 전량은 reservation 리포에 커밋·push 완료**(`4ca3ef9`, `72150a8`).
+
+- 상태: **FAIL(미완).** 공용 컴포넌트·42/36px·접근성·링크 보존·통합 검증기·테스트(70/70)·
+  production build는 전부 실측 통과했으나, **36px/DPR1에서 "열린 굽은 길"이 한 줄로 뭉개져**
+  판독 게이트를 통과하지 못했다.
+- 다음 작업: 요소 축약 재설계(V3 = 나무 한 그루 + 굵은 단일 곡선, trail stroke 2.25px) 구현.
+  배관은 그대로 두고 심볼 `d` 속성과 stroke 폭만 교체하면 된다.
+- 인계 문서(이 한 건만 읽으면 됨):
+  `reservation/docs/FORESTTOUR_BRAND_SYMBOL_HANDOFF_2026-07-29.md`
+- cycle.sh 산출물(`.cycle/`)은 확정본을 reservation `docs/`로 옮겨 보존하고 `.gitignore` 처리했다.

@@ -11,4 +11,6 @@ node_modules/
 # Local agent/runtime state; never part of marketing artifacts.
 .omc/
 .codex-remote-attachments/
+
+# cycle.sh 작업 산출물(설계·반박·최종). 확정본은 대상 리포 docs/로 옮겨 보존한다.
 .cycle/
