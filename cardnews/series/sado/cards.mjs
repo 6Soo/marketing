@@ -1,5 +1,6 @@
 // 나만 몰랐던 일본 · 003 — 사도 편
-// 검증된 현지 사진: Wikimedia Commons 원본 5장(Public domain 또는 CC BY).
+// 검증된 현지 사진: Wikimedia Commons 사진 5장(Public domain · CC0 · CC BY).
+// 표지 01-kitazawa-terrace.jpg는 픽셀 무변경 로컬 재인코딩본 — 사유는 출처.md 참조.
 // 출처·라이선스·해시: cardnews/photos/sado/출처.md 및 각 *.source.json.
 
 export default {
@@ -36,7 +37,7 @@ export default {
       kind: 'cover',
       title: '섬 한가운데<br>거대한 층층 구조물이 남은 이유',
       sub: '광산이 멈춘 뒤에도 · 니가타 사도',
-      photo: 'cardnews/photos/sado/03-kitazawa.jpg',
+      photo: 'cardnews/photos/sado/01-kitazawa-terrace.jpg',
     },
     {
       id: '02-goldmine',
