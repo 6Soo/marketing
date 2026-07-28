@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "experiment": "northern-alps-004",
+  "series": "northern-alps",
+  "seriesPath": "cardnews/series/northern-alps",
+  "publishUnit": "instagram-carousel",
+  "provenance": {
+    "kind": "backfill",
+    "createdAt": "2026-07-28",
+    "note": "실게시 당시 통합 실행 기록이 없어, 리포에 남은 실측값(manifest·LOG.md·data/activation·instagram-assets 브랜치)만으로 소급 생성했다. 확인되지 않은 값은 null과 gaps 사유로 남겼다.",
+    "sources": [
+      "cardnews/out/northern-alps/_manifest-northern-alps.json",
+      "data/activation/northern-alps-004/index.json",
+      "LOG.md (2026-07-27 북알프스 004 카드뉴스·출처·독립 검토 / 실게시·공개 퍼널 운영 체크포인트)",
+      "git commit 7c6f315828284a5dcaa15c5ff5c60d647b18e895 (instagram-assets 브랜치)"
+    ]
+  },
+  "publish": {
+    "channel": "instagram",
+    "account": "@foresttour.kr",
+    "method": "official-web-ui",
+    "methodNote": "Meta Graph API가 자격증명 수신 후 OAuthException code 200 'API access blocked'로 거부해, 로그인된 공식 Instagram 웹 UI로 게시했다.",
+    "permalink": "https://www.instagram.com/p/DbRGuL5kwEU/",
+    "publishedAt": null,
+    "observedAt": "2026-07-26T19:15:31.598Z",
+    "observedAtSource": "data/activation/northern-alps-004/index.json 0h instagram-ui 레코드",
+    "supersededPublish": {
+      "permalink": "https://www.instagram.com/p/DbRFfObk56K/",
+      "state": "deleted",
+      "reason": "이전 캐시 스테이징의 마지막 장이 '다섯 가지 단서'로 남아 있어 삭제하고 위 최종 게시물로 대체했다."
+    }
+  },
+  "caption": {
+    "sourcePath": "cardnews/series/northern-alps/캡션.md",
+    "extraction": "daily-publish.mjs 규칙(--- 3구획이면 가운데, 아니면 전체)",
+    "sourceSha256": "3b1270d1a7a6089064f10fc5948afea2a92ae5bf15570bbec2ebff87dce31c9f",
+    "sourceChars": 569,
+    "publishedSha256": null,
+    "publishedNote": "실게시 화면에서 확인한 캡션 길이 569자가 현재 리포 캡션(569자)과 일치하고, 게시 직전 커밋 5d0d957 이후 캡션 파일이 변경되지 않았다. 다만 게시 화면 원문을 바이트로 보존하지 않아 해시 동일성은 증명되지 않는다."
+  },
+  "assets": {
+    "publishedAssets": {
+      "count": 8,
+      "orderVerifiedOnScreen": true,
+      "note": "실게시 화면에서 8장 전체 순서와 첫 장·마지막 장 문구를 전수 확인했다."
+    },
+    "groups": [
+      {
+        "id": "ci-public-assets",
+        "role": "CI가 공개 배포한 JPEG(GitHub Actions run 30216370194 · attempt 1)",
+        "location": "instagram-assets 브랜치 · commit 7c6f315828284a5dcaa15c5ff5c60d647b18e895 · instagram/30216370194-1/",
+        "publicBaseUrl": "https://raw.githubusercontent.com/6Soo/marketing/7c6f315828284a5dcaa15c5ff5c60d647b18e895/instagram/30216370194-1",
+        "files": [
+          "30216370194-1-northern-alps-cover-a.jpg",
+          "30216370194-1-northern-alps-02-mikurigaike.jpg",
+          "30216370194-1-northern-alps-03-ropeway.jpg",
+          "30216370194-1-northern-alps-04-three-seasons.jpg",
+          "30216370194-1-northern-alps-05-kurobe-dam.jpg",
+          "30216370194-1-northern-alps-06-kamikochi.jpg",
+          "30216370194-1-northern-alps-07-hirayu.jpg",
+          "30216370194-1-northern-alps-08-outro.jpg"
+        ],
+        "note": "HTTP·MIME·JPEG·SHA 검증은 통과했으나, Graph API 게시가 차단돼 이 파일들이 실제 게시물의 원본은 아니다."
+      },
+      {
+        "id": "local-staging-prereview",
+        "role": "독립 검토 반영 전 로컬 스테이징 JPEG + 캡션 + manifest",
+        "location": "cardnews/out/northern-alps/",
+        "files": [
+          "20260726-northern-alps-cover-a.jpg",
+          "20260726-northern-alps-02-mikurigaike.jpg",
+          "20260726-northern-alps-03-ropeway.jpg",
+          "20260726-northern-alps-04-three-seasons.jpg",
+          "20260726-northern-alps-05-kurobe-dam.jpg",
+          "20260726-northern-alps-06-kamikochi.jpg",
+          "20260726-northern-alps-07-hirayu.jpg",
+          "20260726-northern-alps-08-outro.jpg",
+          "_caption-northern-alps.txt",
+          "_manifest-northern-alps.json"
+        ],
+        "note": "커밋 0806e5e에서 생성됐고, 검토 반영 커밋 5d0d957은 PNG(07-hirayu·08-outro)와 캡션만 갱신했을 뿐 이 JPEG·manifest는 재생성하지 않았다. 따라서 '다섯 가지 단서' 시기의 자산이며 실게시본이 아니다."
+      },
+      {
+        "id": "ui-upload-staging",
+        "role": "실제 UI 업로드에 사용한 최종 스테이징",
+        "location": null,
+        "files": ["(미보존)"],
+        "note": "스테이징 디렉터리가 .gitignore(cardnews/out/_publish/, _stage/) 대상이라 파일이 남지 않았다. 지문 값만 LOG.md에 남아 있다."
+      }
+    ]
+  },
+  "fingerprints": [
+    {
+      "id": "ui-upload-staging",
+      "algorithm": "sha256",
+      "value": "0c7fc1e8567aed024f4a097f8cfc3134be2b7b5904b4fb1c3a1203f2377e6c1d",
+      "covers": "실제 UI 업로드에 사용한 최종 스테이징의 캡션 + JPEG 8장 바이트",
+      "producedBy": "cardnews/tools/daily-publish.mjs --stage-only (로컬, 독립 검토 반영 후 재렌더)",
+      "status": "attested-not-recomputable",
+      "recordedIn": "LOG.md:261",
+      "note": "게시된 캐러셀에 가장 가까운 지문이지만 스테이징 파일이 미보존이라 재계산 불가."
+    },
+    {
+      "id": "ci-public-assets",
+      "algorithm": "sha256",
+      "value": "67c2ee3c3f16ac77cb8da30656bdc4a41078d9e1c844c393a912e4e6520a1106",
+      "covers": "검토 반영 후 캡션(569자) + CI가 우분투 sharp로 변환한 JPEG 8장 바이트",
+      "producedBy": "GitHub Actions run 30216370194 attempt 1의 daily-publish.mjs --stage-only",
+      "status": "verified-external-artifact",
+      "recordedIn": "LOG.md:291",
+      "verification": "sha256(캡션(5d0d957 이후 캡션.md 게시 본문) ‖ git show 7c6f315:instagram/30216370194-1/*.jpg 8장) = 67c2ee3c… (2026-07-28 재계산 일치)",
+      "note": "로컬 변환과 바이트가 달라 값이 다르다(같은 PNG라도 변환 환경이 다르면 JPEG 바이트가 달라진다)."
+    },
+    {
+      "id": "local-staging-prereview",
+      "algorithm": "sha256",
+      "value": "2e5fc060b2cf46ead3101f3271e9dfa00d0169c3db6ff0769a2294f127be7f36",
+      "covers": "검토 반영 전 캡션(523자) + 검토 반영 전 로컬 JPEG 8장 바이트",
+      "producedBy": "cardnews/tools/daily-publish.mjs --stage-only (로컬, stamp 20260726)",
+      "status": "verified-recomputable",
+      "recordedIn": "cardnews/out/northern-alps/_manifest-northern-alps.json",
+      "recompute": {
+        "dir": "cardnews/out/northern-alps",
+        "captionFile": "_caption-northern-alps.txt",
+        "files": [
+          "20260726-northern-alps-cover-a.jpg",
+          "20260726-northern-alps-02-mikurigaike.jpg",
+          "20260726-northern-alps-03-ropeway.jpg",
+          "20260726-northern-alps-04-three-seasons.jpg",
+          "20260726-northern-alps-05-kurobe-dam.jpg",
+          "20260726-northern-alps-06-kamikochi.jpg",
+          "20260726-northern-alps-07-hirayu.jpg",
+          "20260726-northern-alps-08-outro.jpg"
+        ]
+      },
+      "note": "게시본이 아니다. 이 manifest는 검토 반영 전 상태로 남아 있어 permalink와 짝지으면 안 된다."
+    }
+  ],
+  "connectedTour": {
+    "productId": "fNod",
+    "policy": "reservation-api-runtime-fail-closed",
+    "requiredTitleTerms": ["알펜루트", "가미코지", "노리쿠라"],
+    "ctaUrl": "https://reserve.foresttour.kr/tour/fNod?from=insta",
+    "note": "CTA는 예약 API에서 활성 상품이 런타임 검증될 때만 노출되고, 오류·지연·불일치에서는 숨겨진다(2026-07-27 실환경 확인)."
+  },
+  "landing": {
+    "storyUrl": "https://foresttour.kr/stories/northern-alps",
+    "profileUrl": "https://foresttour.kr/?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+  },
+  "gaps": [
+    {
+      "field": "publish.publishedAt",
+      "reason": "Graph API 게시가 차단돼 API timestamp가 없고, 웹 UI 게시 시각을 별도 기록하지 않았다. 0h 관측 시각만 실측값으로 남아 있다."
+    },
+    {
+      "field": "caption.publishedSha256",
+      "reason": "게시 화면의 캡션 원문을 바이트로 보존하지 않아 해시를 계산할 근거가 없다. 길이 569자 일치만 확인됐다."
+    },
+    {
+      "field": "assets.groups.ui-upload-staging.files",
+      "reason": "UI 업로드 스테이징 디렉터리가 .gitignore 대상이라 파일 목록·바이트가 남지 않았다. 지문 값만 LOG.md에 있다."
+    },
+    {
+      "field": "publishResultFile",
+      "reason": "_publish-result-northern-alps.json은 --publish 경로에서만 생성되는데 실게시가 웹 UI로 이뤄져 파일이 만들어지지 않았다."
+    }
+  ]
+}

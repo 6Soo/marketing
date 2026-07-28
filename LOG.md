@@ -401,3 +401,60 @@
 
 - 인계서 §0/§0-A(지시 연대기), §3 Persistent Goal·불변조건·완료 게이트, 카페 detour 역사 기록은
   원문 그대로 보존했다. 낡은 서술은 삭제하지 않고 "2026-07-28 확인: ~로 정정" 형태로 갱신했다.
+
+---
+
+## 2026-07-28 — 불변조건 7 회귀 테스트 + 게시 실행 기록 통합
+
+감사에서 확인된 두 구멍(불변조건 7의 marketing 측 테스트 0건, 완료 게이트 3 미충족)을 닫았다.
+
+### (A) `connectedTour` 계약 회귀 테스트 — 신규
+
+- `tools/verify-series-connected-tour.mjs` + `.test.mjs`. `package.json`의
+  `test:instagram`에 추가했다.
+- 강제하는 것:
+  - `connectedTour`가 있으면 `productId`·`policy`·매칭 조건(`requiredTitleTerms` 등 최소 1종)이
+    모두 있어야 한다. `policy`는 허용 목록(`reservation-api-runtime-fail-closed`)에 있는
+    fail-closed 값만 통과한다(기본 거부).
+  - 카드·게시 캡션에 예약 딥링크가 있으면 `productId`와 일치해야 한다.
+  - `connectedTour: null`(히다·산리쿠·사도)이면 카드·게시 캡션 어디에도 예약 링크·예약/모객 문구·
+    출발일·박수·가격이 없어야 한다.
+- 검사 대상 캡션은 `daily-publish.mjs`와 같은 규칙으로 뽑은 **게시 본문**뿐이다.
+  캡션 파일 아래의 검토 메모("출발일·박수를 넣지 않는다" 같은 문장)는 대상이 아니다.
+- 실제 4개 시리즈로 통과하고, 일부러 깨뜨린 픽스처 7종으로 실패한다.
+
+### (B) 게시 실행 기록 통합 — `data/publish-records/<experiment>.json`
+
+- permalink·콘텐츠 지문·자산 목록·캡션·관측 시각을 게시 유닛 하나당 한 파일로 묶었다.
+  `tools/verify-publish-record.mjs` + `.test.mjs`가 계약을 강제한다.
+- 설계 원칙: **모르는 값은 채우지 않는다.** null이면 `gaps[]`에 사유가 있어야 통과한다.
+  지문은 합치지 않고 셋 다 보존하되 "무엇의 해시인지"(`covers`) 라벨과 출처 강도(`status`)를
+  붙인다. `verified-recomputable` 지문은 테스트가 실제로 다시 계산해 대조한다.
+
+#### 지문 3종이 다른 이유 — 규명 결과
+
+같은 카드에서 나온 **서로 다른 세 번의 스테이징**이라서 다르다. `contentFingerprint`는
+`sha256(게시 캡션 바이트 ‖ JPEG 바이트들)`이므로 캡션이나 변환 환경이 다르면 값이 달라진다.
+
+| 지문 | 무엇의 해시인가 | 상태 |
+|---|---|---|
+| `2e5fc060…` (manifest) | **독립 검토 반영 전** 캡션(523자) + 로컬 JPEG 8장 | 재계산 일치 확인 |
+| `0c7fc1e8…` (LOG:261) | 실제 UI 업로드에 쓴 최종 스테이징(검토 반영 후) | 스테이징 미보존 → 재계산 불가 |
+| `67c2ee3c…` (LOG:291) | 검토 반영 후 캡션(569자) + **CI가 변환한** JPEG 8장(commit `7c6f315`) | 재계산 일치 확인 |
+
+- **중요**: `cardnews/out/northern-alps/_manifest-northern-alps.json`은 커밋 `0806e5e` 산출물이고,
+  검토 반영 커밋 `5d0d957`은 PNG(07-hirayu·08-outro)와 캡션만 고쳤을 뿐 JPEG·manifest를
+  재생성하지 않았다. 즉 **out/의 JPEG·manifest는 '다섯 가지 단서' 시기 자산이며 실게시본이 아니다.**
+  permalink와 짝지어 인용하면 안 된다.
+- 사도(`sado-003`)는 게시용 JPEG·manifest·캡션 스냅샷·지문이 하나도 보존되지 않았다.
+  `fingerprints: []`, `assets.publishedAssets: null`, `caption.publishedSha256: null`로 두고
+  각각 미보존 사유를 기록했다. 렌더 PNG 7장의 SHA-256만 실측값으로 남겼다.
+- 두 기록 모두 `publish.publishedAt`은 null이다. Graph API가 차단돼 웹 UI로 게시했고
+  게시 시각을 따로 기록하지 않아, 실측값은 0h 관측 시각뿐이다.
+- 리포에 `_publish-result-*.json`이 0건인 이유도 여기 있다 — 그 파일은 `--publish` 경로에서만
+  생성되는데 실게시가 웹 UI로 이뤄졌고, 스테이징 경로는 `.gitignore` 대상이다.
+
+### 검증
+
+- `npm run test:instagram` 60건 전부 통과(기존 41 + 신규 19).
+- 외부 게시·발행·전송 없음. 시크릿 접근 없음. 기존 테스트 수정 없음.
