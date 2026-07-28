@@ -1,0 +1,641 @@
+{
+  "date": "2026-07-28",
+  "account": {
+    "data": [
+      {
+        "name": "reach",
+        "period": "day",
+        "values": [
+          {
+            "value": 0,
+            "end_time": "2026-07-27T07:00:00+0000"
+          },
+          {
+            "value": 1,
+            "end_time": "2026-07-28T07:00:00+0000"
+          }
+        ],
+        "title": "도달",
+        "description": "비즈니스 계정의 미디어 개체가 고유하게 조회된 총 횟수",
+        "id": "17841445215686571/insights/reach/day"
+      }
+    ]
+  },
+  "media": [
+    {
+      "media": {
+        "id": "17906507652283917",
+        "permalink": "https://www.instagram.com/p/DbRGuL5kwEU/",
+        "caption": "북알프스는 꼭 정상에 올라야만 볼 수 있을까요?\n\n해발 2,450m의 터미널에서\n미쿠리가이케까지 걷는 시간은 약 15분.\n\n산을 자동차로 오르는 대신\n버스와 케이블카, 로프웨이를 갈아타고,\n가미코치에 내려오면 정상 대신 강을 따라 걷습니다.\n\n구로베호와 단풍을 내려다보는 전망대,\n산의 물이 모인 186m 높이의 댐,\n폭포와 온천이 놓인 능선 밖의 쉼표까지.\n\n이 여섯 장면을 저장해 두세요.\n오르지 않아도 만날 수 있는 북알프스의 기억 단서가 됩니다.\n\n카드에 다 담지 못한 고도와 강변 이야기는\n프로필 링크의 북알프스 기록에서 이어집니다.\n\n사진: 663highland, Raita Futo, くろふね, Σ64, Paul Keller\n라이선스: CC BY 2.0/2.5/3.0/4.0\n가공: 4:5 크롭, 색·명암 조정, 하단 스크림과 글자 추가\n사진은 서로 다른 해·계절에 촬영됐으며 현재의 단풍·적설 상황을 뜻하지 않습니다.\n사진별 원문·고정 리비전·라이선스: foresttour.kr 북알프스 기록의 출처\n\n#북알프스 #다테야마구로베알펜루트 #가미코치 #구로베댐\n#일본걷기여행 #일본소도시여행 #나만몰랐던일본",
+        "timestamp": "2026-07-26T19:08:10+0000",
+        "media_type": "CAROUSEL_ALBUM",
+        "like_count": 0,
+        "comments_count": 0
+      },
+      "insights": {
+        "data": [
+          {
+            "name": "reach",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "도달한 계정",
+            "description": "이 슬라이드 컨테이너를 한 번 이상 본 고유 계정 수. 도달은 같은 계정에서 슬라이드 컨테이너를 여러 번 본 횟수까지 집계하는 노출과는 다른 개념입니다. 이 지표는 추산치입니다.",
+            "id": "17906507652283917/insights/reach/lifetime"
+          },
+          {
+            "name": "views",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "조회수",
+            "description": "게시물이 재생되거나 표시된 횟수.",
+            "id": "17906507652283917/insights/views/lifetime"
+          },
+          {
+            "name": "saved",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "저장됨",
+            "description": "게시물 저장 횟수.",
+            "id": "17906507652283917/insights/saved/lifetime"
+          },
+          {
+            "name": "likes",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "좋아요",
+            "description": "게시물의 좋아요 수.",
+            "id": "17906507652283917/insights/likes/lifetime"
+          },
+          {
+            "name": "comments",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "댓글",
+            "description": "게시물의 댓글 수.",
+            "id": "17906507652283917/insights/comments/lifetime"
+          },
+          {
+            "name": "shares",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "공유",
+            "description": "게시물이 공유된 횟수.",
+            "id": "17906507652283917/insights/shares/lifetime"
+          },
+          {
+            "name": "total_interactions",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "게시물 반응",
+            "description": "게시물의 좋아요, 저장, 댓글 및 공유 수에서 좋아요 취소, 저장 취소 및 삭제된 댓글 수를 뺀 값.",
+            "id": "17906507652283917/insights/total_interactions/lifetime"
+          },
+          {
+            "name": "profile_visits",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "프로필 방문",
+            "description": "사람들이 회원님의 프로필을 방문한 횟수입니다.",
+            "id": "17906507652283917/insights/profile_visits/lifetime"
+          },
+          {
+            "name": "follows",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "팔로우",
+            "description": "회원님을 팔로우하는 계정 수입니다.",
+            "id": "17906507652283917/insights/follows/lifetime"
+          }
+        ]
+      }
+    },
+    {
+      "media": {
+        "id": "18098190428194458",
+        "permalink": "https://www.instagram.com/p/DbRD-fWkyUL/",
+        "caption": "섬 한가운데 거대한 층층 구조물이 남아 있는 곳.\n실은 한 달에 5만 톤의 광석을 처리하던 북택부유선광장입니다.\n\n사도는 금광 하나로 끝나는 섬이 아니었습니다.\n기계화 이전 금 생산의 흔적, 바위 많은 남쪽 바다에서 방향을 바꾸던 둥근 대야배,\n배 판재와 목수 기술이 골목으로 남은 슈쿠네기까지 이어집니다.\n\n금이 나온 장소보다, 그 금을 둘러싸고 사람들이 어떻게 살았는지를 따라가면\n사도가 훨씬 오래 기억됩니다.\n\n나중에 다시 보고 싶다면 저장해 두세요.\n프로필의 foresttour.kr에서 같은 사도 이야기를 더 천천히 볼 수 있습니다.\n\n사진: ccfarmer(CC BY 3.0), amaknow·rhodnite(CC BY 2.0), JH0WJF·Tensaibuta(Public Domain).\n사진별 원문·라이선스는 제작 기록에 보존했습니다.\n\n#나만몰랐던일본 #사도섬 #사도여행 #니가타여행 #일본소도시 #슈쿠네기 #다라이부네",
+        "timestamp": "2026-07-26T18:44:10+0000",
+        "media_type": "CAROUSEL_ALBUM",
+        "like_count": 0,
+        "comments_count": 0
+      },
+      "insights": {
+        "data": [
+          {
+            "name": "reach",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "도달한 계정",
+            "description": "이 슬라이드 컨테이너를 한 번 이상 본 고유 계정 수. 도달은 같은 계정에서 슬라이드 컨테이너를 여러 번 본 횟수까지 집계하는 노출과는 다른 개념입니다. 이 지표는 추산치입니다.",
+            "id": "18098190428194458/insights/reach/lifetime"
+          },
+          {
+            "name": "views",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 2
+              }
+            ],
+            "title": "조회수",
+            "description": "게시물이 재생되거나 표시된 횟수.",
+            "id": "18098190428194458/insights/views/lifetime"
+          },
+          {
+            "name": "saved",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "저장됨",
+            "description": "게시물 저장 횟수.",
+            "id": "18098190428194458/insights/saved/lifetime"
+          },
+          {
+            "name": "likes",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "좋아요",
+            "description": "게시물의 좋아요 수.",
+            "id": "18098190428194458/insights/likes/lifetime"
+          },
+          {
+            "name": "comments",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "댓글",
+            "description": "게시물의 댓글 수.",
+            "id": "18098190428194458/insights/comments/lifetime"
+          },
+          {
+            "name": "shares",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "공유",
+            "description": "게시물이 공유된 횟수.",
+            "id": "18098190428194458/insights/shares/lifetime"
+          },
+          {
+            "name": "total_interactions",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "게시물 반응",
+            "description": "게시물의 좋아요, 저장, 댓글 및 공유 수에서 좋아요 취소, 저장 취소 및 삭제된 댓글 수를 뺀 값.",
+            "id": "18098190428194458/insights/total_interactions/lifetime"
+          },
+          {
+            "name": "profile_visits",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "프로필 방문",
+            "description": "사람들이 회원님의 프로필을 방문한 횟수입니다.",
+            "id": "18098190428194458/insights/profile_visits/lifetime"
+          },
+          {
+            "name": "follows",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "팔로우",
+            "description": "회원님을 팔로우하는 계정 수입니다.",
+            "id": "18098190428194458/insights/follows/lifetime"
+          }
+        ]
+      }
+    },
+    {
+      "media": {
+        "id": "18000836177970317",
+        "permalink": "https://www.instagram.com/p/DbPkcaIEwSj/",
+        "caption": "일본 도호쿠의 오른쪽 가장자리, 산리쿠 해안 이야기를 모았습니다.\n\n풍경 앞에서 속도를 늦추는 열차,\n깨끗하고 마른 날에만 우는 모래,\n스님이 극락이라 불렀다고 전해지는 바닷가.\n\n그리고 2011년의 슬픔 이후,\n바닷가 마을을 다시 잇기 위해 만든 1,025km의 길이 있습니다.\n\n빨리 많이 보는 여행보다,\n한 해안에 오래 머무는 여행이 잘 어울리는 곳입니다.\n\n이 다섯 장면을 저장해 두세요.\n산리쿠를 걷고 싶은 날, 작은 지도가 되어줄 겁니다.\n\n카드에 다 담지 못한 열차와 바닷길 이야기는\n프로필 링크의 산리쿠 기록에서 이어집니다.\n\n※ 카드 이미지는 산리쿠의 분위기를 표현한 참고 이미지이며 실제 현지 답사 사진이 아닙니다.\n\n#산리쿠 #도호쿠여행 #미치노쿠시오카제트레일 #일본걷기여행 #일본소도시여행 #기타야마자키 #나만몰랐던일본",
+        "timestamp": "2026-07-26T04:49:24+0000",
+        "media_type": "CAROUSEL_ALBUM",
+        "like_count": 0,
+        "comments_count": 0
+      },
+      "insights": {
+        "data": [
+          {
+            "name": "reach",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "도달한 계정",
+            "description": "이 슬라이드 컨테이너를 한 번 이상 본 고유 계정 수. 도달은 같은 계정에서 슬라이드 컨테이너를 여러 번 본 횟수까지 집계하는 노출과는 다른 개념입니다. 이 지표는 추산치입니다.",
+            "id": "18000836177970317/insights/reach/lifetime"
+          },
+          {
+            "name": "views",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "조회수",
+            "description": "게시물이 재생되거나 표시된 횟수.",
+            "id": "18000836177970317/insights/views/lifetime"
+          },
+          {
+            "name": "saved",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "저장됨",
+            "description": "게시물 저장 횟수.",
+            "id": "18000836177970317/insights/saved/lifetime"
+          },
+          {
+            "name": "likes",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "좋아요",
+            "description": "게시물의 좋아요 수.",
+            "id": "18000836177970317/insights/likes/lifetime"
+          },
+          {
+            "name": "comments",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "댓글",
+            "description": "게시물의 댓글 수.",
+            "id": "18000836177970317/insights/comments/lifetime"
+          },
+          {
+            "name": "shares",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "공유",
+            "description": "게시물이 공유된 횟수.",
+            "id": "18000836177970317/insights/shares/lifetime"
+          },
+          {
+            "name": "total_interactions",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "게시물 반응",
+            "description": "게시물의 좋아요, 저장, 댓글 및 공유 수에서 좋아요 취소, 저장 취소 및 삭제된 댓글 수를 뺀 값.",
+            "id": "18000836177970317/insights/total_interactions/lifetime"
+          },
+          {
+            "name": "profile_visits",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "프로필 방문",
+            "description": "사람들이 회원님의 프로필을 방문한 횟수입니다.",
+            "id": "18000836177970317/insights/profile_visits/lifetime"
+          },
+          {
+            "name": "follows",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "팔로우",
+            "description": "회원님을 팔로우하는 계정 수입니다.",
+            "id": "18000836177970317/insights/follows/lifetime"
+          }
+        ]
+      }
+    },
+    {
+      "media": {
+        "id": "18275147926294579",
+        "permalink": "https://www.instagram.com/p/DbMh7tHj_H3/",
+        "caption": "\"가이드북엔 없는 진짜 일본을 찾는다면\"이라는 질문에서 시작한 히다 이야기입니다.\n\n에도 시대 성하마을과 상인 마을의 흔적이 남은 다카야마,\n많은 눈과 양잠 생활이 만든 시라카와고의 갓쇼즈쿠리,\n그리고 히다강 곁 게로 온천까지.\n\n같은 세계유산에 포함된 고카야마는 도야마현이며,\n히다와 같은 지역으로 묶지 않았습니다.\n\n카드에 다 담지 못한 위치와 이유,\n걸을 때 보이는 장면은 프로필 링크의 히다 기록에서 이어집니다.\n\n※ 카드 이미지는 여행지의 분위기를 표현한 AI 연출 이미지이며 실제 현지 사진이 아닙니다.\n\n저장해 두시면 언젠가 이 정취 앞에서 다시 열어보시게 될 겁니다.\n\n#히다 #히다타카야마 #게로온천 #시라카와고 #기후여행 #일본소도시여행 #나만몰랐던일본",
+        "timestamp": "2026-07-25T00:29:57+0000",
+        "media_type": "CAROUSEL_ALBUM",
+        "like_count": 0,
+        "comments_count": 0
+      },
+      "insights": {
+        "data": [
+          {
+            "name": "reach",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "도달한 계정",
+            "description": "이 슬라이드 컨테이너를 한 번 이상 본 고유 계정 수. 도달은 같은 계정에서 슬라이드 컨테이너를 여러 번 본 횟수까지 집계하는 노출과는 다른 개념입니다. 이 지표는 추산치입니다.",
+            "id": "18275147926294579/insights/reach/lifetime"
+          },
+          {
+            "name": "views",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 2
+              }
+            ],
+            "title": "조회수",
+            "description": "게시물이 재생되거나 표시된 횟수.",
+            "id": "18275147926294579/insights/views/lifetime"
+          },
+          {
+            "name": "saved",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "저장됨",
+            "description": "게시물 저장 횟수.",
+            "id": "18275147926294579/insights/saved/lifetime"
+          },
+          {
+            "name": "likes",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "좋아요",
+            "description": "게시물의 좋아요 수.",
+            "id": "18275147926294579/insights/likes/lifetime"
+          },
+          {
+            "name": "comments",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "댓글",
+            "description": "게시물의 댓글 수.",
+            "id": "18275147926294579/insights/comments/lifetime"
+          },
+          {
+            "name": "shares",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "공유",
+            "description": "게시물이 공유된 횟수.",
+            "id": "18275147926294579/insights/shares/lifetime"
+          },
+          {
+            "name": "total_interactions",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "게시물 반응",
+            "description": "게시물의 좋아요, 저장, 댓글 및 공유 수에서 좋아요 취소, 저장 취소 및 삭제된 댓글 수를 뺀 값.",
+            "id": "18275147926294579/insights/total_interactions/lifetime"
+          },
+          {
+            "name": "profile_visits",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "프로필 방문",
+            "description": "사람들이 회원님의 프로필을 방문한 횟수입니다.",
+            "id": "18275147926294579/insights/profile_visits/lifetime"
+          },
+          {
+            "name": "follows",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "팔로우",
+            "description": "회원님을 팔로우하는 계정 수입니다.",
+            "id": "18275147926294579/insights/follows/lifetime"
+          }
+        ]
+      }
+    },
+    {
+      "media": {
+        "id": "17999828414975466",
+        "permalink": "https://www.instagram.com/p/DbMCkYbEsxd/",
+        "caption": "일본 도호쿠의 오른쪽 가장자리, 산리쿠 해안 이야기를 모았습니다.\n\n풍경 앞에서 속도를 늦추는 열차,\n깨끗하고 마른 날에만 우는 모래,\n스님이 극락이라 불렀다고 전해지는 바닷가.\n\n그리고 2011년의 슬픔 이후,\n바닷가 마을을 다시 잇기 위해 만든 1,025km의 길이 있습니다.\n\n빨리 많이 보는 여행보다,\n한 해안에 오래 머무는 여행이 잘 어울리는 곳입니다.\n\n이 다섯 장면을 저장해 두세요.\n산리쿠를 걷고 싶은 날, 작은 지도가 되어줄 겁니다.\n\n카드에 다 담지 못한 열차와 바닷길 이야기는\n프로필 링크의 산리쿠 기록에서 이어집니다.\n\n※ 카드 이미지는 산리쿠의 분위기를 표현한 참고 이미지이며 실제 현지 답사 사진이 아닙니다.\n\n#산리쿠 #도호쿠여행 #미치노쿠시오카제트레일 #일본걷기여행 #일본소도시여행 #기타야마자키 #나만몰랐던일본",
+        "timestamp": "2026-07-24T19:55:54+0000",
+        "media_type": "CAROUSEL_ALBUM",
+        "like_count": 0,
+        "comments_count": 0
+      },
+      "insights": {
+        "data": [
+          {
+            "name": "reach",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "도달한 계정",
+            "description": "이 슬라이드 컨테이너를 한 번 이상 본 고유 계정 수. 도달은 같은 계정에서 슬라이드 컨테이너를 여러 번 본 횟수까지 집계하는 노출과는 다른 개념입니다. 이 지표는 추산치입니다.",
+            "id": "17999828414975466/insights/reach/lifetime"
+          },
+          {
+            "name": "views",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 1
+              }
+            ],
+            "title": "조회수",
+            "description": "게시물이 재생되거나 표시된 횟수.",
+            "id": "17999828414975466/insights/views/lifetime"
+          },
+          {
+            "name": "saved",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "저장됨",
+            "description": "게시물 저장 횟수.",
+            "id": "17999828414975466/insights/saved/lifetime"
+          },
+          {
+            "name": "likes",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "좋아요",
+            "description": "게시물의 좋아요 수.",
+            "id": "17999828414975466/insights/likes/lifetime"
+          },
+          {
+            "name": "comments",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "댓글",
+            "description": "게시물의 댓글 수.",
+            "id": "17999828414975466/insights/comments/lifetime"
+          },
+          {
+            "name": "shares",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "공유",
+            "description": "게시물이 공유된 횟수.",
+            "id": "17999828414975466/insights/shares/lifetime"
+          },
+          {
+            "name": "total_interactions",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "게시물 반응",
+            "description": "게시물의 좋아요, 저장, 댓글 및 공유 수에서 좋아요 취소, 저장 취소 및 삭제된 댓글 수를 뺀 값.",
+            "id": "17999828414975466/insights/total_interactions/lifetime"
+          },
+          {
+            "name": "profile_visits",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "프로필 방문",
+            "description": "사람들이 회원님의 프로필을 방문한 횟수입니다.",
+            "id": "17999828414975466/insights/profile_visits/lifetime"
+          },
+          {
+            "name": "follows",
+            "period": "lifetime",
+            "values": [
+              {
+                "value": 0
+              }
+            ],
+            "title": "팔로우",
+            "description": "회원님을 팔로우하는 계정 수입니다.",
+            "id": "17999828414975466/insights/follows/lifetime"
+          }
+        ]
+      }
+    }
+  ]
+}
