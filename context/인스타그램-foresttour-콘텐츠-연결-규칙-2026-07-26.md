@@ -152,6 +152,8 @@ AI 이미지에는 실제 현지 사진이 아니라는 고지가 필요하며, 
   - 산리쿠 `DbMCkYbEsxd`: 확인되지 않은 10월·4박 5일 제거, 참고 이미지 고지 추가.
 - 세 게시물 모두 캡션의 다음 행동을 `프로필 링크의 <여행지> 기록에서 이어집니다`로 통일했다.
 - 히다·산리쿠 로컬 캡션 원본에도 공개 고지를 동기화했다.
-- Graph API는 현재 `OAuthException code 200: API access blocked` 상태다. 새 자동 게시를
-  재개하려면 토큰을 노출하지 않은 채 앱 접근 상태·권한을 별도 복구하고,
-  `photoStatus: verified` 조건을 먼저 충족해야 한다.
+- ~~Graph API는 현재 `OAuthException code 200: API access blocked` 상태다.~~
+  **2026-07-29 해소** — 원인은 Meta 개발자 계정 제한이었고, 계정 복원으로 앱·토큰 변경 없이 풀렸다.
+  `doctor` 실측 `✓ 연결 정상 · @foresttour.kr · 게시 한도 0/100`.
+  **단, 자동 게시 재개 조건은 그대로다** — API가 열렸다고 바로 올리지 않는다.
+  `photoStatus: verified`를 먼저 충족해야 하며, placeholder(AI·스톡) 자산은 여전히 코드 게이트로 차단된다.

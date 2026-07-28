@@ -688,6 +688,48 @@ validator·Playwright)는 전량 통과했고 의미 판독만 FAIL이었는데,
 
 ### 여전히 막혀 있는 것 (이번 세션이 풀 수 없음)
 
-- Instagram Graph API `OAuthException code 200 "API access blocked"` — Meta 앱 레벨 차단.
+- ~~Instagram Graph API `OAuthException code 200 "API access blocked"`~~
+  → **같은 날 늦게 해소됨. 바로 아래 블록 참조** (원인은 앱이 아니라 Meta 개발자 계정 제한).
 - GitHub secret `FORESTTOUR_ADMIN_KEY` 미등록, `ACTIVATION_COLLECT_ENABLED` 미설정.
   둘 다 사장님만 처리 가능하며, 이 상태에선 24h 체크포인트가 `due`에서 진행되지 않는다.
+
+---
+
+## 2026-07-29 — .env 복구 + Meta 차단 해소 (인스타 API 정상화)
+
+### 결과 요약
+- **인스타 Graph API 차단 해소.** 7/26부터 이어진 `OAuthException code 200 "API access blocked"`가
+  풀렸다. `node tools/instagram-publish.mjs doctor` →
+  `✓ Instagram API 연결 정상 · @foresttour.kr · 게시 한도 0/100`
+  (`account_type=BUSINESS`, `user_id=17841445215686571` — `.env` 값과 일치, `media_count=5`).
+- **실제 원인은 Meta 개발자 계정 제한이었다.** Meta가 "모든 사람의 안전을 위한 예방 조치"라며
+  developers.facebook.com 접근을 제한했고, 복원되자 **앱 설정·토큰을 전혀 건드리지 않은 상태로**
+  API가 살아났다. 앱 검수·비즈니스 인증·Graph 버전 만료·계정 유형 — 전부 원인이 아니었다.
+
+### 오진 기록 (같은 실수 반복 방지)
+- 앱 검수/설정 쪽을 오래 뒤졌으나 전부 헛다리였다. **계정 제한 중에는 앱 대시보드가 정상으로 보이지
+  않아 오진하기 쉽다.** 재발 시 `developers.facebook.com` 로그인 상태·계정 제한부터 확인할 것.
+- 세션 중 "`앱 심사 불필요`는 검증되지 않은 전제"라고 정정했으나 **그 정정 자체가 틀렸다.**
+  개발 모드 + Standard Access + 본인 비즈니스 계정으로 심사 없이 정상 작동한다. 원복했다.
+- 공개 인스타 프로필 스크래핑으로 "비즈니스 계정 아닌 듯"이라 추정했으나 오판이었다
+  (`account_type=BUSINESS`). **공개 페이지로는 계정 유형을 판정할 수 없다.**
+
+### 유효한 진단 절차 (재사용)
+`code 190`(토큰 파싱 실패 = 토큰 문제)과 `code 200`(계정·앱 문제)을 가르는 것이 핵심.
+가짜 토큰과 실제 토큰을 나란히 던져 응답 코드를 비교하면 즉시 갈린다. 실제 토큰이 `200`을 받으면
+**토큰은 멀쩡하므로 재발급은 시간 낭비다.** 상세: `context/사장님-가이드.md` §9-2-A.
+
+### .env 복구
+- `PEXELS_API_KEY` — git 히스토리(`06b291c^`)에서 복구, 라이브 검증 통과(200 OK + 실사진 반환).
+  ⚠ **과거 `.env`가 커밋된 이력(`bfb998c`)이 있어 히스토리에 키가 남아있다** — 리포를 외부에
+  열기 전 재발급 필요.
+- `GEMINI_API_KEY` — 사장님 재발급분 투입, `gemini-3.6-flash` 라이브 응답 확인.
+  **Gemini 위임 → Opus 검증 기본 실행 경로 복구.**
+- `.gitignore`가 `.env` 사본(`.env.bak-*` 등)을 차단하지 못하던 구멍을 막았다(`.env.*` 추가).
+- 미해결: `FORESTTOUR_ADMIN_KEY` 부재 — `collect-instagram-activation-metrics.mjs --foresttour-live`
+  경로에서만 필요하다.
+
+### 다음 작업
+- API가 열렸다고 자동 게시를 바로 켜지 않는다. **남은 제약은 사진 조건**으로,
+  `photoStatus: verified`가 아닌 자산(AI·스톡)은 코드 게이트로 계속 차단된다.
+- Meta 앱 ID는 여전히 리포에 없다. 비밀값이 아니므로 기록해두면 다음 진단이 빨라진다.
