@@ -1,17 +1,36 @@
 {
   "commonsTitle": "File:Sado from the sea.jpg",
   "descriptionPage": "https://commons.wikimedia.org/wiki/File:Sado_from_the_sea.jpg",
+  "revisionId": 1137968596,
+  "revisionTimestamp": "2025-12-28T09:45:29Z",
+  "revisionUrl": "https://commons.wikimedia.org/w/index.php?title=File%3ASado%20from%20the%20sea.jpg&oldid=1137968596",
   "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/34/Sado_from_the_sea.jpg",
+  "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/3/34/Sado_from_the_sea.jpg",
+  "description": "Sado, Niigata, Japan seen from the sea, in front Kosado, in back Osado",
+  "categories": [
+    "Geography of Sado, Niigata",
+    "PD-user"
+  ],
+  "gps": {
+    "latitude": null,
+    "longitude": null
+  },
   "author": "Tensaibuta at English Wikipedia",
   "credit": "self-made, digital transfer of paper photograph",
   "license": "Public domain",
-  "licenseUrl": null,
+  "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-user",
+  "licenseUrlNote": "Commons가 퍼블릭 도메인에는 LicenseUrl을 제공하지 않아 해당 파일에 적용된 Commons 라이선스 템플릿 문서를 기록함",
   "usageTerms": "Public domain",
   "dateCreated": "17 May 2006 (original upload date) ( Original text: taken circa 1999 )",
   "downloadedAt": "2026-07-26T14:26:53.473Z",
+  "provenanceVerifiedAt": "2026-07-28T08:10:19.829Z",
   "mime": "image/jpeg",
+  "originalWidth": 1515,
+  "originalHeight": 975,
   "width": 1515,
   "height": 975,
   "commonsSha1": "e5aeb446045762f18dc8e6c9915fa91675633cd7",
-  "sha256": "e687c3dbf4584dd5fb35f2bf9251387ac64514bf70bae2d154393cf4d11ceb9d"
+  "localSha1": "e5aeb446045762f18dc8e6c9915fa91675633cd7",
+  "sha256": "e687c3dbf4584dd5fb35f2bf9251387ac64514bf70bae2d154393cf4d11ceb9d",
+  "importModification": "원본 바이트 그대로 저장"
 }

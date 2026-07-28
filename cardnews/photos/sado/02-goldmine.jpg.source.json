@@ -1,7 +1,22 @@
 {
   "commonsTitle": "File:Sado gold mine Doyu Tunnel.jpg",
   "descriptionPage": "https://commons.wikimedia.org/wiki/File:Sado_gold_mine_Doyu_Tunnel.jpg",
+  "revisionId": 903581637,
+  "revisionTimestamp": "2024-07-26T21:11:31Z",
+  "revisionUrl": "https://commons.wikimedia.org/w/index.php?title=File%3ASado%20gold%20mine%20Doyu%20Tunnel.jpg&oldid=903581637",
   "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/28/Sado_gold_mine_Doyu_Tunnel.jpg",
+  "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/2/28/Sado_gold_mine_Doyu_Tunnel.jpg",
+  "description": "佐渡金山 道遊抗",
+  "categories": [
+    "CC-BY-2.0",
+    "Dohyu Mine",
+    "Files with coordinates missing SDC location of creation",
+    "Flickr images reviewed by FlickreviewR 2"
+  ],
+  "gps": {
+    "latitude": "38.037414",
+    "longitude": "138.249144"
+  },
   "author": "amaknow",
   "credit": "https://www.flickr.com/photos/amaknow/15470996424/",
   "license": "CC BY 2.0",
@@ -9,9 +24,14 @@
   "usageTerms": "Creative Commons Attribution 2.0",
   "dateCreated": "2014-11-22 08:46:28",
   "downloadedAt": "2026-07-26T14:26:55.980Z",
+  "provenanceVerifiedAt": "2026-07-28T08:10:17.404Z",
   "mime": "image/jpeg",
+  "originalWidth": 3264,
+  "originalHeight": 2448,
   "width": 3264,
   "height": 2448,
   "commonsSha1": "1e302fe6ea673149f75542eb89feeeab04978864",
-  "sha256": "eb99773e7847b333a4713bd9e335aeabee7eb429c80f1e72c3fb9f53f535721e"
+  "localSha1": "1e302fe6ea673149f75542eb89feeeab04978864",
+  "sha256": "eb99773e7847b333a4713bd9e335aeabee7eb429c80f1e72c3fb9f53f535721e",
+  "importModification": "원본 바이트 그대로 저장"
 }

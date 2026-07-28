@@ -1,18 +1,43 @@
 {
   "commonsTitle": "File:Sado Shukunegi.jpg",
   "descriptionPage": "https://commons.wikimedia.org/wiki/File:Sado_Shukunegi.jpg",
+  "revisionId": 1141972257,
+  "revisionTimestamp": "2026-01-04T22:10:02Z",
+  "revisionUrl": "https://commons.wikimedia.org/w/index.php?title=File%3ASado%20Shukunegi.jpg&oldid=1141972257",
   "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Sado_Shukunegi.jpg",
-  "downloadedUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sado_Shukunegi.jpg/3840px-Sado_Shukunegi.jpg",
+  "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sado_Shukunegi.jpg/3840px-Sado_Shukunegi.jpg",
+  "description": "宿根木集落",
+  "categories": [
+    "Files moved to Commons from ja.wikipedia",
+    "Houses in Niigata prefecture",
+    "Japan photographs taken on 2010-10-22",
+    "October 2010 in Niigata prefecture",
+    "PD-user",
+    "PD files transferred from Japanese Wikipedia",
+    "Shukunegi",
+    "Taken with Canon EOS 7D",
+    "Two-story houses in Japan"
+  ],
+  "gps": {
+    "latitude": null,
+    "longitude": null
+  },
   "author": "JH0WJF",
   "credit": "Self-photographed",
   "license": "Public domain",
-  "licenseUrl": null,
+  "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-user",
+  "licenseUrlNote": "Commons가 퍼블릭 도메인에는 LicenseUrl을 제공하지 않아 해당 파일에 적용된 Commons 라이선스 템플릿 문서를 기록함",
   "usageTerms": "Public domain",
   "dateCreated": "2010-10-22",
   "downloadedAt": "2026-07-26T14:27:33.343Z",
+  "provenanceVerifiedAt": "2026-07-28T08:10:19.383Z",
   "mime": "image/jpeg",
-  "width": 5184,
-  "height": 3456,
+  "originalWidth": 5184,
+  "originalHeight": 3456,
+  "width": 3840,
+  "height": 2560,
   "commonsSha1": "d164126162e3263a2de8c1d61dd5a4b09e5a3820",
-  "sha256": "d1219578a731612b2b3e902c2bf3af00d79042cc163b8587b02cf174480e45f5"
+  "localSha1": "486d72ca91be45467853a3d8473873bc8106676c",
+  "sha256": "d1219578a731612b2b3e902c2bf3af00d79042cc163b8587b02cf174480e45f5",
+  "importModification": "Wikimedia Commons가 원본을 3840×2560 썸네일로 축소"
 }
