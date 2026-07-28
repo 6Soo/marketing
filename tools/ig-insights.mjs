@@ -71,8 +71,11 @@ export async function getMediaInsights(mediaId, live = false) {
     throw new Error('IG_USER_ID 또는 IG_ACCESS_TOKEN이 설정되지 않았습니다.');
   }
 
+  // 지원 지표는 2026-07-29 실측으로 확정했다(CAROUSEL_ALBUM/FEED 기준).
+  // impressions·navigation은 이 미디어 타입에서 거부되며(code 100), impressions의 대체는 views다.
+  // 지표 하나가 거부되면 요청 전체가 실패하므로 미검증 지표를 임의로 추가하지 말 것.
   const url = graphUrl(`${mediaId}/insights`, {
-    metric: 'reach,impressions,saved,likes,comments,shares',
+    metric: 'reach,views,saved,likes,comments,shares,total_interactions,profile_visits,follows',
   });
   const data = await fetchJson(url);
   return data;
@@ -92,8 +95,10 @@ export async function getAccountInsights(live = false) {
     throw new Error('IG_USER_ID 또는 IG_ACCESS_TOKEN이 설정되지 않았습니다.');
   }
 
+  // 계정 인사이트는 media와 허용 지표 집합이 다르다(2026-07-29 실측).
+  // impressions는 여기서도 거부된다. 값이 비어 오는 것은 정상이며(데이터 없음) 0으로 채우지 않는다.
   const url = graphUrl(`${IG_USER_ID}/insights`, {
-    metric: 'reach,follower_count,profile_views',
+    metric: 'reach,follower_count,profile_views,website_clicks,accounts_engaged,total_interactions',
     period: 'day',
   });
   const data = await fetchJson(url);
