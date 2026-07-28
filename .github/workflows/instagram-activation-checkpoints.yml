@@ -73,10 +73,24 @@ jobs:
         id: due
         shell: bash
         run: |
-          CHECKPOINT="$(
+          # The report exits 2 when a checkpoint is due. That is the signal this
+          # step exists to read, not a failure — swallowing it here keeps the
+          # "Refuse silent checkpoint miss" guard below reachable. Any other
+          # non-zero exit is a real error and must still stop the job.
+          set +e
+          REPORT="$(
             node tools/instagram-activation-report.mjs \
               --experiment="${EXPERIMENT}" \
-              --json 2>/dev/null |
+              --json 2>/dev/null
+          )"
+          STATUS=$?
+          set -e
+          if [ "${STATUS}" -ne 0 ] && [ "${STATUS}" -ne 2 ]; then
+            echo "activation report failed with exit ${STATUS}" >&2
+            exit "${STATUS}"
+          fi
+          CHECKPOINT="$(
+            printf '%s' "${REPORT}" |
               jq -r 'if .nextAction.action == "collect-now" then .nextAction.checkpoint else "" end'
           )"
           echo "checkpoint=${CHECKPOINT}" >> "${GITHUB_OUTPUT}"
