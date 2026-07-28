@@ -14,9 +14,12 @@
 
 ## 실행 컨텍스트
 - 실행 시각(KST):
+- 감사 기준 시각(KST):
 - 실행 역할: leader | co_leader | member | unknown
 - 작업: inspect | post | monthly_index | event_create | event_edit | rollback
 - 대상 BAND: band/56995933
+- 공개 노출 위험 확인: yes | no | not_applicable
+- 일일 저장 수: 0 / max 3
 - 실행 직전 확인: yes | no
 
 ## 기준선
@@ -44,8 +47,12 @@
 ## Event remediation
 
 ### 감사 범위
+- 감사 기준 시각(KST):
 - 감사 시작 월:
 - 감사 종료 월:
+- 재개 커서 (월 / 공개 ID / 다음 시작 월):
+- 인벤토리 만료일:
+- 저장 직전 재검증 시각(KST):
 - 월별 화면 표시 합계:
 - 고유 이벤트 ID 수:
 - single_day:
