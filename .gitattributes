@@ -1,0 +1,10 @@
+# 게시 실행 기록·자산의 바이트 무결성 보호 (2026-07-29)
+#
+# 이유: core.autocrlf=true인 Windows 체크아웃에서 git이 줄바꿈을 CRLF로 바꾸면
+# 캡션 파일의 바이트가 달라져 data/publish-records/*.json에 기록된
+# 'verified-recomputable' 지문의 재계산이 실패한다(실측: 북알프스 004의
+# local-staging-prereview 지문이 2e5fc060… → 916423ea…로 어긋남).
+# 아래 경로는 게시 증거이므로 어떤 환경에서도 바이트가 바뀌면 안 된다.
+cardnews/out/** -text
+cardnews/photos/** -text
+data/publish-records/** -text

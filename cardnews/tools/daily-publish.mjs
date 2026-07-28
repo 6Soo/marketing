@@ -92,6 +92,13 @@ if ((live || validateLive) && series.meta?.photoStatus !== 'verified') {
   console.error(series.meta?.photoNote || '현지 실사진과 출처를 확인한 뒤 meta.photoStatus를 verified로 바꾸세요.');
   process.exit(1);
 }
+if (live || validateLive) {
+  const gateRes = spawnSync('node', [join(REPO, 'tools', 'validate-cardnews-sources.mjs'), seriesDir], { stdio: 'inherit', env: process.env });
+  if (gateRes.status !== 0) {
+    console.error("실게시 차단: 사진 출처 검증에 실패했습니다(tools/validate-cardnews-sources.mjs). 위 오류를 해소한 뒤 다시 실행하세요.");
+    process.exit(1);
+  }
+}
 const covers = series.cards.filter(c => c.kind === 'cover');
 const coverId = opt('cover', covers[0]?.id);
 const cover = covers.find(c => c.id === coverId);
