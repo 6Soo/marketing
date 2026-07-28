@@ -141,7 +141,15 @@ Instagram에서 한 약속을 사이트가 답하지 못하거나, 공개 예약
   게시용 1순위는 Commons PD·CC0·CC BY 제3자 촬영본이고, 대장 원본은 화면 기준을 통과한 컷만 쓴다.
   tools/stock-photo.mjs (Pexels API)는 **내부 시안·목업 전용** — 산출물에 쓰면 `placeholder`로
   차단된다. 키는 리포 루트 **.env**에서 자동 로드하며 클라우드 세션은 `NODE_USE_ENV_PROXY=1` 접두.
-  **2026-07-28 실측: 이 워크스테이션에 `.env` 파일이 없어 Pexels·Gemini 호출이 전부 불가 상태.**
+  **2026-07-29 실측 정정: `.env`는 이 워크스테이션에 존재한다**(7/28 "파일 없음" 기록은 다른
+  머신 기준이었음). 현재 상태 — `PEXELS_API_KEY` 복구·라이브 검증 완료(200 OK, 실사진 반환),
+  `IG_USER_ID`/`IG_ACCESS_TOKEN`/`PUBLIC_BASE_URL`/`PUBLIC_DIR` 존재.
+  **미해결 2건**: ① `GEMINI_API_KEY` 없음 → Gemini 위임 경로 전부 불가(재발급:
+  https://aistudio.google.com/apikey). ② 인스타 토큰이 `OAuthException code 200 "API access
+  blocked"` — 만료가 아니라 **Meta 앱 레벨 차단**(refresh 요청도 동일 오류)이라 토큰 재발급으로
+  안 풀린다. Meta 앱 대시보드에서 앱 상태·인증 요구사항부터 확인할 것.
+  ※ 과거 `.env`가 커밋된 이력이 있어(bfb998c) **git 히스토리에 Pexels 키가 남아있다** — 리포를
+  외부에 열기 전 반드시 재발급. `.gitignore`는 `.env.*` 사본까지 차단하도록 보강(2026-07-29).
 
 ## 작업 규칙 (전사와 동일)
 
