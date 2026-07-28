@@ -732,7 +732,7 @@ validator·Playwright)는 전량 통과했고 의미 판독만 FAIL이었는데,
 - **push**: marketing은 `origin/main`(Meta 앱 차단 조사 2건)을 병합한 뒤 푸시 완료.
   reservation은 검증기 수정·V4·보존 브랜치 전부 푸시 완료.
 
-### (H) `~/.orca/bin/cycle.sh` 결함 9건 수정 — 사이클 러너가 실제로는 돌지 않았다
+### (H) `~/.orca/bin/cycle.sh` 결함 10건 수정 — 사이클 러너가 실제로는 돌지 않았다
 
 사장님이 "cycle.sh에 의해서 모든 것을 자동으로 진행하라"고 지시해 실행했더니, 러너가 설계
 단계조차 넘기지 못했다. 실측으로 원인 9건을 규명해 고쳤다. **`~/.orca`는 git 저장소가 아니므로
@@ -766,38 +766,71 @@ validator·Playwright)는 전량 통과했고 의미 판독만 FAIL이었는데,
 `C:/Users/kkokk/orca/workspaces/reservation/cta-observability`(브랜치 `6Soo/cta-observability`)에서
 돌린다. 원본 워킹트리를 건드리지 않는다.
 
-### (H-1) 남은 결함 1건 — 실환경 end-to-end는 아직 완주하지 못했다
+### (H-1) 10번째 결함 — 낡은 `ORCA_TERMINAL_HANDLE` (원인 규명·수정 완료)
 
-셀프테스트(모의 에이전트)는 13/13 통과하지만 **실제 에이전트 패널로 도는 실행은 T1→T2
-인계에서 여전히 멈춘다.** 관측된 사실만 적는다.
+셀프테스트는 13/13 통과하는데 실제 에이전트 패널로 도는 실행만 T1→T2에서 멈추던 문제의
+원인을 찾았다. **환경변수 `ORCA_TERMINAL_HANDLE`이 낡아 있었다.**
 
-- 설계자 패널은 T1을 마치고 스스로 "worker_done을 보고했습니다"라고 출력했다.
-- 해당 태스크는 `task-list`에서 `completed`로 바뀌었다.
-- 그런데 코디네이터 인박스를 `--all`로 조회해도 그 worker_done이 **없다**. 러너는 계속
-  "대기 계속"만 찍는다. 즉 완료 신호가 코디네이터가 아닌 다른 수신자로 갔거나 유실된다.
-- 실행 직전에 `orca orchestration reset`을 돌린 것이 디스패치의 코디네이터 귀속에 영향을
-  줬을 가능성이 있으나 확증하지 못했다. **다음 세션은 reset 없이 재현부터 확인할 것.**
+- 세션이 재시작되면 런타임은 코디네이터 터미널 핸들을 **재발급**한다. 그런데 이미 떠 있는
+  셸의 환경변수에는 옛 문자열이 그대로 남는다.
+- 그 상태로 `orca orchestration check --terminal <낡은 핸들>`을 부르면 **오류 없이 빈 결과**가
+  온다. 러너는 "완료 신호가 아직 없다"로 오해하고 영원히 대기한다.
+- 실측: 셸 env는 `term_73194922…`, 실제 worker_done 수신자는 `term_ba027b08…`이었다.
+  `orca terminal show --terminal term_73194922…`를 부르면 `term_ba027b08…`을 돌려준다 —
+  런타임은 별칭을 해석해 주는데 `check`는 그러지 않는다.
+- 조치: 시작 시 `terminal show`로 코디네이터 핸들을 **정규화**하고, 달라졌으면 그 사실을
+  `▶ [COORD] 핸들 정규화: … → …`로 출력한다. 셀프테스트 13/13 유지 확인.
 
-다음 세션이 볼 지점: `dispatch --json` 응답의 `dispatch.coordinator*` 필드가 실제
-`ORCA_TERMINAL_HANDLE`과 일치하는지, 그리고 작업자 패널이 실제로 실행한
-`orca orchestration send --to <핸들>`의 인자값. 이 둘이 어긋나면 6번 결함의 잔여분이다.
+이 결함이 앞선 세 번의 실행이 전부 "대기 계속"으로 끝난 진짜 이유다. 5~9번 수정이 없었다면
+이 지점까지 도달하지도 못했으므로, 순서대로 하나씩 걷어낸 끝에 드러난 마지막 층이다.
 
-### (H-2) 이번 사이클이 실제로 만든 산출물
+**교훈**: 장수 셸에서 orca 핸들을 환경변수로 신뢰하지 마라. 매 실행 시작에 해석하라.
 
-브랜치 `6Soo/cta-observability`에 CTA 관측 가능화 설계 **3라운드**가 커밋돼 있다.
+### (H-2) 사이클 실환경 완주 — T1→T4까지 실제로 돌았다
 
-- `b19d50e` 초안 — 대안 A(sync-tours 크론 말미 서버측 평가 → settings 저장 →
-  `/api/health`의 `storyCta` 섹션 + `console.error`) / B(trackEvent 계측, 보조) /
-  C(제목 매칭 완화, 불변조건 7 위반으로 기각) 비교
-- `a1b3cfa` R2 — 초안의 모든 사실 주장을 코드로 재검증, `fldidRejects` 단계별 탈락 집계 추가
-- `2137e09` R3 — A″(in-process 평가) 변형을 검토 후 기각. 사용자가 보는 후보 목록이
-  `/api/tours` GET 핸들러 안에서만 완성되므로 in-process 복제는 "화면엔 CTA가 없는데
-  감시는 정상"이라는 최악의 미탐을 만든다. 구현 노트 2건 추가 —
-  `health/route.ts`의 GET에 `request` 파라미터가 없어 셀프 콜 오리진 도출에 시그니처 변경 필요,
-  `sync-tours`에 `maxDuration`이 없어 말미 평가는 독립 `try` + 15초 캡으로 격리해야 함.
+10건을 걷어낸 뒤 실행한 라운드에서 러너가 처음으로 단계를 넘어갔다.
 
-**구현(T4)·검증(T5)은 수행되지 않았다.** 설계만 3라운드 확정된 상태다.
+```
+✔ T1 설계초안(fable(med)) 완료
+✔ T2 반박(sol(med)) 완료
+✔ T3 재반론·개정(fable(med)) 완료
+→ 설계 자동 수용 (판정은 T5 검증에서)
+▶ [MODEL] agy gemini-3.6-flash-high · high · T4 구현
+```
 
+CLASS B 쿼터 프로브가 `agy gemini-3.6-flash-high`를 구현자로 확정했고, 9번 수정(단계 인계)이
+실제로 동작한 것도 확인했다 — T4 태스크 spec 안에 `=== 직전 단계 산출물 ===` 블록이 들어 있다.
+
+**산출물 — 브랜치 `6Soo/cta-observability`**
+
+| 커밋 | 단계 | 내용 |
+|---|---|---|
+| `b19d50e` | T1 | 초안 — A(크론 말미 서버 평가+health `storyCta`) / B(trackEvent, 보조) / C(매칭 완화, 불변조건 7 위반 기각) |
+| `a1b3cfa` | T1-R2 | 모든 사실 주장을 코드로 재검증, `fldidRejects` 단계별 탈락 집계 |
+| `2137e09` | T1-R3 | A″(in-process 평가) 신규 기각 — 후보 목록이 `/api/tours` 핸들러 안에서만 완성되므로 복제하면 "화면엔 CTA 없는데 감시는 정상"이라는 미탐 발생 |
+| `d6861b2` | T1-R4 | §6 단계별 구현 계획 + 잔여 결정 3건 |
+| `d267eec` | T3-R5 | **반박 6건 중 5건 전면 수용**(envelope 오보·smoke 판정·평가 선행·비순환 P1·throwing write·오리진 allowlist), 1건 부분 수용 |
+| `91c18f4` | T4 | 구현 — `storyCtaStatus.ts` 신설, `storyTours.ts`·`health`·`sync-tours`·`smoke.mjs` 개정, 테스트 2종 |
+
+구현 요지: `connectedTour === null`을 4분류(`matched` / `no-candidate` / `title-mismatch` /
+`invalid-input`)로 가르고, API 오류를 mismatch로 오보하지 않도록 envelope를 따로 파싱하며,
+near-miss에 `missingTerms`를 실어 운영자가 "제목이 어떻게 바뀌었는지"를 볼 수 있게 했다.
+fail-closed는 그대로다.
+
+**Opus 독립 검증**: `npm test` **94/94**(기존 82 + 신규 12) · `tsc --noEmit` 0 · `npm run build` 성공.
+
+**T4가 넣은 회귀 1건**: 같은 파일들의 ESLint 오류가 기준선 3건 → 11건으로 늘었다
+(`no-explicit-any` 6, `no-require-imports` 3). 별도 라운드로 수정 중이다.
+
+### (H-3) 남은 문제 — worker_done이 간헐적으로 낡은 핸들로 간다
+
+T4는 `task-list`에서 `completed`인데 러너는 완료 신호를 못 받고 계속 대기했다. (H-1)에서
+규명한 낡은 핸들 문제의 잔여분이다. 시작 시 정규화를 넣었지만 `terminal show`가 빈 값을
+돌려주는 경우가 있어 정규화가 조용히 건너뛰어진다.
+
+**다음 세션이 할 일**: 정규화 실패를 무시하지 말고 실패로 처리하거나, `dispatch --json` 응답에
+담긴 코디네이터 핸들을 신뢰원으로 쓰도록 바꿀 것. 그리고 T5(검증·판정)는 아직 한 번도
+실행되지 않았으므로 완주 확인은 다음 라운드 몫이다.
 
 ### 여전히 막혀 있는 것 (이번 세션이 풀 수 없음)
 
