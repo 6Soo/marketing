@@ -1,0 +1,28 @@
+{
+  "_읽어보세요": [
+    "북알프스(northern-alps-004) 24h 체크포인트용 Instagram 인사이트 스냅샷입니다.",
+    "\"숫자입력\" 자리에 인스타 인사이트 화면의 숫자만 바꿔 넣으세요(따옴표 없이 숫자, 예: 12).",
+    "화면에 안 나오거나 모르는 값은 \"숫자입력\" 그대로 두세요. 그대로 두면 기록에서 빠집니다.",
+    "절대 0이나 null을 쓰지 마세요. 0/null은 '실제로 0으로 관측했다'로 기록됩니다.",
+    "permalink는 절대 수정하지 마세요. 이 값으로 게시물을 찾습니다.",
+    "작성 가이드: context/인스타-활성화-24h-스냅샷-작성가이드.md"
+  ],
+  "_experiment": "northern-alps-004",
+  "_checkpoint": "24h",
+  "media": [
+    {
+      "media": {
+        "permalink": "https://www.instagram.com/p/DbRGuL5kwEU/",
+        "like_count": "숫자입력",
+        "comments_count": "숫자입력"
+      },
+      "insights": {
+        "data": [
+          { "name": "reach", "total_value": { "value": "숫자입력" } },
+          { "name": "saved", "total_value": { "value": "숫자입력" } },
+          { "name": "shares", "total_value": { "value": "숫자입력" } }
+        ]
+      }
+    }
+  ]
+}
