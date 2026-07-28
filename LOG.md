@@ -819,8 +819,10 @@ fail-closed는 그대로다.
 
 **Opus 독립 검증**: `npm test` **94/94**(기존 82 + 신규 12) · `tsc --noEmit` 0 · `npm run build` 성공.
 
-**T4가 넣은 회귀 1건**: 같은 파일들의 ESLint 오류가 기준선 3건 → 11건으로 늘었다
-(`no-explicit-any` 6, `no-require-imports` 3). 별도 라운드로 수정 중이다.
+**T4가 넣은 회귀 1건 — 해소**: 같은 파일들의 ESLint 오류가 기준선 3건 → 11건으로 늘었다
+(`no-explicit-any` 6, `no-require-imports` 3). 별도 수정 라운드로 닫았다(`5b4f0ef`).
+`eslint-disable` 주석으로 덮지 않고 실제 타입을 좁히고 `require()`를 정적 import로 바꿨다.
+재검증: **ESLint 오류 0** · `npm test` 94/94 · `tsc --noEmit` 0 · `npm run build` 성공.
 
 ### (H-3) 남은 문제 — worker_done이 간헐적으로 낡은 핸들로 간다
 
