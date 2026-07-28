@@ -2,7 +2,9 @@
 
 > Standalone continuation context. A Linux agent should resume from this document without relying on the chat prompt. It records the session decisions, completed implementation, evidence, blockers, and exact next actions. Production secrets are intentionally excluded.
 
-Updated: 2026-07-27, Asia/Seoul. User instruction at handoff: stop all work, prepare a Linux agent migration handoff, push it, and do not start new workers or publish anything during migration.
+Updated: 2026-07-27, Asia/Seoul. 사실 정정 반영: 2026-07-28(브랜치명, 24h 도래, 워크플로 실패,
+출처 링크 수, `/stories/sado`, CTA 취약점, 사도 사진 결함 — §1·§6·§7). 목표·불변조건·완료 게이트는
+변경하지 않았다. User instruction at handoff: stop all work, prepare a Linux agent migration handoff, push it, and do not start new workers or publish anything during migration.
 
 ## 0. 최종 정본
 
@@ -77,7 +79,9 @@ Linux agent는 이 문서를 읽었다는 이유만으로 실행·게시·배포
 
 ## 1. Repository and safety
 
-- Repository: `6Soo/marketing`; branch: `Master`; remote: `https://github.com/6Soo/marketing/`.
+- Repository: `6Soo/marketing`; branch: **`main`**; remote: `https://github.com/6Soo/marketing/`.
+  - 2026-07-28 확인: 이 문서가 처음 적었던 `Master`는 존재하지 않는다(`origin/Master` 없음).
+    기본 브랜치는 `origin/HEAD -> origin/main`이므로 `main`으로 정정한다. §7 재개 절차도 함께 정정됨.
 - Handoff series before the final cleanup:
   `1c32f59`, `2752e73`, `39e9972`, `1acf949`, `03bb01a`, `f3f2159`.
 - Relevant implementation history: `9d05fb8`, `2158b65`, `b52ac72`, `abf69a6`, `363cea3`.
@@ -283,20 +287,41 @@ Last verification: `npm run test:instagram` passed 41/41. Tests cover publish va
 - Public Northern Alps story:
   `https://foresttour.kr/stories/northern-alps`.
 - Production deployment `dpl_96otr4Y6fTjRD5QfQ7CyUoUtigpB` was READY and passed
-  390×844 mobile, canonical, metadata, eight source links, home discovery card,
+  390×844 mobile, canonical, metadata, source links, home discovery card,
   CTA, overflow, and console checks.
+  - 2026-07-28 확인: 위의 "eight source links"는 사진 고정 리비전 8건 기준이었다.
+    현재 `/stories/northern-alps`는 **총 14개 출처**(공식 자료 6 + 사진 8)를 렌더한다.
+    기준 수치를 14로 갱신한다.
+- Public Sado story: `https://foresttour.kr/stories/sado`.
+  - 2026-07-28 확인: 이 문서는 사도를 IG 게시물·Story 에셋으로만 기록했으나, 사도는 지금
+    canonical·OG·공식 출처 4건을 갖춘 정식 스토리 페이지이며 홈 발견 카드에서 연결된다.
+    연결된 공개 일정이 없으므로 CTA는 올바르게 숨김 상태다(fail-closed 정상).
 - The exact active product `fNod` is shown only when runtime verification succeeds;
   API failure, delay, or mismatch hides the CTA.
+  - 2026-07-28 확인 — 알려진 취약점: `fNod` CTA 노출이 상품 제목의 부분 문자열 매칭
+    (`알펜루트`·`가미코지`·`노리쿠라`)에 의존한다. 카페 원문 제목이 바뀌면 CTA가 조용히 사라진다.
 - Hida and Sanriku captions were corrected to remove unsupported duration/month/departure
   promises and disclose AI/stock stand-ins. Their placeholder assets remain blocked from republishing.
 - GitHub secret names present: `IG_ACCESS_TOKEN`, `IG_USER_ID`.
 - Missing: `FORESTTOUR_ADMIN_KEY`; no `ACTIVATION_COLLECT_ENABLED` repository variable was present.
 - Meta API calls were blocked with `OAuthException code 200: API access blocked`; do not retry as if successful or fabricate metrics.
 - Production `foresttour.kr/api/health` previously exposed only `adminKey: true` (presence, not value). Never derive the key from it. No local/deployment environment value was available.
-- 0h records for Sado and Northern Alps are present. At the last check (2026-07-27 around 05:55 KST), 24h was still upcoming:
+- 0h records for Sado and Northern Alps are present. At the 2026-07-27 check (around 05:55 KST), 24h was still upcoming:
   - Sado due `2026-07-27T18:47:02.033Z` UTC = 2026-07-28 03:47 KST;
   - Northern Alps due `2026-07-27T19:15:31.598Z` UTC = 2026-07-28 04:15 KST.
+  - **2026-07-28 확인: "24h가 아직 미도래"라는 서술은 정정한다. 두 기한 모두 이미 지났다.**
+    현재 두 실험 모두 24h 상태는 `due`이고 records는 0이다.
+    **시간이 더 흘러도 자동으로 `recorded`가 되지 않는다** — 수집 경로(Instagram API 또는
+    체크인된 UI 스냅샷 + `FORESTTOUR_ADMIN_KEY`)가 실행돼야만 기록된다.
 - Last reports showed both experiments `collecting`, with 24h missing source groups `graph-api or instagram-ui` and `foresttour-admin`.
+- 2026-07-28 확인 — 워크플로 실패: `instagram-activation-checkpoints` 예약 실행이
+  07-27 19:50, 07-28 03:30 두 건 연속 실패했다. 이는 설계된 fail-closed이며 장애가 아니다.
+  다만 `Determine due checkpoint` 스텝이 리포트 도구의 exit 2에서 죽어 안내 스텝
+  (`Refuse silent checkpoint miss`)에 도달하지 못하던 결함이 있었고, 커밋 `4e3f76c`로 수정됐다.
+- 2026-07-28 확인 — 알려진 결함(사도 사진): `cardnews/series/sado`는 `photoStatus: 'verified'`인데
+  `node tools/validate-cardnews-sources.mjs cardnews/series/sado`는 실패한다
+  (표지가 `03-kitazawa.jpg`를 재사용 → 중복). 실게시 게이트가 `photoStatus`만 보고 검증기를
+  돌리지 않는 구멍이 있다.
 - Last observed 0h UI metrics were zero/unknown where the UI showed no value; do not infer success from zeros.
 - Sado Story follow-up asset:
   `cardnews/out/sado/story/01-discovery-link.jpg`.
@@ -307,8 +332,8 @@ Last verification: `npm run test:instagram` passed 41/41. Tests cover publish va
 
 ```bash
 git fetch origin
-git switch Master
-git pull --ff-only origin Master
+git switch main
+git pull --ff-only origin main
 git status --short
 git show --stat --oneline 9d05fb8
 cat AGENTS.md

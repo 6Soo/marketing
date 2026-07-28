@@ -358,3 +358,46 @@
    통과 후 `Instagram Story follow-up package`를 실행한다.
 6. 모바일에서 `사도 이야기 이어보기` 링크 스티커를 추가해 Story를 게시하고,
    이후 `story_sado_visit`을 같은 귀속 규칙으로 측정한다.
+
+---
+
+## 2026-07-28 세션 — 인계서 사실 정정·감사
+
+이번 세션은 **사실 정정 전용**이다. Persistent Goal(§3), 불변조건, 완료 게이트 문구는 건드리지 않았다.
+게시·발행·secret 취급은 하지 않았다.
+
+### 실측으로 확인해 정정한 것
+
+1. **브랜치명**: 인계서 §1·§7이 `Master`라 적었으나 `origin/Master`는 없고 기본 브랜치는
+   `main`(`origin/HEAD -> origin/main`)이다. §7의 `git switch Master` 재개 절차를 그대로
+   실행하면 실패한다 → `main`으로 정정했다.
+2. **24h 도래**: 인계서 §6의 "24h 미도래"는 낡았다. 사도 `2026-07-27T18:47:02Z`,
+   북알프스 `2026-07-27T19:15:31Z` 기한은 이미 지났고, 현재 두 실험 모두 24h는 `due` /
+   records 0이다. **시간이 더 흘러도 자동으로 `recorded`가 되지 않는다** — 수집 경로가
+   실제로 실행돼야 기록된다.
+3. **워크플로 실패**: `instagram-activation-checkpoints` 예약 실행이 07-27 19:50,
+   07-28 03:30 두 건 연속 실패했다. 설계된 fail-closed이며 장애가 아니다. 다만
+   `Determine due checkpoint` 스텝이 리포트 도구의 exit 2에서 죽어 안내 스텝
+   (`Refuse silent checkpoint miss`)까지 가지 못하던 결함이 있었고 커밋 `4e3f76c`로 수정됐다.
+4. **출처 링크 수**: §6의 "eight source links"는 사진 고정 리비전 8건 기준이었다.
+   현재 `/stories/northern-alps`는 **총 14개**(공식 자료 6 + 사진 8)를 렌더한다 → 기준 갱신.
+5. **`/stories/sado` 존재**: §6은 사도를 IG 게시물·Story 에셋으로만 기록했으나, 지금은
+   canonical·OG·공식 출처 4건을 갖춘 정식 스토리 페이지이며 홈 발견 카드로 연결된다.
+   연결된 공개 일정이 없어 CTA는 올바르게 숨김 상태다.
+6. **폴라로이드 벽(`CLAUDE.md`)**: "현재 Pexels 임시" 서술이 낡았다. 현재 `/home2`는
+   `FIELD NOTES` 4장 발견 카드 구조이고 사도·북알프스 카드는 실제 현지 사진 + CC 크레딧을 쓴다.
+   **대장 촬영 원본 교체 대상은 히다·산리쿠로 좁혀졌다.**
+
+### 알려진 취약점·결함으로 기록한 것
+
+7. **CTA 취약점**: `fNod` CTA가 상품 제목의 부분 문자열 매칭(`알펜루트`·`가미코지`·`노리쿠라`)에
+   의존한다. 카페 원문 제목이 바뀌면 CTA가 조용히 사라진다.
+8. **사도 사진 결함**: `cardnews/series/sado`는 `photoStatus: 'verified'`인데
+   `node tools/validate-cardnews-sources.mjs cardnews/series/sado`가 실패한다
+   (표지가 `03-kitazawa.jpg` 재사용 → 중복). 실게시 게이트가 `photoStatus`만 보고
+   검증기를 돌리지 않는 구멍이 있다.
+
+### 손대지 않은 것
+
+- 인계서 §0/§0-A(지시 연대기), §3 Persistent Goal·불변조건·완료 게이트, 카페 detour 역사 기록은
+  원문 그대로 보존했다. 낡은 서술은 삭제하지 않고 "2026-07-28 확인: ~로 정정" 형태로 갱신했다.
