@@ -304,7 +304,11 @@ Last verification: `npm run test:instagram` passed 41/41. Tests cover publish va
   promises and disclose AI/stock stand-ins. Their placeholder assets remain blocked from republishing.
 - GitHub secret names present: `IG_ACCESS_TOKEN`, `IG_USER_ID`.
 - Missing: `FORESTTOUR_ADMIN_KEY`; no `ACTIVATION_COLLECT_ENABLED` repository variable was present.
-- Meta API calls were blocked with `OAuthException code 200: API access blocked`; do not retry as if successful or fabricate metrics.
+- ~~Meta API calls were blocked with `OAuthException code 200: API access blocked`~~ — **RESOLVED 2026-07-29.**
+  Root cause was a Meta *developer account* restriction (Meta's own "safety precaution"), not the app,
+  the token, or app review. Once the account was restored, the API worked with no app or token changes.
+  Verified: `✓ Instagram API 연결 정상 · @foresttour.kr · 게시 한도 0/100` (`account_type=BUSINESS`).
+  Still applies: never fabricate metrics — if a call fails, report the failure.
 - Production `foresttour.kr/api/health` previously exposed only `adminKey: true` (presence, not value). Never derive the key from it. No local/deployment environment value was available.
 - 0h records for Sado and Northern Alps are present. At the 2026-07-27 check (around 05:55 KST), 24h was still upcoming:
   - Sado due `2026-07-27T18:47:02.033Z` UTC = 2026-07-28 03:47 KST;
