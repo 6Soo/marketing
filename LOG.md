@@ -576,3 +576,118 @@
 - 인계 문서(이 한 건만 읽으면 됨):
   `reservation/docs/FORESTTOUR_BRAND_SYMBOL_HANDOFF_2026-07-29.md`
 - cycle.sh 산출물(`.cycle/`)은 확정본을 reservation `docs/`로 옮겨 보존하고 `.gitignore` 처리했다.
+
+---
+
+## 2026-07-29 — 인계 결함 3건 해소 + 브랜드 심볼 V3 블라인드 판정
+
+인계서(§6 "알려진 취약점·결함")와 브랜드 심볼 인계에서 열려 있던 항목을 실행했다.
+외부 게시·발행·전송 없음. secret 접근 없음. reservation은 push하지 않았다.
+
+### (A) 실게시 게이트에 출처 검증기 연결 — marketing `d43db4f`
+
+`daily-publish.mjs`의 `--publish`/`--validate-live` 경로가 `meta.photoStatus`만 확인하고
+`tools/validate-cardnews-sources.mjs`를 실행하지 않던 구멍을 막았다. 이제 게이트에서
+검증기를 실행하고 실패 시 exit 1로 차단한다.
+
+- 회귀 테스트 3건 신설: `cardnews/tools/daily-publish.test.mjs`
+  (중복 사진 차단 / 서로 다른 검증 사진 통과 / `photoStatus: placeholder` 차단)
+- 픽스처는 `cardnews/__gate-fixtures/` 아래에 만든다. `cardnews/series/` 아래에 만들면
+  `verify-series-connected-tour.test.mjs`의 시리즈 스캔에 잡혀 다른 테스트를 깨뜨린다.
+  또 검증기가 `resolve(seriesDir,'..','..','..')`로 리포 루트를 잡으므로 깊이 3이어야 한다.
+
+### (B) 게시 증거 줄바꿈 변환 차단 — 이번에 새로 발견 (같은 커밋)
+
+`core.autocrlf=true`인 Windows 체크아웃에서 git이
+`cardnews/out/northern-alps/_caption-northern-alps.txt`를 CRLF로 바꿔
+`verify-publish-record`의 `verified-recomputable` 지문 재계산이 실패한다.
+**실측**: 기대 `2e5fc060…` / 실제 `916423ea…` (1125바이트 → 1150바이트).
+
+즉 기존 "지문 재계산 일치 확인" 기록은 **LF 체크아웃 환경에서만** 유효했다.
+`.gitattributes`로 `cardnews/out/**`·`cardnews/photos/**`·`data/publish-records/**`의
+EOL 변환을 차단했다. 향후 게시 증거를 추가할 때 이 경로 밖에 두면 같은 함정이 재발한다.
+
+### (C) 사도 003 표지 중복 해소 — marketing `0b6bec1`
+
+표지가 3장 카드와 같은 `03-kitazawa.jpg`를 재사용하던 결함을 닫았다. (A) 덕분에 이 결함은
+이제 실게시를 실제로 차단한다.
+
+- 새 표지 `cardnews/photos/sado/01-kitazawa-terrace.jpg`
+  — Commons `File:北沢浮遊選鉱場内の濁川 02.jpg`, 저작자 Indiana jo, **CC0**,
+  3648×2736, 고정 리비전 993748777.
+- 화면 기준 실사 확인: 우측에 층층 테라스가 뚜렷해 표지 문구와 소재가 맞고,
+  하단 1/3이 균일한 녹지라 스크림·흰 글씨를 얹을 수 있으며 상단 좌우가 비어 있다.
+- **로컬 재인코딩 고지**: Commons 원본 바이트가 JPEG 종료 마커(`FF D9`) 없이 `FF FF`로
+  끝나 검증기의 `isJpeg()`를 통과하지 못한다. Commons 서버도 이 파일의 썸네일 생성에
+  실패해 어떤 요청 폭(2000·2400·2800·3000·3400)에서도 원본을 반환한다. 그래서 픽셀
+  크기·크롭·색을 바꾸지 않고 JPEG로만 재인코딩(q92, 4:4:4)했다. 원본 SHA-1은
+  `commonsSha1`에, 로컬 해시는 `sha256`/`localSha1`에 보존했다.
+- 캡션 크레딧도 정정: 카드에 쓰이지 않는 `Tensaibuta`(cover-a.jpg)를 빼고
+  `Indiana jo(CC0)`를 넣었다.
+- **재렌더·재게시하지 않았다.** `cardnews/out/sado/`의 PNG와 공개된 Instagram 게시물은
+  옛 표지 상태 그대로다.
+
+#### 사도 Commons 가용 사진 실측 (다음 세션이 다시 세지 않도록)
+
+CLAUDE.md 비주얼 계약 2번대로 착수 전에 실조회로 셌다. 검색어 14종 + 카테고리 5종을
+훑어 **PD·CC0·CC BY이면서 장변 2700px↑인 후보는 사도 전체에서 약 20건**이고, 그중
+표지로 쓸 만한 풍경·유적 컷은 손에 꼽는다. 나머지는 박물관 내부·음식·맨홀·도로 표지다.
+`File:Japan - panoramio (1).jpg`(CC BY 3.0, 5760×3840, 항공에서 본 사도 전경)가
+남은 최상급 후보지만 현재 표지 문구("층층 구조물")와 소재가 맞지 않아 쓰지 않았다.
+
+또 **Wikimedia는 이 워크스테이션의 Range 요청(`bytes=-2`)을 전부 거부한다.** JPEG 종료
+마커를 원격으로 미리 검사할 수 없으므로, 후보는 내려받은 뒤 로컬에서 확인해야 한다.
+
+### (D) 브랜드 심볼 V3 — 블라인드 T5로 FAIL 확정 (reservation)
+
+인계서는 "다음 작업 = V3 구현"이라 적었으나, **다른 세션이 이미 구현·검증(R4)을 마쳐
+워킹트리에 미커밋 상태로 있었다.** 자동 게이트(ESLint·tsc·test 82/82·build·production
+validator·Playwright)는 전량 통과했고 의미 판독만 FAIL이었는데, 그 판정은 **설계를 읽은
+구현자가 내려 §7.2의 블라인드 요건을 충족하지 못한다고 R4 스스로 적어 두었다.**
+
+이번 세션은 그 공백을 채웠다. production 빌드 → `next start` → Chromium DPR 1 캡처
+(390×844 상단 390×110 크롭 = 심볼 36×36 device pixel 무재샘플링 / 1280×900 = 42px) 후
+설계를 모르는 독립 세션 2개에 선택지 순서를 서로 다르게 무작위화해 강제선택시켰다.
+
+- 정답 범주 `나무 한 그루 + 아래에서 굽어 나오는 한 줄 길` 선택 = **10건 중 0건**
+  (36px 5/5 `추상 배지`, 42px 5/5 `화살표 + 갈고리`)
+- **36px에서 SEPARATION도 5/5 실패** — R4 자기판정(통과)보다 나쁘다. 설계가 계산한
+  3.33px 잉크 공백이 실제로는 분리로 읽히지 않는다.
+- 두 판정자 모두 묻지 않은 false affordance(`맨 위로 가기`·`업로드` 버튼 오인)를 스스로 지적했다.
+- 기록: `reservation/docs/FORESTTOUR_BRAND_SYMBOL_T5_BLIND_2026-07-29.md`
+
+**보존 조치**: V3 구현이 유실될 위험이 있어 `main`이 아니라 전용 브랜치
+`brand/v3-r4-blind-fail`(`1ce7b9c`)에 커밋했다. `main` 워킹트리는 R3 상태로 되돌렸으므로
+누가 `main`을 push해도 실패한 심볼이 배포되지 않는다. **push는 하지 않았다.**
+
+### (E) 브랜드 검증기 Windows 위양성 버그 — reservation main `0c0dd2b`
+
+`scripts/verify-foresttour-brand.mjs`의 main-module 가드가
+`import.meta.url === ` + "`file://${process.argv[1]}`" + `였다. Windows에서
+`process.argv[1]`은 `D:\...\x.mjs`이고 `import.meta.url`은 퍼센트 인코딩된
+`file:///D:/OneDrive/%EB%AC%B8%EC%84%9C/...`라 **이 조건은 절대 참이 되지 않는다.**
+검증기 본체가 통째로 건너뛰어져 5페이지 중 한 곳도 검사하지 않고 exit 0으로 끝났다.
+
+- 즉 과거 "production 검증기 통과" 기록은 **macOS에서만** 유효하다.
+- `pathToFileURL(process.argv[1]).href` 비교로 교체. 실증: 구 조건 false / 신 조건 true,
+  수정 후 5페이지 실검사 전부 `✓`. `npm test` 73/73, `tsc --noEmit` 통과.
+- 심볼 기하와 무관하므로 V3 판정과 분리해 `main`에 적용했다(push 없음).
+
+### 사장님 결정이 필요한 것
+
+1. **브랜드 심볼 V4 방향.** R3(나무 2그루+단차)와 R4(나무 1그루)의 실패를 합치면
+   구조적 충돌이 확정된다 — 침엽수로 읽히게 하는 특징은 34px에서 소멸하고, 그걸 빼면
+   남는 실루엣은 삼각형 하나이며 삼각형+아래 돌출부는 화살표로 읽힌다. 좌표 탐색으로는
+   벗어날 수 없다. 선택지 4종과 근거는 위 블라인드 기록 §6. 블라인드 결과를 보태면
+   ①요소를 하나로 / ④비협상 조건 완화(모바일 40~42px 또는 모노그램)의 근거가 가장 강하다.
+2. **공개된 사도 Instagram 캡션 정정 여부.** 현재 공개 캡션은 카드에 쓰이지 않는
+   `Tensaibuta(Public Domain)`를 크레딧한다. 로컬은 고쳤지만 공개 게시물 수정은 외부
+   작업이라 하지 않았다.
+3. **사도 표지 문구 `섬 한가운데`.** 북택부유선광장이 있는 아이카와는 사도 서해안이라
+   지리적으로 부정확하다. 이미 공개된 문구라 임의로 바꾸지 않았다.
+
+### 여전히 막혀 있는 것 (이번 세션이 풀 수 없음)
+
+- Instagram Graph API `OAuthException code 200 "API access blocked"` — Meta 앱 레벨 차단.
+- GitHub secret `FORESTTOUR_ADMIN_KEY` 미등록, `ACTIVATION_COLLECT_ENABLED` 미설정.
+  둘 다 사장님만 처리 가능하며, 이 상태에선 24h 체크포인트가 `due`에서 진행되지 않는다.

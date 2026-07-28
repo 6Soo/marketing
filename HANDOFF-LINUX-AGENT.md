@@ -318,10 +318,19 @@ Last verification: `npm run test:instagram` passed 41/41. Tests cover publish va
   07-27 19:50, 07-28 03:30 두 건 연속 실패했다. 이는 설계된 fail-closed이며 장애가 아니다.
   다만 `Determine due checkpoint` 스텝이 리포트 도구의 exit 2에서 죽어 안내 스텝
   (`Refuse silent checkpoint miss`)에 도달하지 못하던 결함이 있었고, 커밋 `4e3f76c`로 수정됐다.
-- 2026-07-28 확인 — 알려진 결함(사도 사진): `cardnews/series/sado`는 `photoStatus: 'verified'`인데
+- ~~2026-07-28 확인 — 알려진 결함(사도 사진): `cardnews/series/sado`는 `photoStatus: 'verified'`인데
   `node tools/validate-cardnews-sources.mjs cardnews/series/sado`는 실패한다
   (표지가 `03-kitazawa.jpg`를 재사용 → 중복). 실게시 게이트가 `photoStatus`만 보고 검증기를
-  돌리지 않는 구멍이 있다.
+  돌리지 않는 구멍이 있다.~~
+  **[2026-07-29 해소] 두 건 모두 닫혔다.** 게이트는 `daily-publish.mjs`에서 검증기를 실제로
+  실행하고 실패 시 exit 1로 차단한다(커밋 `d43db4f`, 회귀 테스트 3건 신설). 사도 표지는
+  Commons CC0 신규 사진 `01-kitazawa-terrace.jpg`로 교체해 검증기가 통과한다(커밋 `0b6bec1`).
+  재렌더·재게시는 하지 않았으므로 `cardnews/out/sado/`와 공개 게시물은 옛 표지 그대로다.
+  상세는 `LOG.md`의 2026-07-29 블록 (A)·(C).
+- 2026-07-29 확인 — 새로 발견한 결함(게시 증거 줄바꿈): `core.autocrlf=true`인 Windows
+  체크아웃에서 `cardnews/out/northern-alps/_caption-northern-alps.txt`가 CRLF로 바뀌어
+  `verified-recomputable` 지문 재계산이 실패했다(기대 `2e5fc060…` / 실제 `916423ea…`).
+  즉 기존 "재계산 일치 확인" 기록은 LF 환경에서만 유효했다. `.gitattributes`로 차단했다(`d43db4f`).
 - Last observed 0h UI metrics were zero/unknown where the UI showed no value; do not infer success from zeros.
 - Sado Story follow-up asset:
   `cardnews/out/sado/story/01-discovery-link.jpg`.
