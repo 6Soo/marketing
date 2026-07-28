@@ -155,3 +155,13 @@ console.log(`✓ ${out}`);
 console.log(`  프로파일 ${profile} · ${scenes.length}장 · ${total.toFixed(1)}초 · 음악 ${basename(music)}`);
 console.log(`  구성: ${layout}`);
 if (profile !== 'full') console.log('  훅: 페이드인 없음 + 표지 펀치인 + 1.6초 지점 급속 컷 3연발');
+
+// 음원 출처 표식. 사진과 같은 원칙 — 나중에 증명할 수 없으면 쓰지 않은 것과 같다.
+// placeholder는 코드 합성물(gen-music.mjs)이라 법적 문제는 없지만 완성도가 낮으므로,
+// 그대로 실게시되는 사고를 막기 위해 눈에 띄게 알린다.
+if (basename(music).startsWith('placeholder-')) {
+  console.warn('\n⚠ 음악이 placeholder입니다 (코드 합성물 — 게시해도 법적 문제는 없으나 완성도 낮음).');
+  console.warn('  교체: Pixabay(인스타+유튜브 겸용) 또는 Meta Sound Collection(인스타 전용)에서 받아');
+  console.warn('  cardnews/assets/music/ 에 두고 --music=경로 로 지정. 라이선스 근거는 같은 폴더 출처.md에 기록.');
+  console.warn('  상세: cardnews/docs/인스타-자동게시-음악.md §3-A');
+}
