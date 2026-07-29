@@ -1119,3 +1119,20 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
   (`3de8aa0`) 이미 게시된 카드에는 심볼이 없고, 릴스도 그 상태의 PNG를 썼다 —
   게시된 캐러셀과 일관된다. 재렌더하면 심볼이 들어가 **게시 증거와 어긋나므로 주의**할 것.
 - 상세 실행안: `strategy/인스타-최초도달-확보-실행안-0729.md`
+
+---
+
+## 2026-07-29 — Instagram 전면 인계 후 자동 실행 착수
+
+- 인계 문서의 우선순위를 재검증하고, 북알프스 릴스를 기존 캐러셀 실험에 섞지 않기 위해
+  `data/experiments/northern-alps-reel-005.json`을 신설했다.
+- 실험의 1차 비교값은 `reach`·`views`·`shares`다. 프로필 링크는 정책상 깨끗한
+  `https://foresttour.kr`을 유지하므로 사이트 방문은 게시물 단위로 직접 귀속할 수 없다.
+  따라서 `insta` + `instagram-app` 방문은 보조 증거로만 쓰고 릴스 우위의 단독 근거로 쓰지 않는다.
+- 수행 모델: **GPT-5.6 Sol**. 검증 모델: **GPT-5.6 Sol 자체 검증 + 파일·테스트·GitHub Actions 실증**.
+  주요 반박: 프로필 링크 유입을 릴스 전용 source code로 기록하면 존재하지 않는 정밀도를 만들고
+  활성화 판정을 오염시킨다. 최종 수용: `sourceCode=insta`로 실제 분류와 맞추되, 게시물 단위
+  인과 추론 금지를 guardrail에 명시했다.
+- 폴백 사유: 이 세션에는 Claude Fable 5/Opus 5와 AGY Flash/Sonnet 호출 수단이 없고,
+  리포의 Gemini 브리지는 `.env`/`GEMINI_API_KEY` 부재로 호출할 수 없다. 호출하지 않은 모델을
+  호출했다고 기록하지 않는 `AGENTS.md` 정책을 적용했다.
