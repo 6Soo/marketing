@@ -9,7 +9,7 @@
   "scripts": {
     "render": "node cardnews/tools/render.mjs",
     "daily-publish": "node cardnews/tools/daily-publish.mjs",
-    "test:instagram": "node --test tools/instagram-publish.test.mjs tools/record-instagram-activation.test.mjs tools/instagram-activation-report.test.mjs tools/ingest-instagram-publish-result.test.mjs tools/collect-instagram-activation-metrics.test.mjs tools/list-instagram-activation-experiments.test.mjs tools/instagram-activation-learn.test.mjs tools/build-instagram-story.test.mjs tools/verify-instagram-story-ready.test.mjs tools/verify-series-connected-tour.test.mjs tools/verify-publish-record.test.mjs cardnews/tools/daily-publish.test.mjs",
+    "test:instagram": "node --test tools/instagram-publish.test.mjs tools/record-instagram-activation.test.mjs tools/instagram-activation-report.test.mjs tools/ingest-instagram-publish-result.test.mjs tools/collect-instagram-activation-metrics.test.mjs tools/list-instagram-activation-experiments.test.mjs tools/instagram-activation-learn.test.mjs tools/build-instagram-story.test.mjs tools/verify-instagram-story-ready.test.mjs tools/verify-series-connected-tour.test.mjs tools/verify-publish-record.test.mjs cardnews/tools/daily-publish.test.mjs tools/ig-insights.test.mjs",
     "activation:learn": "node tools/instagram-activation-learn.mjs",
     "activation:status": "node tools/instagram-activation-report.mjs",
     "activation:ingest": "node tools/ingest-instagram-publish-result.mjs",

@@ -4,6 +4,11 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, '..');
+function getEnvFile() {
+  return process.env.IG_ENV_FILE || join(REPO, '.env');
+}
+
+export const MEDIA_METRICS = ['reach', 'saved', 'likes', 'comments', 'shares', 'views'];
 
 /**
  * 환경 변수 로드 (.env 패턴 적용)
@@ -13,14 +18,12 @@ const REPO = resolve(HERE, '..');
 function env(name) {
   if (process.env[name]) return process.env[name];
   try {
-    const m = readFileSync(join(REPO, '.env'), 'utf8').match(new RegExp(`^${name}=(.+)$`, 'm'));
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const m = readFileSync(getEnvFile(), 'utf8').match(new RegExp(`^${escaped}=(.+)$`, 'm'));
     if (m) return m[1].trim();
-  } catch { /* .env 없으면 무시 */ }
+  } catch { /* ENV_FILE 없으면 무시 */ }
   return '';
 }
-
-const IG_USER_ID = env('IG_USER_ID');
-const IG_ACCESS_TOKEN = env('IG_ACCESS_TOKEN');
 
 function safeGraphError(payload, status) {
   const error = payload?.error || {};
@@ -34,9 +37,10 @@ function safeGraphError(payload, status) {
   ].filter(Boolean).join(' · ');
 }
 
-async function fetchJson(url) {
+async function fetchJson(url, token) {
+  const authToken = token || env('IG_ACCESS_TOKEN');
   const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${IG_ACCESS_TOKEN}` },
+    headers: { Authorization: `Bearer ${authToken}` },
   });
   let payload = {};
   try {
@@ -67,15 +71,58 @@ export async function getMediaInsights(mediaId, live = false) {
     return null;
   }
 
-  if (!IG_USER_ID || !IG_ACCESS_TOKEN) {
+  const userId = env('IG_USER_ID');
+  const token = env('IG_ACCESS_TOKEN');
+
+  if (!userId || !token) {
     throw new Error('IG_USER_ID 또는 IG_ACCESS_TOKEN이 설정되지 않았습니다.');
   }
 
-  const url = graphUrl(`${mediaId}/insights`, {
-    metric: 'reach,impressions,saved,likes,comments,shares',
+  const bulkUrl = graphUrl(`${mediaId}/insights`, {
+    metric: MEDIA_METRICS.join(','),
   });
-  const data = await fetchJson(url);
-  return data;
+
+  try {
+    const data = await fetchJson(bulkUrl, token);
+    return data;
+  } catch (bulkErr) {
+    const metricResults = await Promise.allSettled(
+      MEDIA_METRICS.map(async (m) => {
+        const url = graphUrl(`${mediaId}/insights`, { metric: m });
+        const res = await fetchJson(url, token);
+        return { metric: m, res };
+      }),
+    );
+
+    const dataItems = [];
+    const metricErrors = {};
+
+    for (let i = 0; i < MEDIA_METRICS.length; i++) {
+      const metricName = MEDIA_METRICS[i];
+      const result = metricResults[i];
+
+      if (result.status === 'fulfilled') {
+        const resData = result.value.res?.data;
+        if (Array.isArray(resData)) {
+          dataItems.push(...resData);
+        }
+      } else {
+        const errMsg = result.reason?.message || String(result.reason);
+        metricErrors[metricName] = errMsg;
+        console.error(`[Media ${mediaId}] 인사이트 메트릭 '${metricName}' 수집 실패: ${errMsg}`);
+      }
+    }
+
+    if (dataItems.length === 0) {
+      throw bulkErr;
+    }
+
+    return {
+      data: dataItems,
+      insightsFallback: true,
+      ...(Object.keys(metricErrors).length > 0 ? { metricErrors } : {}),
+    };
+  }
 }
 
 /**
@@ -88,15 +135,18 @@ export async function getAccountInsights(live = false) {
     return null;
   }
 
-  if (!IG_USER_ID || !IG_ACCESS_TOKEN) {
+  const userId = env('IG_USER_ID');
+  const token = env('IG_ACCESS_TOKEN');
+
+  if (!userId || !token) {
     throw new Error('IG_USER_ID 또는 IG_ACCESS_TOKEN이 설정되지 않았습니다.');
   }
 
-  const url = graphUrl(`${IG_USER_ID}/insights`, {
+  const url = graphUrl(`${userId}/insights`, {
     metric: 'reach,follower_count,profile_views',
     period: 'day',
   });
-  const data = await fetchJson(url);
+  const data = await fetchJson(url, token);
   return data;
 }
 
@@ -113,23 +163,39 @@ export async function collectInsights(live = false) {
   }
 
   let accountData, mediaData;
+  let exitCodeOne = false;
+
   if (!live) {
     console.log('[Dry Run] 미디어 목록 수집 및 각각의 인사이트 수집 시뮬레이션');
     accountData = await getAccountInsights(false);
     mediaData = [];
   } else {
     accountData = await getAccountInsights(true);
+    const userId = env('IG_USER_ID');
+    const token = env('IG_ACCESS_TOKEN');
     // 미디어 목록 조회
-    const mediaUrl = graphUrl(`${IG_USER_ID}/media`, {
+    const mediaUrl = graphUrl(`${userId}/media`, {
       fields: 'id,permalink,caption,timestamp,media_type,like_count,comments_count',
     });
-    const mediaList = await fetchJson(mediaUrl);
+    const mediaList = await fetchJson(mediaUrl, token);
 
     mediaData = [];
-    if (mediaList && mediaList.data) {
+    let isolatedCount = 0;
+
+    if (mediaList && Array.isArray(mediaList.data)) {
       for (const media of mediaList.data) {
-        const insights = await getMediaInsights(media.id, true);
-        mediaData.push({ media, insights });
+        try {
+          const insights = await getMediaInsights(media.id, true);
+          mediaData.push({ media, insights });
+        } catch (err) {
+          const insightsError = err.message || String(err);
+          console.error(`[Media ${media.id}] 인사이트 수집 격리: ${insightsError}`);
+          mediaData.push({ media, insights: null, insightsError });
+          isolatedCount++;
+        }
+      }
+      if (mediaList.data.length > 0 && isolatedCount === mediaList.data.length) {
+        exitCodeOne = true;
       }
     }
   }
@@ -137,7 +203,7 @@ export async function collectInsights(live = false) {
   const result = {
     date: dateStr,
     account: accountData,
-    media: mediaData
+    media: mediaData,
   };
 
   const outputPath = join(insightsDir, `${dateStr}.json`);
@@ -146,6 +212,10 @@ export async function collectInsights(live = false) {
   } else {
     writeFileSync(outputPath, JSON.stringify(result, null, 2), 'utf8');
     console.log(`데이터 저장 완료: ${outputPath}`);
+  }
+
+  if (exitCodeOne) {
+    process.exitCode = 1;
   }
 
   return result;
