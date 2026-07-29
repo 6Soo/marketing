@@ -15,6 +15,7 @@ const opt = (name, dflt) => args.find(a => a.startsWith(`--${name}=`))?.split('=
 
 export async function generateBandPost(seriesDir, dayType, options = {}) {
   const outFile = options.output || opt('output', 'band-post.txt');
+  const generateText = options.askGemini || askGemini;
 
   if (!existsSync(seriesDir)) {
     console.error("지정된 시리즈 폴더가 없습니다:", seriesDir);
@@ -51,22 +52,22 @@ ${strategyInstruction}
 ${textContent}
 `;
 
-  let bandText = "밴드용 텍스트가 여기에 들어갑니다.";
   try {
-    bandText = await askGemini(prompt);
+    const bandText = await generateText(prompt);
+    if (!bandText?.trim()) throw new Error('빈 응답');
+
+    const outFilePath = options.output || opt('output')
+      ? (isAbsolute(outFile) ? outFile : resolve(REPO, outFile))
+      : join(REPO, 'cardnews', 'out', basename(seriesDir), outFile);
+    mkdirSync(dirname(outFilePath), { recursive: true });
+
+    writeFileSync(outFilePath, bandText);
+    console.log(`[밴드 발행] 게시글 텍스트 준비 완료: ${outFilePath}`);
+    console.log(`[밴드 발행] 반자동 초안입니다. 공개 게시 전 사람이 검토해야 합니다.`);
+    return outFilePath;
   } catch (e) {
-    console.warn("Gemini API 호출 실패 (", e.message, ")");
-    bandText = textContent;
+    throw new Error(`BAND 초안 생성 실패: ${e.message}`, { cause: e });
   }
-
-  const outFilePath = options.output || opt('output')
-    ? (isAbsolute(outFile) ? outFile : resolve(REPO, outFile))
-    : join(REPO, 'cardnews', 'out', basename(seriesDir), outFile);
-  mkdirSync(dirname(outFilePath), { recursive: true });
-
-  writeFileSync(outFilePath, bandText);
-  console.log(`[밴드 발행] 게시글 텍스트 준비 완료: ${outFilePath}`);
-  console.log(`[밴드 발행] TODO: 네이버 밴드 Open API 파트너 승인 후 자동 게시 기능 활성화 예정`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith('band-publish.mjs')) {
