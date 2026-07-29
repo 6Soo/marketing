@@ -24,7 +24,13 @@ const CARD_CSS = `
   }
   .wm { position: absolute; top: 18px; left: 22px; font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
         font-size: .58rem; font-weight: 700; letter-spacing: .1em; color: rgba(255,255,255,.82);
-        text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+        text-shadow: 0 1px 8px rgba(0,0,0,.5);
+        display: flex; align-items: center; gap: .42em; }
+  /* 공식 심볼(전나무) — 단일 원천: foresttour 리포 brand/forest-tour-fir.svg.
+     currentColor라 .wm / .wm.dark 색을 그대로 따라간다. */
+  .wm svg { width: 1.15em; height: 1.15em; flex: 0 0 auto;
+            filter: drop-shadow(0 1px 8px rgba(0,0,0,.5)); }
+  .wm.dark svg { filter: none; }
   .pg { position: absolute; top: 18px; right: 22px; font-family: ui-monospace, "SF Mono", monospace;
         font-size: .6rem; color: rgba(255,255,255,.78); font-variant-numeric: tabular-nums;
         text-shadow: 0 1px 8px rgba(0,0,0,.45); }
@@ -87,9 +93,15 @@ const SCRIM_BODY = `linear-gradient(180deg, rgba(8,12,10,.28) 0%, rgba(8,12,10,.
 
 const esc = s => (s ?? '');
 
+// (주)숲길여행 공식 심볼 — 전나무. 좌표 원천은 전사 리포 brand/forest-tour-fir.svg다.
+// 여기서 형상을 고치지 말 것. currentColor라 워터마크 색(밝은 카드/종이 카드)을 그대로 따라간다.
+const FIR_GLYPH = '<svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" '
+  + 'd="M256 0 L368 176 L323 176 L432 320 L369 320 L496 448 L298 448 L298 512 '
+  + 'L214 512 L214 448 L16 448 L143 320 L80 320 L189 176 L144 176 Z"/></svg>';
+
 // kind별 카드 마크업 — 기준본 DOM 구조 그대로.
 function cardBody(meta, c, page, total) {
-  const wmpg = dark => `<div class="wm${dark ? ' dark' : ''}">${esc(meta.watermark)}</div><div class="pg${dark ? ' dark' : ''}">${page}/${total}</div>`;
+  const wmpg = dark => `<div class="wm${dark ? ' dark' : ''}">${FIR_GLYPH}${esc(meta.watermark)}</div><div class="pg${dark ? ' dark' : ''}">${page}/${total}</div>`;
   if (c.kind === 'cover') {
     return `
     <div class="card pc cover" style="background-image: ${SCRIM_COVER}, url('${c.photoUrl}');">
