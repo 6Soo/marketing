@@ -186,6 +186,34 @@ secret: `IG_USER_ID` · `IG_ACCESS_TOKEN` · `GEMINI_API_KEY` / variable: `vars.
 Story 자산 재빌드 → **24h 체크포인트 게이트 검증** → 모바일 업로드용 패키지를 아티팩트로 업로드.
 (Story 링크 스티커는 API로 못 붙인다 — 모바일 수동 단계다.)
 
+### 4-3-A. `instagram-reel-publish.yml` — **릴스 전용 (2026-07-29 신설)**
+
+수동 디스패치 전용, 예약 없음. **기본값이 `preflight`라 실수로 디스패치해도 아무것도 게시되지 않는다.**
+
+| mode | 하는 일 |
+|---|---|
+| `preflight` | 러너에서 Graph 자격이 동작하는지만 확인. **자산 배포도 게시도 없음** |
+| `verify` | 자산을 `instagram-assets`에 공개 배포 + REELS 컨테이너 생성·폴링. **게시 안 함** |
+| `publish` | 실게시. `experiment` 입력 **필수**(측정에 연결되지 않는 게시를 만들지 않기 위해) |
+
+입력: `series`(northern-alps / sado) · `mode` · `experiment`
+자격 확인을 자산 배포보다 **먼저** 두었고(캐러셀 경로와 같은 순서), 공개 URL을 우리가 먼저 받아
+로컬과 **SHA-256을 대조**한 뒤에만 Meta에 넘긴다.
+
+```bash
+# 1단계 — 러너 자격 확인 (게시 0건)
+gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
+  -f series=northern-alps -f mode=preflight
+# 2단계 — Meta가 raw URL을 소화하는지 확인 (게시 0건)
+gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
+  -f series=northern-alps -f mode=verify
+# 3단계 — 실게시 (사장 결정 후)
+gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
+  -f series=northern-alps -f mode=publish -f experiment=<릴스실험ID>
+```
+
+⚠ **이 워크플로는 아직 한 번도 실행하지 않았다.** 실게시는 사장 결정 사항이라 디스패치하지 않았다.
+
 ### 4-4. GitHub 시크릿·변수 현황 (`gh` 조회, 값 아님 이름만)
 
 | 이름 | 종류 | 등록 시각(UTC) |
@@ -524,11 +552,11 @@ Pixabay 라이선스 화면에 `Content ID Registered` 배지가 있고, 업로�
 
 1. **07-30 09:15 KST 직후 체크포인트 워크플로 성공 여부 확인**(§5-2). 실패했으면 유예가
    남아 있는 동안 즉시 수동 디스패치. 놓치면 72h도 영구 손실이다. **시한이 있는 유일한 항목.**
-2. **릴스 게시 워크플로 작성** — mp4를 `instagram-assets`에 배포 → `instagram-publish.mjs reel`
-   호출 → `--result-file` + `ingest-instagram-publish-result.mjs` 연결.
-   `assertNotDuplicateCaption`을 reel 분기에 이식할 것. 캡션은 §9-1-B의 파일을 쓴다.
-3. **게시 전 사전 검증 2건**(§9-1): `preflight_only=true` 디스패치로 러너 doctor 실증 +
-   REELS 컨테이너만 만들어 보고 `media_publish`는 부르지 않는 방식으로 raw URL 소화 여부 확인.
+2. ~~릴스 게시 워크플로 작성~~ — ✅ **완료** (`instagram-reel-publish.yml`, §4-3-A).
+   `--verify-only` 모드와 릴스 분기의 게이트 공백 2건(중복 캡션·지문 형식)도 함께 메웠다.
+3. **게시 전 사전 검증 2건**(§9-1) — 사장 결정 없이 지금 가능하다. 둘 다 게시 0건이다.
+   `mode=preflight`로 러너 자격 실증 → `mode=verify`로 Meta가 raw URL을 소화하는지 확인.
+   **여기서 실패하면 게시 자체가 불가능하므로 실게시 전에 반드시 통과시켜야 한다.**
 4. **릴스 실게시** — 사장 결정 사항. **북알프스 먼저 한 편**을 권한다: 캡션이 무결하고
    첫 프레임 밝기(65.4)가 확인됐다. 캐러셀 2편 동시 게시는 도달 0이라 아무것도 가르쳐주지
    못했고, 릴스는 처음으로 신호가 생길 기회라 변수를 분리하는 값이 크다. ※ 데이터가 아니라 판단이다.
