@@ -31,6 +31,14 @@ on:
           - northern-alps
           - sado
         default: northern-alps
+      variant:
+        description: '릴스 자산 변형'
+        required: true
+        type: choice
+        options:
+          - card-reach
+          - scenic-v2
+        default: card-reach
       mode:
         description: 'preflight(자격 확인만) / verify(컨테이너까지) / publish(실게시)'
         required: true
@@ -57,9 +65,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SERIES: ${{ inputs.series }}
+      VARIANT: ${{ inputs.variant }}
       MODE: ${{ inputs.mode }}
-      VIDEO_PATH: cardnews/out/${{ inputs.series }}/reel-cover-a.mp4
-      CAPTION_PATH: cardnews/out/${{ inputs.series }}/_caption-reel-${{ inputs.series }}.txt
       ASSET_KEY: reel-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@v4
@@ -73,6 +80,19 @@ jobs:
       - name: 입력 정합성 검사
         run: |
           set -euo pipefail
+          if [ "$VARIANT" = "scenic-v2" ]; then
+            test "$SERIES" = "northern-alps" || {
+              echo "::error::scenic-v2는 northern-alps에서만 지원합니다."
+              exit 1
+            }
+            VIDEO_PATH="cardnews/out/northern-alps/reel-scenic-v2.mp4"
+            CAPTION_PATH="cardnews/out/northern-alps/_caption-reel-northern-alps-scenic-v2.txt"
+          else
+            VIDEO_PATH="cardnews/out/${SERIES}/reel-cover-a.mp4"
+            CAPTION_PATH="cardnews/out/${SERIES}/_caption-reel-${SERIES}.txt"
+          fi
+          echo "VIDEO_PATH=$VIDEO_PATH" >> "$GITHUB_ENV"
+          echo "CAPTION_PATH=$CAPTION_PATH" >> "$GITHUB_ENV"
           test -f "$VIDEO_PATH"   || { echo "::error::릴스 파일 없음: $VIDEO_PATH"; exit 1; }
           test -f "$CAPTION_PATH" || { echo "::error::릴스 캡션 없음: $CAPTION_PATH"; exit 1; }
           if [ "$MODE" = "publish" ] && [ -z "${{ inputs.experiment }}" ]; then

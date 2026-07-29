@@ -1,0 +1,53 @@
+{
+  "id": "northern-alps-scenic-reel-006",
+  "seriesPath": "cardnews/series/northern-alps",
+  "destination": "북알프스",
+  "format": "reel",
+  "variant": "scenic-v2",
+  "landingUrl": "https://foresttour.kr/stories/northern-alps",
+  "sourceCode": "insta",
+  "attributionSourcePrefix": "insta",
+  "attributionEnvironment": "instagram-app",
+  "hypothesis": "카드뉴스 문법을 제거하고 원본 풍경 네 장과 장소 라벨 하나만 사용한 10초 릴스는 텍스트 중심 북알프스 릴스보다 평균 시청과 반복 재생 신호를 개선한다.",
+  "checkpoints": ["0h", "24h", "72h", "7d"],
+  "measurementSourceGroups": [
+    ["graph-api", "instagram-ui"],
+    ["foresttour-admin"]
+  ],
+  "instagramMetrics": [
+    "reach",
+    "views",
+    "likes",
+    "comments",
+    "saves",
+    "shares",
+    "organicInteractions",
+    "profileVisits",
+    "follows",
+    "postsTotal",
+    "followersTotal",
+    "followingTotal"
+  ],
+  "foresttourMetrics": [
+    "story_northern-alps_visit",
+    "story_northern-alps_context",
+    "story_northern-alps_related",
+    "story_northern-alps_discoveries",
+    "story_northern-alps_tour"
+  ],
+  "activationEvidence": {
+    "required": [
+      "publishedPermalink",
+      "organicInteraction",
+      "instagramAttributedStoryVisit"
+    ],
+    "note": "도달만으로 성공으로 보지 않는다. 기존 northern-alps-reel-005와 reach·views·shares를 비교하되, 게시 시점 차이 때문에 단일 수치로 인과를 확정하지 않는다."
+  },
+  "guardrails": [
+    "확인하지 않은 수치를 0으로 추정하지 않고 필드를 생략한다.",
+    "화면·Graph API·foresttour 관리자 화면 중 실제 확인한 출처만 기록한다.",
+    "프로필 링크 방문은 릴스 한 편에 직접 귀속할 수 없으므로 사이트 방문을 형식 효과의 단독 근거로 쓰지 않는다.",
+    "개별 사용자의 이름·댓글 내용·연락처 등 개인정보를 저장하지 않는다.",
+    "공개 모집 일정이 생기기 전 story_northern-alps_tour=0은 실패로 해석하지 않는다."
+  ]
+}
