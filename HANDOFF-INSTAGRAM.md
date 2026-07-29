@@ -212,7 +212,15 @@ gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
   -f series=northern-alps -f mode=publish -f experiment=<릴스실험ID>
 ```
 
-⚠ **이 워크플로는 아직 한 번도 실행하지 않았다.** 실게시는 사장 결정 사항이라 디스패치하지 않았다.
+**실행 이력** (2026-07-29):
+
+| run | mode | 결과 |
+|---|---|---|
+| `30437191779` | preflight | ✅ 러너 Graph 자격 실증 · 게시 한도 사용 0 |
+| `30437257592` | verify | ✅ Meta가 raw URL 소화 확인 · `container_id=18068450156507190` · **게시 안 함** |
+| `30437313…` | preflight | ✅ 게시 한도 사용 **0 유지** — 게시가 새지 않았음 확인 |
+
+⚠ **`mode=publish`는 아직 한 번도 실행하지 않았다.** 실게시는 사장 결정 사항이다.
 
 ### 4-4. GitHub 시크릿·변수 현황 (`gh` 조회, 값 아님 이름만)
 
@@ -399,17 +407,33 @@ gh run list --repo 6Soo/marketing --limit 3
 `daily-cardnews.yml`의 publish 잡은 `daily-publish.mjs`(캐러셀 전용)만 호출한다.
 릴스 스텝을 담은 워크플로 1개를 커밋·푸시하면 이 머신에서 디스패치만으로 게시가 완결된다.
 
-**게시 전 반드시 확인할 미검증 고리 2개** (둘 다 게시 없이 검증 가능):
+#### ✅ 미검증 고리 2개 — **2026-07-29 둘 다 실증으로 닫혔다 (게시 0건)**
 
-1. **Meta가 `raw.githubusercontent.com` URL을 소화한 실증이 아직 없다.**
-   `data/activation/*/`의 0h 기록이 전부 `"source": "instagram-ui"` — **기존 캐러셀 5건은 모두
-   웹 UI 수동 게시**였다(Meta 차단 기간과 겹침). 워크플로의 raw URL → Graph API 실게시는
-   **한 번도 성공한 적이 없다.** 게다가 mp4의 `content-type`이 `application/octet-stream`이라
-   Meta의 동영상 수집이 이를 받아들이는지 미확인이다.
-   → REELS 컨테이너 생성 + status 폴링까지만 하고 `media_publish`를 부르지 않는 검증 모드로
-   사전 확인할 수 있다(컨테이너는 미발행 시 공개 흔적 없이 만료된다).
-2. **Actions 러너에서의 `doctor` 성공은 미확인.** 7/29의 성공 기록은 `.env`가 있는 머신 기준이다.
-   `preflight_only=true` 디스패치(게시 0건)로 확인할 수 있다.
+**1. Actions 러너에서의 Graph 자격** — `mode=preflight` 실행 `30437191779`:
+```
+✓ Instagram API 연결 정상 · @foresttour.kr · 게시 한도 사용 0
+```
+그전까지 `doctor` 성공 기록은 `.env`가 있는 Windows 머신 기준이었다. **이제 러너에서 실증됐다.**
+
+**2. Meta가 `raw.githubusercontent.com`의 mp4를 소화하는가** — `mode=verify` 실행 `30437257592`:
+```
+content-type: application/octet-stream
+VIDEO_URL: https://raw.githubusercontent.com/6Soo/marketing/d9508146…/instagram/reel-30437257592-1/reel.mp4
+✓ 릴스 컨테이너 검증 통과 · container_id=18068450156507190
+  Meta가 video_url을 실제로 내려받아 처리를 마쳤습니다. 게시하지 않았습니다.
+```
+`content-type`이 `application/octet-stream`인데도 **Meta가 정상적으로 내려받아 처리를 완료했다**
+(컨테이너 생성 → `FINISHED`까지 약 34초). 로컬↔공개 URL SHA-256 대조도 통과했다.
+
+이것이 중요한 이유: `data/activation/*/`의 0h 기록이 전부 `"source": "instagram-ui"`다 —
+**기존 캐러셀 5건은 전부 웹 UI 수동 게시**였고(Meta 차단 기간과 겹침), 워크플로의
+raw URL → Graph API 경로는 **한 번도 성공한 적이 없었다.** 이제 성공한다는 것이 확인됐다.
+
+**게시가 새지 않았음 확인**: 검증 직후 `preflight` 재실행 → `게시 한도 사용 0` (변동 없음).
+미발행 컨테이너는 만료되며 공개 게시물로 남지 않는다.
+
+> **→ 릴스 게시 경로는 마지막 `media_publish` 호출 하나만 남았다.**
+> `mode=publish` 디스패치 한 번이면 게시된다. **그 한 번이 사장님 결정이다.**
 
 **코드 공백**: `assertNotDuplicateCaption`(최근 25건 캡션 대조)은 **carousel 분기에서만 호출된다.**
 reel 분기에는 없다. 릴스 게시 경로를 만들 때 이식해야 한다.
@@ -554,10 +578,10 @@ Pixabay 라이선스 화면에 `Content ID Registered` 배지가 있고, 업로�
    남아 있는 동안 즉시 수동 디스패치. 놓치면 72h도 영구 손실이다. **시한이 있는 유일한 항목.**
 2. ~~릴스 게시 워크플로 작성~~ — ✅ **완료** (`instagram-reel-publish.yml`, §4-3-A).
    `--verify-only` 모드와 릴스 분기의 게이트 공백 2건(중복 캡션·지문 형식)도 함께 메웠다.
-3. **게시 전 사전 검증 2건**(§9-1) — 사장 결정 없이 지금 가능하다. 둘 다 게시 0건이다.
-   `mode=preflight`로 러너 자격 실증 → `mode=verify`로 Meta가 raw URL을 소화하는지 확인.
-   **여기서 실패하면 게시 자체가 불가능하므로 실게시 전에 반드시 통과시켜야 한다.**
-4. **릴스 실게시** — 사장 결정 사항. **북알프스 먼저 한 편**을 권한다: 캡션이 무결하고
+3. ~~게시 전 사전 검증 2건~~ — ✅ **완료** (§9-1). 러너 자격·Meta의 raw URL 소화 둘 다 실증.
+   게시 한도 사용 0으로 게시가 새지 않았음도 확인했다.
+4. **릴스 실게시 — 남은 것은 이 한 번의 디스패치뿐이다.** 사장 결정 사항.
+   **북알프스 먼저 한 편**을 권한다: 캡션이 무결하고
    첫 프레임 밝기(65.4)가 확인됐다. 캐러셀 2편 동시 게시는 도달 0이라 아무것도 가르쳐주지
    못했고, 릴스는 처음으로 신호가 생길 기회라 변수를 분리하는 값이 크다. ※ 데이터가 아니라 판단이다.
 5. **릴스용 실험 파일 신설** — `data/experiments/`에는 캐러셀 실험 2건뿐이다.
