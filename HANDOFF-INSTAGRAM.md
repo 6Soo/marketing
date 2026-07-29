@@ -355,14 +355,86 @@ gh run list --repo 6Soo/marketing --limit 3
 `IG_ACCESS_TOKEN` · `IG_USER_ID` · `PUBLIC_BASE_URL` · `PUBLIC_DIR` 전부 미설정.
 `.env`는 Windows 체크아웃에만 있고 `.gitignore`가 막으므로 git으로 넘어오지 않는다.
 
-**릴스는 캐러셀과 게시 경로가 다르다는 점에 주의**: `daily-cardnews.yml`의 publish 잡은
-`daily-publish.mjs`(캐러셀 전용)를 호출한다. **릴스를 Actions로 게시하는 워크플로는 없다.**
-릴스 게시는 `instagram-publish.mjs reel --video=<공개URL> --caption-file=… --publish`이고,
-mp4를 먼저 공개 URL에 올려야 한다.
+#### ⚠ 정정 — "이 머신에서는 게시가 불가능하다"는 **틀렸다** (Fable 반박 검증 2026-07-29)
 
-### (2) 사도 공개 캡션의 잘못된 크레딧
-공개 게시물 캡션이 `Tensaibuta`를 크레딧하는데 **그 사진이 게시물에 없다.**
-로컬 `cardnews/series/sado/캡션.md`는 이미 교정됨. **공개 캡션 편집은 수동 작업**이다.
+로컬 직접 실행은 불가하지만 **GitHub Actions 경로가 열려 있다.** 실측 근거:
+
+| 고리 | 실측 |
+|---|---|
+| 시크릿 | `IG_ACCESS_TOKEN`·`IG_USER_ID` GitHub에 등록됨(§4-4) — 워크플로 env로 주입 가능 |
+| 트리거 권한 | `gh auth status` → 계정 `6Soo`, 스코프에 `repo`·`workflow` 포함 |
+| 릴스 게시 코드 | `tools/instagram-publish.mjs`의 `reel` 명령. 자격을 `process.env` 우선으로 읽음 |
+| 공개 호스팅 | **리포가 PUBLIC**(`gh repo view` → `"visibility":"PUBLIC"`). `daily-cardnews.yml`이 자산을 orphan 브랜치 `instagram-assets`에 올리고 `raw.githubusercontent.com/<repo>/<고정SHA>/…`로 서빙한다 |
+| mp4 raw 접근 | 실측 `curl -I` → **HTTP 200 · content-length 5,577,664** |
+
+**남은 것은 단 하나 — 릴스를 게시하는 워크플로가 아직 없다.**
+`daily-cardnews.yml`의 publish 잡은 `daily-publish.mjs`(캐러셀 전용)만 호출한다.
+릴스 스텝을 담은 워크플로 1개를 커밋·푸시하면 이 머신에서 디스패치만으로 게시가 완결된다.
+
+**게시 전 반드시 확인할 미검증 고리 2개** (둘 다 게시 없이 검증 가능):
+
+1. **Meta가 `raw.githubusercontent.com` URL을 소화한 실증이 아직 없다.**
+   `data/activation/*/`의 0h 기록이 전부 `"source": "instagram-ui"` — **기존 캐러셀 5건은 모두
+   웹 UI 수동 게시**였다(Meta 차단 기간과 겹침). 워크플로의 raw URL → Graph API 실게시는
+   **한 번도 성공한 적이 없다.** 게다가 mp4의 `content-type`이 `application/octet-stream`이라
+   Meta의 동영상 수집이 이를 받아들이는지 미확인이다.
+   → REELS 컨테이너 생성 + status 폴링까지만 하고 `media_publish`를 부르지 않는 검증 모드로
+   사전 확인할 수 있다(컨테이너는 미발행 시 공개 흔적 없이 만료된다).
+2. **Actions 러너에서의 `doctor` 성공은 미확인.** 7/29의 성공 기록은 `.env`가 있는 머신 기준이다.
+   `preflight_only=true` 디스패치(게시 0건)로 확인할 수 있다.
+
+**코드 공백**: `assertNotDuplicateCaption`(최근 25건 캡션 대조)은 **carousel 분기에서만 호출된다.**
+reel 분기에는 없다. 릴스 게시 경로를 만들 때 이식해야 한다.
+※ 이번에 만든 릴스 캡션 2건은 수동으로 지문 대조를 마쳤다(§9-1-B).
+
+### 9-1-B. 릴스 캡션 — 신설 (2026-07-29)
+
+릴스는 캐러셀과 **다른 게시물**이므로 캡션을 따로 둔다. 같은 캡션을 재사용하면 산리쿠 중복
+사고와 같은 불이익을 받는다.
+
+| 파일 | SHA-256 |
+|---|---|
+| `cardnews/out/sado/_caption-reel-sado.txt` | `a67796a99ab9…d27091` |
+| `cardnews/out/northern-alps/_caption-reel-northern-alps.txt` | `e24ffd183ee7…44a0e` |
+
+두 지문 모두 `data/publish-records/*.json`의 기존 게시 지문 및 캐러셀 캡션 파일과 **전부 다르다**
+(수동 대조 완료 — reel 분기에 자동 게이트가 없기 때문).
+첫 줄은 릴스 첫 프레임 문안과 일치시켰다(약속-회수 일치). 해시태그 5개·검색 키워드 앞배치·
+저장 및 공유 유도·음원 크레딧 포함.
+
+### ★ (2) 사도 크레딧 결함 — **2026-07-29 새로 발견. 릴스 게시의 선결 조건이었다**
+
+`HANDOFF-2026-07-29.md` §4-(3)은 "공개 캡션이 `Tensaibuta`를 크레딧하는데 그 사진이 게시물에
+없다. 로컬 `캡션.md`는 이미 교정됨"이라고 적었다. **그 '교정'이 다른 틀린 크레딧으로 바뀐 것이었다.**
+
+git 증거로 확정:
+
+| | 실측 |
+|---|---|
+| `cardnews/out/sado/cover-a.png` 마지막 렌더 | `70e9a25` · **2026-07-26 23:45** |
+| 표지를 `01-kitazawa-terrace.jpg`(Indiana jo, CC0)로 교체 | `0b6bec1` · **2026-07-29 03:55** |
+| `0b6bec1`이 `cardnews/out/sado/`를 건드렸나 | **아니다** (photos/·cards.mjs·캡션.md만 변경) |
+
+즉 `0b6bec1`은 **소스 정의만** 바꾸고 재렌더는 하지 않았다(게시 증거 보호 — 의도된 결정이며
+커밋 메시지에도 명시돼 있다). 그런데 캡션은 새 표지 기준으로 고쳤다.
+결과: **렌더된 PNG에 없는 사진(Indiana jo)을 캡션이 크레딧한다.** Tensaibuta 결함과 같은 클래스다.
+
+- 렌더된 사도 자산의 실제 저작자 = **ccfarmer**(표지 = 옛 `03-kitazawa.jpg` 재사용 + 3장 카드) ·
+  **amaknow** · **rhodnite** · **JH0WJF** — 4인
+- 로컬 `cardnews/series/sado/캡션.md:22`가 크레딧하는 사람 = 위 4인 + **Indiana jo** — 5인
+
+**처리**: 릴스 캡션에서 Indiana jo를 제외했다(위 §9-1-B). 재렌더로 맞추는 대안은 택하지 않았다 —
+게시 증거를 덮게 되고, 현재 템플릿에는 전나무 로고가 들어가 있어 **"다음 시리즈부터 적용"**
+원칙(`CLAUDE.md` 비주얼 계약 3)과도 어긋난다.
+
+**남은 것 두 가지**:
+1. `cardnews/series/sado/캡션.md`는 여전히 Indiana jo를 크레딧한다. 재렌더 전까지는 이 파일이
+   **렌더 자산과 불일치**함을 알고 써야 한다. 캐러셀을 다시 낼 일이 생기면 그때 정합을 맞춘다.
+2. **공개된 캐러셀 게시물**(`/p/DbRD-fWkyUL/`)의 캡션은 여전히 `Tensaibuta`를 크레딧한다.
+   **공개 캡션 편집은 수동 작업**이다.
+
+※ **북알프스는 무결하다.** 사진 8장 → 저작자 5인(663highland·Raita Futo·くろふね·Σ64·Paul Keller)이
+`cardnews/photos/northern-alps/출처.md`와 캡션에서 정확히 일치함을 전수 대조로 확인했다.
 
 ### (3) CTA 관측성 브랜치 — ⚠ **유실 위험**
 `reservation` 리포의 `cta-observability` @ `9e79b69`. `src/lib/storyCtaStatus.ts` 신설
@@ -451,12 +523,26 @@ Pixabay 라이선스 화면에 `Content ID Registered` 배지가 있고, 업로�
 ## 12. 다음 세션이 할 일 — 순서대로
 
 1. **07-30 09:15 KST 직후 체크포인트 워크플로 성공 여부 확인**(§5-2). 실패했으면 유예가
-   남아 있는 동안 즉시 수동 디스패치. 놓치면 72h도 영구 손실이다.
-2. **릴스 게시** — `.env`가 있는 환경에서 mp4를 공개 URL에 올리고
-   `instagram-publish.mjs reel --video=… --caption-file=… --publish`. 두 편을 동시에 낼지
-   한 편으로 반응을 볼지는 판단 필요.
-3. **CTA 관측성 브랜치 푸시**(§9-3) — 유실 위험이 있으므로 병합 여부와 무관하게 먼저 보존.
-4. 사도 공개 캡션 크레딧 수동 교정(§9-2).
-5. 릴스 게시 후 72h·7d 인사이트로 **해시태그·훅 가설 검증** → `data/performance.json` 가동.
-6. placeholder 2건(히다·산리쿠) 사진 교체 또는 새 편집 단위 착수
-   (`cardnews/docs/다음-편집단위-후보-3건-0728.md`).
+   남아 있는 동안 즉시 수동 디스패치. 놓치면 72h도 영구 손실이다. **시한이 있는 유일한 항목.**
+2. **릴스 게시 워크플로 작성** — mp4를 `instagram-assets`에 배포 → `instagram-publish.mjs reel`
+   호출 → `--result-file` + `ingest-instagram-publish-result.mjs` 연결.
+   `assertNotDuplicateCaption`을 reel 분기에 이식할 것. 캡션은 §9-1-B의 파일을 쓴다.
+3. **게시 전 사전 검증 2건**(§9-1): `preflight_only=true` 디스패치로 러너 doctor 실증 +
+   REELS 컨테이너만 만들어 보고 `media_publish`는 부르지 않는 방식으로 raw URL 소화 여부 확인.
+4. **릴스 실게시** — 사장 결정 사항. **북알프스 먼저 한 편**을 권한다: 캡션이 무결하고
+   첫 프레임 밝기(65.4)가 확인됐다. 캐러셀 2편 동시 게시는 도달 0이라 아무것도 가르쳐주지
+   못했고, 릴스는 처음으로 신호가 생길 기회라 변수를 분리하는 값이 크다. ※ 데이터가 아니라 판단이다.
+5. **릴스용 실험 파일 신설** — `data/experiments/`에는 캐러셀 실험 2건뿐이다.
+   같은 실험 ID에 릴스 permalink를 섞으면 측정이 오염된다.
+6. **CTA 관측성 브랜치 푸시**(§9-3) — 유실 위험이 있으므로 병합 여부와 무관하게 먼저 보존.
+7. 사도 공개 캐러셀 캡션 크레딧 수동 교정(§9-2).
+8. 릴스 게시 후 72h·7d 인사이트로 **해시태그·훅 가설 검증** → `data/performance.json` 가동.
+9. placeholder 2건(히다·산리쿠) 사진 교체 또는 새 편집 단위 착수
+   (`cardnews/docs/다음-편집단위-후보-3건-0728.md`). 착수 전 Commons 실조회로 **가용 사진 수를 셀 것**
+   (파일 수는 지표가 아니다 — 도호쿠 단풍 250장 중 가용 1장이었던 실측 전례).
+
+---
+
+*이 문서의 사실 검증: Opus 5(설계·최종 확정) ↔ Fable 5(반박 검증) 상호 검증 — `AGENTS.md` §0-A 절차.
+GPT 5.6 Sol 측 교차검증은 이 환경에 브리지가 없어 **미수행**이다. 인벤토리 수집은 저추론 레인
+위임(AGY Flash 3.6 불가 → Sonnet 대체) 후 Opus가 `gh`·파일 실조회로 재검증했다.*
