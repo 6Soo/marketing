@@ -99,3 +99,85 @@ test('API 사전검사는 공개 자산 배포보다 먼저 실행되고 폴백 
   assert.match(workflow, /preflight_only:/);
   assert.match(workflow.slice(doctor, fallback), /preflight_only == true/);
 });
+
+test('--verify-only와 --publish는 함께 쓸 수 없다', () => {
+  const { dir, envFile } = fixture();
+  try {
+    const result = spawnSync(process.execPath, [
+      SCRIPT,
+      'reel',
+      '--video=https://example.com/reel.mp4',
+      '--verify-only',
+      '--publish',
+    ], {
+      encoding: 'utf8',
+      env: { ...process.env, IG_ENV_FILE: envFile, IG_USER_ID: '', IG_ACCESS_TOKEN: '' },
+    });
+    const output = `${result.stdout}\n${result.stderr}`;
+    assert.equal(result.status, 1);
+    assert.match(output, /함께 쓸 수 없습니다/);
+    // 어떤 Graph 호출도 일어나지 않아야 한다.
+    assert.doesNotMatch(output, /POST https:/);
+    assert.doesNotMatch(output, new RegExp(FAKE_TOKEN));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('--verify-only는 reel 전용이며 carousel에서는 거부된다', () => {
+  const { dir, envFile } = fixture();
+  try {
+    const result = spawnSync(process.execPath, [
+      SCRIPT,
+      'carousel',
+      '--images=https://example.com/1.jpg,https://example.com/2.jpg',
+      '--verify-only',
+    ], {
+      encoding: 'utf8',
+      env: { ...process.env, IG_ENV_FILE: envFile, IG_USER_ID: '', IG_ACCESS_TOKEN: '' },
+    });
+    const output = `${result.stdout}\n${result.stderr}`;
+    assert.equal(result.status, 1);
+    assert.match(output, /reel 명령에서만/);
+    // carousel이 verify-only로 live 취급돼 실제 게시로 새는 일이 없어야 한다.
+    assert.doesNotMatch(output, /media_publish/);
+    assert.doesNotMatch(output, new RegExp(FAKE_TOKEN));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('릴스 분기도 중복 캡션 게이트와 지문 형식 검사를 거친다', () => {
+  const source = readFileSync(SCRIPT, 'utf8');
+  const reelBranch = source.slice(source.indexOf("cmd === 'reel'"), source.indexOf("cmd === 'refresh-token'"));
+  assert.match(reelBranch, /assertNotDuplicateCaption\(\)/);
+  assert.match(reelBranch, /--fingerprint는 SHA-256/);
+  // verify-only일 때 media_publish는 호출되지 않아야 한다.
+  const publishCall = reelBranch.indexOf('media_publish');
+  const verifyGuard = reelBranch.indexOf('if (verifyOnly)');
+  assert.ok(verifyGuard >= 0 && verifyGuard < publishCall);
+});
+
+test('릴스 드라이런은 네트워크 호출 없이 파라미터만 보여준다', () => {
+  const { dir, envFile } = fixture();
+  const captionFile = join(dir, 'caption.txt');
+  writeFileSync(captionFile, '릴스 드라이런 캡션\n', 'utf8');
+  try {
+    const result = spawnSync(process.execPath, [
+      SCRIPT,
+      'reel',
+      '--video=https://example.com/reel.mp4',
+      `--caption-file=${captionFile}`,
+    ], {
+      encoding: 'utf8',
+      env: { ...process.env, IG_ENV_FILE: envFile, IG_USER_ID: '', IG_ACCESS_TOKEN: '' },
+    });
+    const output = `${result.stdout}\n${result.stderr}`;
+    assert.equal(result.status, 0);
+    assert.match(output, /\[드라이런\] POST/);
+    assert.match(output, /media_type = REELS/);
+    assert.doesNotMatch(output, new RegExp(FAKE_TOKEN));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

@@ -1,0 +1,218 @@
+# 릴스 게시 — 수동 디스패치 전용 (예약 실행 없음)
+#
+# 캐러셀 경로(daily-cardnews.yml → daily-publish.mjs)는 릴스를 다루지 못한다.
+# 이 워크플로가 릴스 전용 경로다.
+#
+# 왜 mode가 3단계인가:
+#   드라이런(플래그 없음)은 네트워크 호출 자체를 하지 않으므로 "Meta가 이 raw URL을
+#   내려받을 수 있는가"를 증명하지 못한다. 그런데 이 리포에서 raw.githubusercontent →
+#   Graph API 실게시는 **한 번도 성공한 적이 없다**(기존 캐러셀 5건은 전부 웹 UI 수동 게시,
+#   data/activation/*/의 0h 기록이 전부 source=instagram-ui). mp4의 content-type도
+#   application/octet-stream이라 Meta의 동영상 수집이 받아들이는지 미확인이다.
+#   그래서 게시 없이 컨테이너까지만 만들어 보는 verify 단계를 사이에 둔다.
+#
+#   preflight — 러너에서 Graph 자격이 동작하는지만 확인. 자산 배포도 게시도 없음.
+#   verify    — 자산을 공개 배포하고 REELS 컨테이너 생성 + 처리 완료 폴링까지. 게시 안 함.
+#               미발행 컨테이너는 만료되며 공개 흔적을 남기지 않는다.
+#   publish   — 실제 게시. experiment 입력이 필수다(게시 결과를 측정 실험에 연결).
+#
+# 기본값은 preflight다. 실수로 디스패치해도 아무것도 게시되지 않는다.
+
+name: Instagram reel publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      series:
+        description: '시리즈 (photoStatus: verified 인 것만)'
+        required: true
+        type: choice
+        options:
+          - northern-alps
+          - sado
+        default: northern-alps
+      mode:
+        description: 'preflight(자격 확인만) / verify(컨테이너까지) / publish(실게시)'
+        required: true
+        type: choice
+        options:
+          - preflight
+          - verify
+          - publish
+        default: preflight
+      experiment:
+        description: '활성화 측정 실험 ID (mode=publish일 때 필수)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram-reel-publish
+  cancel-in-progress: false
+
+jobs:
+  reel:
+    runs-on: ubuntu-latest
+    env:
+      SERIES: ${{ inputs.series }}
+      MODE: ${{ inputs.mode }}
+      VIDEO_PATH: cardnews/out/${{ inputs.series }}/reel-cover-a.mp4
+      CAPTION_PATH: cardnews/out/${{ inputs.series }}/_caption-reel-${{ inputs.series }}.txt
+      ASSET_KEY: reel-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # publish 모드인데 experiment가 없으면 여기서 멈춘다.
+      # 게시만 되고 측정에 연결되지 않는 상태를 만들지 않기 위함이다.
+      - name: 입력 정합성 검사
+        run: |
+          set -euo pipefail
+          test -f "$VIDEO_PATH"   || { echo "::error::릴스 파일 없음: $VIDEO_PATH"; exit 1; }
+          test -f "$CAPTION_PATH" || { echo "::error::릴스 캡션 없음: $CAPTION_PATH"; exit 1; }
+          if [ "$MODE" = "publish" ] && [ -z "${{ inputs.experiment }}" ]; then
+            echo "::error::mode=publish에는 experiment 입력이 필요합니다."
+            exit 1
+          fi
+          echo "video   $VIDEO_PATH ($(stat -c%s "$VIDEO_PATH") bytes)"
+          echo "caption $CAPTION_PATH"
+
+      - name: 테스트
+        run: npm run test:instagram
+
+      # 자산을 공개 배포하기 전에 자격부터 확인한다(daily-cardnews.yml과 같은 순서).
+      - name: Instagram API 연결 사전검사
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: node tools/instagram-publish.mjs doctor
+
+      - name: preflight 종료 안내
+        if: ${{ inputs.mode == 'preflight' }}
+        run: |
+          {
+            echo "## preflight 통과"
+            echo
+            echo "러너에서 Graph 자격이 동작합니다. 자산 배포와 게시는 하지 않았습니다."
+            echo "다음 단계: mode=verify 로 다시 디스패치해 Meta가 raw URL을 소화하는지 확인하세요."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      # 릴스 mp4를 orphan 브랜치에 올려 고정 SHA raw URL을 얻는다.
+      # 고정 SHA라 CDN 캐시 충돌이 없다(캐러셀 경로와 같은 방식).
+      - name: 릴스 공개 배포
+        if: ${{ inputs.mode != 'preflight' }}
+        id: deploy
+        run: |
+          set -euo pipefail
+          ASSET_WORKTREE="${RUNNER_TEMP}/instagram-assets"
+
+          if git ls-remote --exit-code origin refs/heads/instagram-assets >/dev/null 2>&1; then
+            git fetch origin instagram-assets
+            git worktree add -B instagram-assets "$ASSET_WORKTREE" origin/instagram-assets
+          else
+            git worktree add --detach "$ASSET_WORKTREE"
+            cd "$ASSET_WORKTREE"
+            git checkout --orphan instagram-assets
+            git rm -rf .
+            cd "$GITHUB_WORKSPACE"
+          fi
+
+          mkdir -p "$ASSET_WORKTREE/instagram/$ASSET_KEY"
+          cp "$VIDEO_PATH" "$ASSET_WORKTREE/instagram/$ASSET_KEY/reel.mp4"
+
+          cd "$ASSET_WORKTREE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "instagram/$ASSET_KEY"
+          git commit -m "assets: Instagram ${ASSET_KEY}"
+          git push origin HEAD:instagram-assets
+
+          ASSET_SHA="$(git rev-parse HEAD)"
+          VIDEO_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${ASSET_SHA}/instagram/${ASSET_KEY}/reel.mp4"
+          echo "video_url=$VIDEO_URL" >> "$GITHUB_OUTPUT"
+          echo "배포 URL: $VIDEO_URL"
+
+      # Meta에 넘기기 전에 우리가 먼저 받아본다. 바이트가 같아야 한다.
+      - name: 공개 URL 바이트 검증
+        if: ${{ inputs.mode != 'preflight' }}
+        env:
+          VIDEO_URL: ${{ steps.deploy.outputs.video_url }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl -fsSL "$VIDEO_URL" -o /tmp/fetched.mp4; then break; fi
+            echo "raw 반영 대기 중… ($attempt/5)"
+            sleep 10
+          done
+          test -f /tmp/fetched.mp4 || { echo "::error::공개 URL을 받을 수 없습니다."; exit 1; }
+          LOCAL="$(sha256sum "$VIDEO_PATH" | cut -d' ' -f1)"
+          REMOTE="$(sha256sum /tmp/fetched.mp4 | cut -d' ' -f1)"
+          echo "local  $LOCAL"
+          echo "remote $REMOTE"
+          test "$LOCAL" = "$REMOTE" || { echo "::error::공개 URL 바이트가 로컬과 다릅니다."; exit 1; }
+          curl -fsSI "$VIDEO_URL" | grep -i '^content-type' || true
+
+      # 게시하지 않고 Meta가 실제로 내려받아 처리하는지만 확인한다.
+      - name: 컨테이너 검증 (게시 없음)
+        if: ${{ inputs.mode == 'verify' }}
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          VIDEO_URL: ${{ steps.deploy.outputs.video_url }}
+        run: |
+          node tools/instagram-publish.mjs reel \
+            --video="$VIDEO_URL" \
+            --caption-file="$CAPTION_PATH" \
+            --verify-only
+
+      - name: 릴스 발행
+        if: ${{ inputs.mode == 'publish' }}
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          VIDEO_URL: ${{ steps.deploy.outputs.video_url }}
+        run: |
+          set -euo pipefail
+          # 지문 = sha256(캡션 + 영상 바이트). daily-publish.mjs와 같은 규약이다.
+          FINGERPRINT="$(cat "$CAPTION_PATH" "$VIDEO_PATH" | sha256sum | cut -d' ' -f1)"
+          node tools/instagram-publish.mjs reel \
+            --video="$VIDEO_URL" \
+            --caption-file="$CAPTION_PATH" \
+            --result-file="_stage/reel-result-${ASSET_KEY}.json" \
+            --fingerprint="$FINGERPRINT" \
+            --publish
+
+      - name: 게시 결과를 실험에 흡수
+        if: ${{ inputs.mode == 'publish' }}
+        run: |
+          node tools/ingest-instagram-publish-result.mjs \
+            --experiment="${{ inputs.experiment }}" \
+            --result-file="_stage/reel-result-${ASSET_KEY}.json" \
+            --source=graph-api
+
+      - name: 활성화 기록 커밋
+        if: ${{ inputs.mode == 'publish' }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "커밋할 변경 없음"
+          else
+            git commit -m "chore(activation): 릴스 게시 기록 — ${SERIES} (${ASSET_KEY})"
+            git push origin HEAD:main
+          fi
+
+      - name: 결과 아티팩트
+        if: ${{ always() && inputs.mode == 'publish' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: reel-publish-${{ github.run_id }}
+          path: _stage/
+          if-no-files-found: ignore

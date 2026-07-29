@@ -7,6 +7,9 @@
 //   node tools/instagram-publish.mjs doctor
 //   node tools/instagram-publish.mjs carousel --images=URL1,URL2 --caption-file=캡션.txt [--publish]
 //   node tools/instagram-publish.mjs reel --video=URL --caption-file=캡션.txt [--publish]
+//   node tools/instagram-publish.mjs reel --video=URL --caption-file=캡션.txt --verify-only
+//     ↑ 게시하지 않고 Meta가 video_url을 실제로 소화하는지만 확인한다(컨테이너 생성 + 폴링).
+//       드라이런(플래그 없음)은 네트워크 호출을 하지 않으므로 URL 접근성을 증명하지 못한다.
 //   node tools/instagram-publish.mjs limit
 //   node tools/instagram-publish.mjs refresh-token --write-env
 
@@ -44,7 +47,13 @@ const cmd = args[0];
 const opt = (name, dflt) =>
   args.find((arg) => arg.startsWith(`--${name}=`))?.split('=').slice(1).join('=') ?? dflt;
 const flag = (name) => args.includes(`--${name}`);
-const live = flag('publish');
+// --verify-only: 실제 Graph 호출로 컨테이너를 만들고 처리 완료까지 폴링하되 media_publish는
+// 부르지 않는다. Meta가 video_url을 실제로 내려받아 소화하는지를 게시 없이 확인하는 유일한
+// 방법이다(드라이런은 네트워크 호출 자체를 하지 않으므로 URL 접근성을 증명하지 못한다).
+// 미발행 컨테이너는 만료되며 공개 흔적을 남기지 않는다. reel 전용.
+const verifyOnly = flag('verify-only');
+const publishRequested = flag('publish');
+const live = publishRequested || verifyOnly;
 const resultFile = opt('result-file');
 const contentFingerprint = opt('fingerprint', '');
 
@@ -195,6 +204,12 @@ async function assertNotDuplicateCaption() {
 }
 
 try {
+  if (verifyOnly && publishRequested) {
+    throw new Error('--verify-only와 --publish는 함께 쓸 수 없습니다. 검증과 게시를 분리하세요.');
+  }
+  if (verifyOnly && cmd !== 'reel') {
+    throw new Error('--verify-only는 reel 명령에서만 지원합니다.');
+  }
   if (cmd === 'doctor') {
     requireCredentials();
     const profile = await graphGet('me', { fields: 'id,user_id,username' });
@@ -251,17 +266,29 @@ try {
     };
     if (opt('cover')) params.cover_url = opt('cover');
     if (opt('audio-name')) params.audio_name = opt('audio-name');
+    if (contentFingerprint && !/^[a-f0-9]{64}$/i.test(contentFingerprint)) {
+      throw new Error('--fingerprint는 SHA-256 64자리여야 합니다.');
+    }
+    // 캐러셀 분기에만 있던 중복 캡션 게이트를 릴스에도 적용한다.
+    // 산리쿠가 같은 캡션으로 두 번 올라간 사고는 이 게이트를 우회한 경로에서 났다.
+    await assertNotDuplicateCaption();
     const container = await graphPost(`${IG_USER || '<IG_USER_ID>'}/media`, params);
     await waitReady(container.id);
-    const published = await graphPost(`${IG_USER || '<IG_USER_ID>'}/media_publish`, {
-      creation_id: container.id,
-    });
-    await writePublishResult(published.id, 'VIDEO');
-    console.log(
-      live
-        ? `✓ 릴스 게시 완료 · media_id=${published.id}`
-        : '※ 음악은 영상에 미리 포함된 오디오가 그대로 게시됩니다.',
-    );
+    if (verifyOnly) {
+      console.log(`✓ 릴스 컨테이너 검증 통과 · container_id=${container.id}`);
+      console.log('  Meta가 video_url을 실제로 내려받아 처리를 마쳤습니다. 게시하지 않았습니다.');
+      console.log('  미발행 컨테이너는 만료되며 공개 게시물로 남지 않습니다.');
+    } else {
+      const published = await graphPost(`${IG_USER || '<IG_USER_ID>'}/media_publish`, {
+        creation_id: container.id,
+      });
+      await writePublishResult(published.id, 'VIDEO');
+      console.log(
+        live
+          ? `✓ 릴스 게시 완료 · media_id=${published.id}`
+          : '※ 음악은 영상에 미리 포함된 오디오가 그대로 게시됩니다.',
+      );
+    }
   } else if (cmd === 'refresh-token') {
     requireCredentials();
     if (!flag('write-env')) {
