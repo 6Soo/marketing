@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "experiment": "sado-003",
+  "checkpoint": "72h",
+  "source": "graph-api",
+  "observedAt": "2026-07-30T00:34:59.470Z",
+  "metrics": {
+    "reach": 1,
+    "saves": 0,
+    "shares": 0,
+    "likes": 0,
+    "comments": 0
+  }
+}
