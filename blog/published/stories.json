@@ -1,0 +1,585 @@
+{
+  "schemaVersion": 1,
+  "site": "https://foresttour.kr",
+  "stories": [
+    {
+      "slug": "sanriku",
+      "series": "나만 몰랐던 일본 · 002",
+      "episode": "산리쿠 해안",
+      "title": "열차가 바다 위에서 속도를 늦추는 이유",
+      "description": "산리쿠 해안의 절벽과 마을, 산리쿠 철도와 1,025km 바닷길을 공식 자료와 함께 천천히 이어 봅니다.",
+      "canonical": "https://foresttour.kr/stories/sanriku",
+      "hero": {
+        "src": "https://images.pexels.com/photos/15531352/pexels-photo-15531352.jpeg?auto=compress&cs=tinysrgb&w=1600",
+        "alt": "산리쿠의 바다와 철교를 떠올리게 하는 분위기 참고 이미지 · 실제 현지 사진 아님",
+        "credit": "Artem Makarov · Pexels",
+        "notice": "필드노트와 같은 분위기 참고 이미지 · 실제 현지 사진 아님",
+        "pageUrl": "https://www.pexels.com/photo/15531352/"
+      },
+      "openingTitle": "카드에 다 담지 못한\n산리쿠의 다음 장",
+      "jumpLabel": "열차 이야기부터 이어보기",
+      "jumpTarget": "train",
+      "intro": [
+        "일본 도호쿠의 오른쪽 가장자리. 산리쿠는 한 장의 해안 풍경이라기보다, 절벽과 작은 항구와 다시 이어진 길을 천천히 읽는 지역입니다.",
+        "짧게 지나치기 쉬운 장면들을 여기서는 위치와 이유, 걸을 때 만나게 되는 감각까지 조금 더 깊게 펼칩니다."
+      ],
+      "sections": [
+        {
+          "id": "train",
+          "eyebrow": "A TRAIN THAT WAITS",
+          "title": "풍경을 지나치지 않도록\n다리 위에서 천천히",
+          "paragraphs": [
+            "산리쿠 철도 리아스선의 호리나이역과 시라이카이간역 사이에는 태평양을 건너는 듯한 오사와 교량이 있습니다. 호리나이역 남쪽에 놓인 높이 약 30m의 철도교입니다.",
+            "이와테현 공식 관광정보는 열차가 관광객에게 바다 전망을 보여 주기 위해 교량 위에서 약 1분간 멈춘다고 소개합니다. 카드의 “속도를 늦추는 이유”는 지연이 아니라, 창밖 풍경을 그냥 지나치지 않도록 마련한 짧은 관람 시간입니다. 실제 운행 방식은 열차와 당일 상황에 따라 달라질 수 있습니다."
+          ],
+          "image": {
+            "src": "https://images.pexels.com/photos/17269131/pexels-photo-17269131.jpeg?auto=compress&cs=tinysrgb&w=1600",
+            "alt": "바닷가를 달리는 열차 분위기 참고 이미지 · 실제 산리쿠 철도 사진 아님",
+            "credit": "Huu Huynh · Pexels",
+            "notice": "분위기 참고 이미지 · 실제 산리쿠 철도 사진 아님",
+            "pageUrl": "https://www.pexels.com/photo/17269131/"
+          },
+          "fact": "이와테현 공식 관광정보: 높이 약 30m 오사와 교량 · 바다 전망을 위한 약 1분 정차 안내"
+        },
+        {
+          "id": "trail",
+          "eyebrow": "A ROAD THAT REMEMBERS",
+          "title": "바다를 따라 1,025km,\n마을을 다시 잇는 길",
+          "paragraphs": [
+            "미치노쿠 시오카제 트레일은 아오모리현 하치노헤에서 후쿠시마현 소마까지 태평양 연안을 잇습니다. 2011년 동일본대지진 이후, 자연과 삶의 기억을 걸어서 잇는 길로 만들어졌고 2019년에 전 구간이 열렸습니다.",
+            "산길만 이어지는 트레일이 아닙니다. 숲과 절벽 사이로 걷다가 항구와 마을, 논밭과 방조제를 지납니다. 풍경과 생활이 번갈아 나타나는 것이 이 길의 가장 산리쿠다운 리듬입니다."
+          ],
+          "image": {
+            "src": "https://images.pexels.com/photos/32667821/pexels-photo-32667821.jpeg?auto=compress&cs=tinysrgb&w=1600",
+            "alt": "바다를 곁에 두고 이어지는 해안 산책로 분위기 참고 이미지",
+            "credit": "Petra Nesti · Pexels",
+            "notice": "분위기 참고 이미지 · 실제 현지 사진 아님",
+            "pageUrl": "https://www.pexels.com/photo/32667821/"
+          },
+          "fact": "환경성 공식 기록: 2019년 전 구간 개통 · 총연장 1,025km"
+        },
+        {
+          "id": "cliffs",
+          "eyebrow": "THE SEA ALPS",
+          "title": "200m 절벽이\n8km 이어지는 해안",
+          "paragraphs": [
+            "기타야마자키에서는 바다가 아래로 멀어 보입니다. 높이 약 200m의 절벽이 약 8km 이어져, 짧은 전망보다 해안의 규모를 몸으로 느끼게 합니다.",
+            "공식 관광자원 평가에서 해안 부문 유일의 최고 등급인 ‘특A급’으로 소개되는 곳입니다. 다만 숫자보다 먼저 남는 것은, 안개가 드나들 때 절벽의 윤곽이 차례로 사라지는 장면입니다."
+          ],
+          "image": {
+            "src": "https://images.pexels.com/photos/15397238/pexels-photo-15397238.jpeg?auto=compress&cs=tinysrgb&w=1600",
+            "alt": "높은 절벽과 바다가 맞닿는 해안 분위기 참고 이미지",
+            "credit": "Luis Flores · Pexels",
+            "notice": "분위기 참고 이미지 · 실제 현지 사진 아님",
+            "pageUrl": "https://www.pexels.com/photo/15397238/"
+          },
+          "fact": "이와테현 공식 관광정보: 높이 약 200m · 약 8km · 해안 부문 특A급"
+        },
+        {
+          "id": "jodogahama",
+          "eyebrow": "A NAME LEFT BY WONDER",
+          "title": "스님이 ‘극락’이라\n불렀다고 전해지는 바닷가",
+          "paragraphs": [
+            "조도가하마는 흰 바위와 솔숲, 잔잔한 만이 한 화면처럼 겹치는 곳입니다. 약 300년 전 한 스님이 “마치 극락정토 같다”고 감탄한 데서 이름이 붙었다고 전해집니다.",
+            "산리쿠의 거친 절벽을 오래 본 뒤 이 만에 도착하면 바다의 표정이 갑자기 조용해집니다. 그래서 이곳은 명소 하나라기보다 긴 해안길의 숨 고르는 장면에 가깝습니다."
+          ],
+          "image": {
+            "src": "https://images.pexels.com/photos/33347958/pexels-photo-33347958.jpeg?auto=compress&cs=tinysrgb&w=1600",
+            "alt": "흰 바위와 잔잔한 물이 어우러진 해안 분위기 참고 이미지",
+            "credit": "Ashar Mirza · Pexels",
+            "notice": "분위기 참고 이미지 · 실제 현지 사진 아님",
+            "pageUrl": "https://www.pexels.com/photo/33347958/"
+          },
+          "fact": "이와테현 공식 관광정보가 소개하는 지명 유래이며, 전승이므로 단정하지 않습니다."
+        }
+      ],
+      "walkingNotes": [
+        "한 번에 많은 명소보다 한 해안을 오래 보고 싶은 분",
+        "평탄한 산책과 오르내림이 있는 해안길을 섞어 걷고 싶은 분",
+        "풍경뿐 아니라 마을의 생활과 재해의 기억도 함께 이해하고 싶은 분"
+      ],
+      "scheduleNotes": [
+        "현재 산리쿠 이야기와 정확히 연결된 모집 일정은 없습니다.",
+        "짧은 필드노트에서 언급한 10월 여정도 현재 공개 예약 일정으로 확인되지 않아 연결하지 않았습니다. 실제 출발이 예약 화면에 공개될 때만 이곳에 연결합니다."
+      ],
+      "relatedSlugs": [
+        "hida",
+        "sado"
+      ],
+      "sources": [
+        {
+          "label": "이와테현 공식 관광정보 · 산리쿠 철도 오사와 교량과 약 1분 정차 안내",
+          "url": "https://iwatetabi.jp/spots/60860/"
+        },
+        {
+          "label": "환경성 · 미치노쿠 시오카제 트레일의 배경과 1,025km 전 구간",
+          "url": "https://tohoku.env.go.jp/topics_00015.html"
+        },
+        {
+          "label": "환경성 · 산리쿠 부흥국립공원과 해안길의 이야기",
+          "url": "https://www.env.go.jp/nature/nationalparks/list/sanriku-fukko/feature/story/"
+        },
+        {
+          "label": "이와테현 공식 관광정보 · 기타야마자키",
+          "url": "https://iwatetabi.jp/spots/94113/"
+        },
+        {
+          "label": "이와테현 공식 관광정보 · 조도가하마",
+          "url": "https://iwatetabi.jp/spots/5144/"
+        }
+      ],
+      "photoStatus": "placeholder",
+      "featuredOrder": 1,
+      "keywords": [
+        "산리쿠 해안",
+        "산리쿠 철도",
+        "미치노쿠 시오카제 트레일",
+        "도호쿠 여행"
+      ],
+      "publicationStatus": "published",
+      "publishedAt": "2026-07-26T12:00:00+09:00",
+      "updatedAt": "2026-07-29T18:00:00+09:00",
+      "discoveryHook": "열차가 바다 위에서 속도를 늦추는 이유"
+    },
+    {
+      "slug": "hida",
+      "series": "나만 몰랐던 일본 · 001",
+      "episode": "히다의 산마을",
+      "title": "유명한 마을보다 그 사이의 길",
+      "description": "히다의 격자창, 눈을 견디는 갓쇼 지붕, 게로 온천을 공식 자료와 함께 더 천천히 이어 봅니다.",
+      "canonical": "https://foresttour.kr/stories/hida",
+      "hero": {
+        "src": "/stories/hida/cover.webp",
+        "alt": "히다의 오래된 목조 거리를 표현한 AI 연출 이미지 · 실제 현지 사진 아님",
+        "credit": "숲길여행 필드노트",
+        "notice": "필드노트에 사용된 AI 연출 이미지 · 실제 현지 사진 아님"
+      },
+      "socialImageSrc": "/stories/hida/cover-og.jpg",
+      "openingTitle": "격자창에서 눈의 지붕까지\n히다의 다음 장",
+      "jumpLabel": "오래된 거리부터 이어보기",
+      "jumpTarget": "oldtown",
+      "intro": [
+        "히다는 한 마을의 이름으로 끝나지 않습니다. 다카야마의 오래된 거리에서 산 사이 갓쇼 마을을 지나, 히다강을 따라 온천에 닿는 동안 풍경의 결이 조금씩 달라집니다.",
+        "짧은 필드노트에서 짧게 보았던 격자창과 억새 지붕, 온천의 감각을 여기서는 왜 그런 모습이 남았는지까지 이어서 살펴봅니다."
+      ],
+      "sections": [
+        {
+          "id": "oldtown",
+          "eyebrow": "A TOWN OF MERCHANTS",
+          "title": "격자창 아래로\n에도의 시간이 흐르는 거리",
+          "paragraphs": [
+            "다카야마의 오래된 거리는 에도 시대 성하마을과 상인 마을로 발달했습니다. 가미마치와 시모마치의 세 거리는 국가 중요전통적건조물군 보존지구로 지정되어 있습니다.",
+            "연속된 격자창과 낮은 처마, 처마 아래 흐르는 용수로를 따라 걷다 보면 한 건물보다 거리 전체가 보존된 이유를 느끼게 됩니다. 아침에는 미야가와 강변 시장까지 천천히 이어 볼 수 있습니다."
+          ],
+          "fact": "히다 다카야마 공식 관광정보: 에도 시대 성하·상인 마을 · 세 거리 보존지구"
+        },
+        {
+          "id": "gassho",
+          "eyebrow": "ROOFS FOR DEEP SNOW",
+          "title": "손을 모은 듯한 지붕은\n눈과 생활이 만든 구조",
+          "paragraphs": [
+            "기후현 시라카와고의 갓쇼즈쿠리 집은 산악 지대의 많은 눈에 적응해 발달한 농가 형식입니다. UNESCO 등재유산은 도야마현 고카야마까지 함께 포함하지만, 고카야마는 히다 지역이 아닙니다.",
+            "큰 지붕 아래의 넓은 다락은 누에를 기르는 생활과도 연결됐습니다. UNESCO는 이 집들을 자연환경과 지역의 사회·경제적 조건에 맞춰 발전한 전통 정주의 뛰어난 사례로 설명합니다."
+          ],
+          "image": {
+            "src": "/stories/hida/gassho.webp",
+            "alt": "갓쇼즈쿠리 산촌을 표현한 AI 연출 이미지 · 실제 현지 사진 아님",
+            "credit": "숲길여행 필드노트",
+            "notice": "필드노트에 사용된 AI 연출 이미지 · 실제 현지 사진 아님"
+          },
+          "fact": "UNESCO 세계유산센터: 급경사 억새 지붕 · 폭설과 양잠 생활에 적응한 구조"
+        },
+        {
+          "id": "onsen",
+          "eyebrow": "WATER AFTER THE WALK",
+          "title": "산마을의 하루 끝,\n히다강 곁 온천",
+          "paragraphs": [
+            "게로 온천은 아리마·구사쓰와 함께 일본 삼명천으로 불리며, 공식 관광정보는 약 1,000년의 역사와 알칼리성 단순온천의 매끄러운 촉감을 소개합니다.",
+            "온천만 따로 소비하기보다 오래된 거리와 산마을을 걸은 뒤 히다강의 물소리 가까이에서 하루를 늦추는 장면으로 볼 때, 히다 여행의 호흡이 자연스럽게 이어집니다."
+          ],
+          "image": {
+            "src": "/stories/hida/onsen.webp",
+            "alt": "히다강 곁 온천 마을을 표현한 AI 연출 이미지 · 실제 게로 사진 아님",
+            "credit": "숲길여행 필드노트",
+            "notice": "필드노트에 사용된 AI 연출 이미지 · 실제 현지 사진 아님"
+          },
+          "fact": "게로 온천관광협회: 일본 삼명천 · 약 1,000년의 역사 · 알칼리성 단순온천"
+        }
+      ],
+      "walkingNotes": [
+        "유명한 한 지점보다 오래된 거리와 산마을 사이의 변화를 보고 싶은 분",
+        "아침 시장과 골목 산책 뒤 온천에서 하루를 천천히 마무리하고 싶은 분",
+        "건축의 모양뿐 아니라 눈과 생활이 만든 이유까지 알고 싶은 분"
+      ],
+      "scheduleNotes": [
+        "현재 히다 이야기와 정확히 연결된 모집 일정은 없습니다.",
+        "기존 필드노트의 3박 4일·10월 문구도 현재 공개 예약 일정으로 확인되지 않아 연결하지 않았습니다. 같은 여행이 예약 화면에 정확히 공개된 뒤에만 일정 링크를 추가합니다."
+      ],
+      "relatedSlugs": [
+        "sado",
+        "sanriku"
+      ],
+      "sources": [
+        {
+          "label": "히다 다카야마 공식 관광정보 · 오래된 거리와 보존지구",
+          "url": "https://www.hidatakayama.or.jp/spot/detail_1101.html"
+        },
+        {
+          "label": "UNESCO 세계유산센터 · 시라카와고와 고카야마의 갓쇼즈쿠리",
+          "url": "https://whc.unesco.org/en/list/734"
+        },
+        {
+          "label": "게로 온천관광협회 · 일본 삼명천과 온천의 성질",
+          "url": "https://www.gero-spa.com/onsen/"
+        },
+        {
+          "label": "게로 온천관광 프로모션 · 약 1,000년의 역사와 알칼리성 단순온천",
+          "url": "https://www.gero-spa.com/suhadabijin/en/about.html"
+        }
+      ],
+      "discoveryHook": "가이드북엔 없는 진짜 일본을 찾는다면",
+      "photoStatus": "placeholder",
+      "featuredOrder": 2,
+      "keywords": [
+        "히다 여행",
+        "다카야마",
+        "시라카와고",
+        "게로 온천"
+      ],
+      "publicationStatus": "published",
+      "publishedAt": "2026-07-26T12:00:00+09:00",
+      "updatedAt": "2026-07-29T18:00:00+09:00"
+    },
+    {
+      "slug": "northern-alps",
+      "series": "나만 몰랐던 일본 · 004",
+      "episode": "다테야마에서 가미코치까지",
+      "title": "정상보다 먼저 열리는 북알프스",
+      "description": "무로도 미쿠리가이케, 다테야마 구로베 알펜루트, 구로베댐과 가미코치 강변을 실제 현지 사진과 공식 자료로 이어 봅니다.",
+      "canonical": "https://foresttour.kr/stories/northern-alps",
+      "hero": {
+        "src": "/stories/northern-alps/kappa-bridge.jpg",
+        "alt": "가미코치 갓파바시와 야케다케의 실제 현지 촬영 사진",
+        "credit": "663highland · Wikimedia Commons · CC BY 2.5",
+        "notice": "북알프스 현지 촬영",
+        "pageUrl": "https://commons.wikimedia.org/wiki/File:150920_Kappa-bashi_Kamikochi_Japan01n.jpg"
+      },
+      "socialImageSrc": "/stories/northern-alps/kappa-bridge.jpg",
+      "openingTitle": "오르지 않아도 만나는\n북알프스의 다음 장",
+      "jumpLabel": "해발 2,450m의 호수부터 이어보기",
+      "jumpTarget": "mikurigaike",
+      "intro": [
+        "북알프스라는 이름을 들으면 먼저 정상을 떠올리지만, 이 산맥은 교통으로 고도를 건너고 호수와 강변을 짧게 걸을 때도 충분히 열립니다.",
+        "짧은 필드노트에서 지나간 다섯 장면을 실제 위치와 계절, 걷기의 난도까지 구분하며 다테야마에서 가미코치로 천천히 이어 봅니다."
+      ],
+      "sections": [
+        {
+          "id": "mikurigaike",
+          "eyebrow": "A LAKE AT 2,450M",
+          "title": "해발 2,450m에서\n걷기는 15분부터",
+          "paragraphs": [
+            "무로도는 다테야마 구로베 알펜루트의 최고 지점인 해발 2,450m에 있습니다. 공식 안내 기준으로 터미널 옥상 출구에서 미쿠리가이케 포토스폿까지 약 15분입니다.",
+            "정상 등정 대신 호숫가에 서도 다테야마 능선이 물 위에 열립니다. 고도가 높아 해수면보다 기온이 크게 낮고, 눈과 강풍이 남는 시기가 있으므로 짧은 산책도 당일 기상과 복장을 먼저 확인해야 합니다."
+          ],
+          "image": {
+            "src": "/stories/northern-alps/mikurigaike.jpg",
+            "alt": "무로도 미쿠리가이케와 다테야마 능선의 실제 현지 촬영 사진",
+            "credit": "Raita Futo · Wikimedia Commons · CC BY 2.0",
+            "notice": "미쿠리가이케 현지 촬영",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:Mikuriga-ike_Pond_(51831767103).jpg"
+          },
+          "fact": "알펜루트 공식 안내: 무로도 해발 2,450m · 터미널에서 미쿠리가이케 포토스폿까지 약 15분"
+        },
+        {
+          "id": "daikanbo",
+          "eyebrow": "A TERRACE ABOVE THE LAKE",
+          "title": "단풍을 올려다보는 대신\n구로베호 위에서 내려다보기",
+          "paragraphs": [
+            "다테야마역과 오기사와 사이에는 일반 자동차가 들어갈 수 없습니다. 버스와 케이블카, 로프웨이 같은 교통수단을 갈아타며 약 2,000m의 고도 차를 건넙니다.",
+            "다이칸보의 구름 위 테라스에서는 구로베호와 산자락이 한눈에 펼쳐집니다. 단풍은 고도에 따라 시기가 달라 한 날짜의 전 구간이 같은 색이라고 단정할 수 없습니다."
+          ],
+          "image": {
+            "src": "/stories/northern-alps/daikanbo.jpg",
+            "alt": "다이칸보에서 내려다본 구로베호와 가을 산자락의 실제 현지 촬영 사진",
+            "credit": "くろふね · Wikimedia Commons · CC BY 3.0",
+            "notice": "다이칸보 현지 촬영",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:大観峰_-_panoramio_(1).jpg"
+          },
+          "fact": "알펜루트 공식 안내: 약 2,000m 고도 변화 · 다이칸보에서 구로베호와 가을 산색 조망"
+        },
+        {
+          "id": "kurobe",
+          "eyebrow": "A 186M WALL",
+          "title": "산의 물이 모인 곳을\n걸어서 건너기",
+          "paragraphs": [
+            "구로베댐은 높이 186m로 일본에서 가장 높은 댐입니다. 댐 상부를 걸어 건너며 호수와 산의 규모를 함께 볼 수 있습니다.",
+            "관광 방류는 통상 6월 26일부터 10월 15일까지이고 날씨에 따라 취소될 수 있습니다. 이 기록과 연결된 10월 하순 여행에서는 방류 장면을 기대 요소로 제시하지 않습니다."
+          ],
+          "image": {
+            "src": "/stories/northern-alps/kurobe-dam.jpg",
+            "alt": "구로베댐과 구로베호의 실제 현지 촬영 사진",
+            "credit": "Raita Futo · Wikimedia Commons · CC BY 2.0",
+            "notice": "구로베댐 현지 촬영",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:Kurobe_dam_(51832000884).jpg"
+          },
+          "fact": "알펜루트 공식 안내: 일본 최고 높이 186m · 관광 방류 6월 26일~10월 15일, 기상에 따라 취소"
+        },
+        {
+          "id": "kamikochi",
+          "eyebrow": "WALK WITH THE RIVER",
+          "title": "정상 대신\n아즈사가와를 따라",
+          "paragraphs": [
+            "가미코치는 해발 약 1,500m의 산악 계곡입니다. 갓파바시에서는 아즈사가와의 흐름과 호타카 연봉, 야케다케를 함께 볼 수 있습니다.",
+            "난도가 높지 않은 강변 코스도 있지만 쉬움을 보장하지는 않습니다. 비와 서리, 나무뿌리와 체력에 따라 같은 길의 난도는 달라집니다. 정상보다 풍경의 속도로 걷고 싶은 날에 어울리는 선택입니다."
+          ],
+          "image": {
+            "src": "/stories/northern-alps/azusa-river.jpg",
+            "alt": "가미코치를 흐르는 아즈사가와의 실제 현지 촬영 사진",
+            "credit": "Σ64 · Wikimedia Commons · CC BY 3.0",
+            "notice": "가미코치 현지 촬영",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:Azusa_River_03.jpg"
+          },
+          "fact": "가미코치 공식 안내: 해발 1,500m · 갓파바시에서 호타카 연봉과 아즈사가와 조망"
+        },
+        {
+          "id": "hirayu",
+          "eyebrow": "A PAUSE OUTSIDE THE RIDGE",
+          "title": "폭포와 온천이 놓인\n능선 밖의 쉼표",
+          "paragraphs": [
+            "히라유는 가미코치와 노리쿠라로 길이 갈라지는 산자락입니다. 숲 안쪽의 히라유 폭포와 온천 마을은 높은 지대를 건너기 전후에 속도를 늦추는 장면이 됩니다.",
+            "사용한 사진은 2007년 11월 23일 눈이 쌓인 날의 장면이며, 연결 출발일의 적설이나 현황을 뜻하지 않습니다. 폭포와 온천을 산과 마을 사이의 생활권으로 함께 볼 때 북알프스 여행의 고도 변화가 더 자연스럽게 이어집니다."
+          ],
+          "image": {
+            "src": "/stories/northern-alps/hirayu-falls.jpg",
+            "alt": "2007년 11월 눈이 쌓인 기후현 다카야마시 히라유 폭포의 실제 현지 촬영 사진",
+            "credit": "663highland · Wikimedia Commons · CC BY 2.5",
+            "notice": "히라유 폭포 현지 촬영 · 2007년 11월 23일",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:Hirayu-otaki01s3200.jpg"
+          },
+          "fact": "Wikimedia 고정 리비전의 위치·촬영일과 중부산악국립공원 권역 자료로 장소와 계절을 확인했습니다."
+        },
+        {
+          "id": "norikura",
+          "eyebrow": "THE NEXT HEIGHT",
+          "title": "히라유에서 다시 이어지는\n노리쿠라의 고도",
+          "paragraphs": [
+            "히라유는 가미코치뿐 아니라 노리쿠라다케 방향으로 이어지는 버스의 관문입니다. 이 기록과 연결된 일정에서 노리쿠라는 히라유 이후 다시 높은 지대로 올라가는 다음 장면입니다.",
+            "고지대의 날씨와 도로 통제는 낮은 마을과 다를 수 있습니다. 실제 이동 전에는 당일 운행과 입산 정보를 확인하고, 이 페이지는 공개 상품 제목에 노리쿠라가 포함된 출발만 연결합니다."
+          ],
+          "fact": "히라유온천 공식 FAQ의 가미코치·노리쿠라 교통 안내와 공개 상품 제목을 함께 확인했습니다."
+        }
+      ],
+      "walkingNotes": [
+        "정상 등정보다 호수와 강변에서 산의 규모를 느끼고 싶은 분",
+        "버스·케이블카·로프웨이를 갈아타며 고도와 계절의 변화를 보고 싶은 분",
+        "짧은 고지대 산책과 난도가 높지 않은 강변 코스를 날씨에 맞춰 고르고 싶은 분"
+      ],
+      "scheduleNotes": [
+        "공개 예약 데이터에서 알펜루트·가미코지·노리쿠라가 모두 일치하는 현재 출발만 연결합니다.",
+        "API가 실패하거나 상품 ID·제목·출발일이 하나라도 맞지 않으면 예약 버튼을 표시하지 않습니다."
+      ],
+      "connectedTour": {
+        "fldid": "fNod",
+        "requiredTitleTerms": [
+          "알펜루트",
+          "가미코지",
+          "노리쿠라"
+        ],
+        "ctaLabel": "이 북알프스 일정 자세히 보기"
+      },
+      "relatedSlugs": [
+        "hida",
+        "sado"
+      ],
+      "sources": [
+        {
+          "label": "다테야마 구로베 알펜루트 공식 FAQ · 무로도 고도, 미쿠리가이케 접근, 자동차 제한, 방류 기간",
+          "url": "https://www.alpen-route.com/en/faq/"
+        },
+        {
+          "label": "다테야마 구로베 알펜루트 공식 · 미쿠리가이케, 구로베댐, 다이칸보 전망",
+          "url": "https://www.alpen-route.com/en/how-to-enjoy/landmarks/"
+        },
+        {
+          "label": "가미코치 공식 · 갓파바시와 해발 1,500m 산악 계곡",
+          "url": "https://www.kamikochi.or.jp/learn/spots/1319/"
+        },
+        {
+          "label": "가미코치 공식 · 강변 걷기 코스와 난도 안내",
+          "url": "https://www.kamikochi.org/thingstodo/walking"
+        },
+        {
+          "label": "히라유온천 공식 · 가미코치·노리쿠라 교통 관문 안내",
+          "url": "https://www.hirayuonsen.or.jp/qa.php"
+        },
+        {
+          "label": "환경성 · 중부산악국립공원",
+          "url": "https://www.env.go.jp/en/nature/nps/park/chubu/index.html"
+        },
+        {
+          "label": "사진 01 갓파바시 · 663highland · CC BY 2.5 · 2015-09-20 · 고정 리비전 · SHA-256 0460d5dd…efc",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3A150920%20Kappa-bashi%20Kamikochi%20Japan01n.jpg&oldid=743718336"
+        },
+        {
+          "label": "사진 02 미쿠리가이케 · Raita Futo · CC BY 2.0 · 2021-09-21 · 고정 리비전 · SHA-256 68675320…2ef",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3AMikuriga-ike%20Pond%20(51831767103).jpg&oldid=1085475114"
+        },
+        {
+          "label": "사진 03 다테야마 로프웨이 · くろふね · CC BY 4.0 · 2022-05-07 · 고정 리비전 · SHA-256 a3e19008…41c",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3A%E7%AB%8B%E5%B1%B1%E3%83%AD%E3%83%BC%E3%83%97%E3%82%A6%E3%82%A7%E3%82%A420220507-IMG%202321.jpg&oldid=1046907388"
+        },
+        {
+          "label": "사진 04 다이칸보 · くろふね · CC BY 3.0 · 2011-10-13 · 고정 리비전 · SHA-256 16d36d5a…157",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3A%E5%A4%A7%E8%A6%B3%E5%B3%B0%20-%20panoramio%20(1).jpg&oldid=1217620288"
+        },
+        {
+          "label": "사진 05 구로베댐 · Raita Futo · CC BY 2.0 · 2021-09-21 · 고정 리비전 · SHA-256 bbd77b4c…28f",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3AKurobe%20dam%20(51832000884).jpg&oldid=1127093512"
+        },
+        {
+          "label": "사진 06 아즈사가와 · Σ64 · CC BY 3.0 · 2011-07-26 · 고정 리비전 · SHA-256 6137536b…1b6",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3AAzusa%20River%2003.jpg&oldid=1133443657"
+        },
+        {
+          "label": "사진 07 히라유 폭포 · 663highland · CC BY 2.5 · 2007-11-23 · 고정 리비전 · SHA-256 eeaaea80…79a",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3AHirayu-otaki01s3200.jpg&oldid=1241560272"
+        },
+        {
+          "label": "사진 08 가미코치 단풍 · Paul Keller · CC BY 2.0 · 2012-10-22 · 고정 리비전 · SHA-256 a80b4901…3e7",
+          "url": "https://commons.wikimedia.org/w/index.php?title=File%3ATrees%20autumn%202%20(8150484186).jpg&oldid=1198114527"
+        }
+      ],
+      "discoveryHook": "북알프스는 꼭 정상에 올라야만 볼 수 있을까?",
+      "photoStatus": "verified",
+      "featuredOrder": 4,
+      "keywords": [
+        "일본 북알프스",
+        "다테야마 구로베 알펜루트",
+        "가미코치",
+        "구로베댐"
+      ],
+      "publicationStatus": "published",
+      "publishedAt": "2026-07-26T12:00:00+09:00",
+      "updatedAt": "2026-07-29T18:00:00+09:00"
+    },
+    {
+      "slug": "sado",
+      "series": "나만 몰랐던 일본 · 003",
+      "episode": "사도의 광산과 항구 마을",
+      "title": "금광 밖으로 이어지는 사도의 생활",
+      "description": "사도 금산에서 북택부유선광장, 둥근 대야배와 배목수 마을 슈쿠네기까지 실제 현지 사진과 공식 자료로 이어 봅니다.",
+      "canonical": "https://foresttour.kr/stories/sado",
+      "hero": {
+        "src": "/stories/sado/kitazawa.jpg",
+        "alt": "사도 아이카와의 북택부유선광장 콘크리트 구조물",
+        "credit": "ccfarmer · Wikimedia Commons · CC BY 3.0",
+        "notice": "사도 현지 촬영 · CC BY 3.0",
+        "pageUrl": "https://commons.wikimedia.org/wiki/File:Kitazawa_flotation_mineral_processing_field_-_panoramio.jpg"
+      },
+      "socialImageSrc": "/stories/sado/kitazawa.jpg",
+      "openingTitle": "금광이 멈춘 뒤에도\n섬에 남은 다음 장",
+      "jumpLabel": "세계유산 이야기부터 이어보기",
+      "jumpTarget": "goldmine",
+      "intro": [
+        "사도를 금광 하나로만 보면 섬의 절반을 놓치게 됩니다. 광석을 캔 갱도에서 시작해, 광석을 골라낸 북택의 층과 남쪽 바다의 둥근 배, 배목수 마을까지 생활의 흔적이 이어집니다.",
+        "짧은 필드노트에서 짧게 지나간 네 장면을 여기서는 세계유산의 경계와 사진의 출처까지 분명히 하며 더 천천히 살펴봅니다."
+      ],
+      "sections": [
+        {
+          "id": "goldmine",
+          "eyebrow": "BEFORE MACHINES",
+          "title": "금보다 오래 남은 건\n사람이 파낸 방식",
+          "paragraphs": [
+            "2024년 세계유산이 된 사도섬 금산은 니시미카와 사금산과 아이카와·쓰루시 금은산으로 이뤄집니다. UNESCO는 서로 다른 지질에 맞춰 발전한 비기계식 채굴과 생산 체계의 흔적을 핵심 가치로 봅니다.",
+            "사진의 도유갱은 사도 광산의 갱도와 근대 시설을 만나는 지점입니다. 금의 양보다, 산을 읽고 광맥을 따라간 사람의 기술을 먼저 보면 세계유산의 이유가 더 또렷해집니다."
+          ],
+          "image": {
+            "src": "/stories/sado/goldmine.jpg",
+            "alt": "사도 금산 도유갱의 현지 촬영 사진",
+            "credit": "amaknow · Wikimedia Commons · CC BY 2.0",
+            "notice": "사도 현지 촬영 · CC BY 2.0",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:Sado_gold_mine_Doyu_Tunnel.jpg"
+          },
+          "fact": "UNESCO 세계유산센터: 2024년 등재 · 니시미카와와 아이카와·쓰루시의 비기계식 금 생산 체계"
+        },
+        {
+          "id": "taraibune",
+          "eyebrow": "A ROUND BOAT",
+          "title": "배가 둥근 데는\n바다의 이유가 있습니다",
+          "paragraphs": [
+            "오기 해안의 대야배는 씻는 통처럼 둥글지만 관광용 모양에서 시작한 배가 아닙니다. 19세기 후반, 바위가 빽빽한 좁은 암초 사이에서 방향을 바꾸기 쉽도록 만들어졌습니다.",
+            "육지에서 보면 장난감처럼 작아 보이지만, 바다와 생업이 도구의 모양을 정한 결과입니다. 사도 남쪽에서는 이 배를 직접 타며 짧게 바다를 돌아볼 수 있습니다."
+          ],
+          "image": {
+            "src": "/stories/sado/taraibune.jpg",
+            "alt": "사도 오기항의 둥근 대야배 현지 촬영 사진",
+            "credit": "rhodnite · Wikimedia Commons · CC BY 2.0",
+            "notice": "사도 현지 촬영 · CC BY 2.0",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:Taraibune_in_Sado_Ogi.jpg"
+          },
+          "fact": "사도 공식 관광 가이드: 19세기 후반 · 오기 해안의 좁고 복잡한 암초 지형에 맞춘 배"
+        },
+        {
+          "id": "shukunegi",
+          "eyebrow": "A VILLAGE OF SHIPWRIGHTS",
+          "title": "배목수의 기술이\n골목이 되었습니다",
+          "paragraphs": [
+            "슈쿠네기는 서쪽 항로가 번성하던 시대에 회선업과 배 건조로 성장했습니다. 좁은 땅에 집들이 모였고, 배 판재를 다시 쓴 외벽과 돌을 얹은 지붕이 지금도 마을의 표정을 만듭니다.",
+            "1991년 국가 중요전통적건조물군 보존지구로 선정됐습니다. 광산의 금이 섬 바깥으로 움직이던 시간과, 배를 만들고 고치던 사람들의 생활을 함께 읽을 수 있는 곳입니다."
+          ],
+          "image": {
+            "src": "/stories/sado/shukunegi.jpg",
+            "alt": "사도 슈쿠네기의 좁은 골목과 전통 가옥 현지 촬영 사진",
+            "credit": "JH0WJF · Wikimedia Commons · Public Domain",
+            "notice": "사도 현지 촬영 · Public Domain",
+            "pageUrl": "https://commons.wikimedia.org/wiki/File:Sado_Shukunegi.jpg"
+          },
+          "fact": "사도시 공식 문화재 정보: 1991년 보존지구 선정 · 회선업과 배목수 생활이 만든 마을"
+        }
+      ],
+      "walkingNotes": [
+        "세계유산 금산을 금의 양보다 사람의 기술로 이해하고 싶은 분",
+        "산업 유산에서 항구와 생활 도구까지 한 섬의 연결을 보고 싶은 분",
+        "많은 장소를 찍기보다 아이카와와 남쪽 마을을 오래 보고 싶은 분"
+      ],
+      "scheduleNotes": [
+        "현재 사도 이야기와 정확히 연결된 공개 모집 일정은 없습니다.",
+        "내부 기획 기록은 공개 출발 확정이 아닙니다. 실제 일정이 예약 화면에 공개된 뒤에만 이곳에 연결합니다."
+      ],
+      "relatedSlugs": [
+        "sanriku",
+        "hida"
+      ],
+      "sources": [
+        {
+          "label": "UNESCO 세계유산센터 · 사도섬 금산 등재 결정과 구성",
+          "url": "https://whc.unesco.org/en/decisions/8610"
+        },
+        {
+          "label": "사도시 공식 · 북택부유선광장의 건설 시기와 처리 능력",
+          "url": "https://www.city.sado.niigata.jp/site/mine/4521.html"
+        },
+        {
+          "label": "사도 공식 관광 가이드 · 오기 해안 대야배의 기원",
+          "url": "https://www.visitsado.com/media/files/pdf/en-pdf/sadoisland_ogi_en.pdf"
+        },
+        {
+          "label": "사도시 공식 · 슈쿠네기 전통적 건조물군 보존지구",
+          "url": "https://www.city.sado.niigata.jp/site/bunkazai/5271.html"
+        }
+      ],
+      "discoveryHook": "섬 한가운데 거대한 층층 구조물이 남은 이유",
+      "photoStatus": "verified",
+      "featuredOrder": 3,
+      "keywords": [
+        "사도섬 여행",
+        "사도 금산",
+        "북택부유선광장",
+        "슈쿠네기"
+      ],
+      "publicationStatus": "published",
+      "publishedAt": "2026-07-26T12:00:00+09:00",
+      "updatedAt": "2026-07-29T18:00:00+09:00"
+    }
+  ]
+}

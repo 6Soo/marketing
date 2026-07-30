@@ -16,7 +16,11 @@
     "activation:ingest": "node tools/ingest-instagram-publish-result.mjs",
     "activation:collect": "node tools/collect-instagram-activation-metrics.mjs",
     "story:build": "node tools/build-instagram-story.mjs",
-    "story:ready": "node tools/verify-instagram-story-ready.mjs"
+    "story:ready": "node tools/verify-instagram-story-ready.mjs",
+    "blog:draft": "node tools/blog-draft.mjs",
+    "blog:publish": "node tools/blog-content.mjs publish",
+    "blog:validate": "node tools/blog-content.mjs validate",
+    "test:blog": "node --test tools/blog-content.test.mjs"
   },
   "devDependencies": {
     "ffmpeg-static": "^5.3.0"

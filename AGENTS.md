@@ -7,7 +7,8 @@
 ## 0. 먼저 읽을 순서
 1. **CLAUDE.md** (리포 루트) — 회사 컨텍스트·마케팅 원칙.
 2. **§0-A 모델 라우팅 지침**(바로 아래) — 어느 모델이 무엇을 맡는지의 정본.
-3. 채널별 단일 인계서 — BAND는 **HANDOFF-BAND.md**, Instagram은 **HANDOFF-INSTAGRAM.md**.
+3. 채널별 단일 인계서 — BAND는 **HANDOFF-BAND.md**, Instagram은 **HANDOFF-INSTAGRAM.md**,
+   foresttour.kr 블로그는 **HANDOFF-BLOG.md**.
 4. **LOG.md** 맨 아래 "세션 핸드오프" 블록 — 최신 세션이 한 일 / 배포·런타임 상태 / 미결 / 함정 / 부트스트랩.
 5. (있으면) 하위 `docs/`, `learning/`.
 
