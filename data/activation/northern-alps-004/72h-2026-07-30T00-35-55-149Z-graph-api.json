@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "experiment": "northern-alps-004",
+  "checkpoint": "72h",
+  "source": "graph-api",
+  "observedAt": "2026-07-30T00:35:55.149Z",
+  "metrics": {
+    "reach": 1,
+    "saves": 0,
+    "shares": 0,
+    "likes": 0,
+    "comments": 0
+  }
+}

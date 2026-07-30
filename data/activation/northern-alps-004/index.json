@@ -55,5 +55,33 @@
       "story_northern-alps_discoveries": 0,
       "story_northern-alps_tour": 0
     }
+  },
+  {
+    "schemaVersion": 1,
+    "experiment": "northern-alps-004",
+    "checkpoint": "72h",
+    "source": "graph-api",
+    "observedAt": "2026-07-30T00:35:55.149Z",
+    "metrics": {
+      "reach": 1,
+      "saves": 0,
+      "shares": 0,
+      "likes": 0,
+      "comments": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "experiment": "northern-alps-004",
+    "checkpoint": "72h",
+    "source": "foresttour-admin",
+    "observedAt": "2026-07-30T00:35:58.136Z",
+    "metrics": {
+      "story_northern-alps_visit": 1,
+      "story_northern-alps_context": 0,
+      "story_northern-alps_related": 0,
+      "story_northern-alps_discoveries": 0,
+      "story_northern-alps_tour": 0
+    }
   }
 ]
