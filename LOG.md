@@ -1241,8 +1241,16 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
 ### 남은 외부 상태
 
 - 코드는 크롤링 가능 상태를 만들지만 검색 색인을 보장하지 않는다.
-- 배포 후 공개 14개 URL을 다시 검증하고, 사이트 소유 계정으로 Google Search Console·
-  네이버 서치어드바이저에 sitemap/RSS를 1회 제출해야 한다. 로그인·2차 인증은 우회하지 않는다.
+- 프로덕션 `a1f8951`, Vercel `dpl_GLUZcQURhQqvKVRRsRYAc9kDKWpQ`가 `READY`이고
+  공개 14개 URL 재검증이 통과했다.
+- Google Search Console은 `kkokkohero6@gmail.com`에서 `https://foresttour.kr/` URL 접두어
+  속성 소유 확인을 마쳤다. 최초 sitemap 제출에서 Pexels 이미지 URL의 escape되지 않은 `&` 때문에
+  “읽을 수 없음”이 발생했고, 이미지 sitemap을 자사 story OG URL로 바꾸고 XML 앰퍼샌드 회귀
+  게이트를 추가했다. 수정 후 테스트 **87/87**, TypeScript, 변경 파일 ESLint, 빌드가 통과했다.
+- Search Console 최종 실측은 `sitemap.xml` **성공·발견 6페이지**,
+  `stories/feed.xml` **성공·발견 5페이지**다. 색인 자체를 보장하는 결과는 아니다.
+- 네이버 서치어드바이저는 로그인 화면까지 확인했으나 로그인 세션이 없어 중단했다.
+  운영자가 네이버 로그인한 뒤 소유 확인과 sitemap/RSS 제출을 이어야 한다.
 - 마케팅 리포는 이미 PUBLIC이고 `bfb998c`에 남은 과거 Pexels 키가 2026-07-31 API HTTP 200으로
   아직 유효하다. 이번 변경이 새로 공개한 비밀은 아니지만 기존 노출 자격정보이므로 Pexels에서
   재발급·기존 키 폐기가 필요하다. 외부 계정 권한 없이 git 히스토리를 파괴적으로 재작성하지 않았다.

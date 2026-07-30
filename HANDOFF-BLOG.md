@@ -116,6 +116,11 @@ npm run verify:foresttour
 
 원격 원고 폴백은 Vercel 로그에 `[foresttour-blog] 번들 정상본 사용` 경고를 남깁니다.
 
+2026-07-31 프로덕션 기준 예약 앱 `a1f8951`, Vercel 배포
+`dpl_GLUZcQURhQqvKVRRsRYAc9kDKWpQ`가 `READY`이며 공개 14개 URL이 통과했습니다.
+Google Search Console 확인 파일은
+`https://foresttour.kr/google812722b9e5c1b794.html`에 영구 유지합니다.
+
 ### 긴급 글 내리기
 
 권리·사실 문제로 글을 내려야 할 때는 마케팅 원격 JSON에서만 삭제하지 않습니다. 원격 장애 시
@@ -128,14 +133,15 @@ npm run verify:foresttour
 
 새 글 추가는 마케팅 리포만으로 가능하지만, **긴급 삭제는 앱 번들 동시 배포**가 계약입니다.
 
-## 7. 외부 콘솔에서만 할 수 있는 일
+## 7. 외부 검색 콘솔 상태
 
 코드와 공개 URL만으로 크롤링 가능 상태는 만들 수 있지만 색인 결과를 보장할 수는 없습니다.
-사이트 소유 계정으로 아래 1회 등록이 필요합니다.
 
-1. Google Search Console에 `https://foresttour.kr/sitemap.xml` 제출
-2. 네이버 서치어드바이저에 사이트 소유 확인 후 같은 sitemap과 RSS 제출
-3. 색인 수·검색 노출·검색 유입 퍼널을 4주 단위로 확인
+- Google Search Console: 운영 계정에서 `https://foresttour.kr/` URL 접두어 속성 소유 확인 완료.
+  `sitemap.xml`은 **성공·발견 6페이지**, `stories/feed.xml`은 **성공·발견 5페이지**입니다.
+- 네이버 서치어드바이저: 로그인 화면까지 확인했으나 로그인 세션이 없어 중단했습니다.
+  운영자가 네이버 로그인한 뒤 사이트 소유 확인과 sitemap/RSS 제출을 해야 합니다.
+- 공통 후속: 색인 수·검색 노출·검색 유입 퍼널을 4주 단위로 확인합니다.
 
 로그인 만료·2차 인증·CAPTCHA는 우회하지 않습니다.
 
