@@ -236,7 +236,7 @@ gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
 ## 5. 측정 루프 — 실험별 현재 상태
 
 `node tools/instagram-activation-report.mjs --experiment=<id> --json` 직접 실행 결과
-(2026-07-29T08:33 UTC 기준).
+(2026-07-30T00:36 UTC 기준).
 
 ### `sado-003`
 - permalink `https://www.instagram.com/p/DbRD-fWkyUL/` · publishedAt `2026-07-26T18:47:02.033Z`
@@ -246,7 +246,7 @@ gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
 |---|---|---|---:|
 | 0h | **recorded** | — | 3건 |
 | 24h | **missed** ❌ | 2026-07-27T18:47:02 | 0건 |
-| 72h | upcoming | **2026-07-29T18:47:02** | — |
+| 72h | **recorded** ✅ | 2026-07-29T18:47:02 | 5건 |
 | 7d | upcoming | 2026-08-02T18:47:02 | — |
 
 ### `northern-alps-004`
@@ -257,7 +257,7 @@ gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
 |---|---|---|---:|
 | 0h | **recorded** | — | 2건 |
 | 24h | **missed** ❌ | 2026-07-27T19:15:31 | 0건 |
-| 72h | upcoming | **2026-07-29T19:15:31** | — |
+| 72h | **recorded** ✅ | 2026-07-29T19:15:31 | 4건 |
 | 7d | upcoming | 2026-08-02T19:15:31 | — |
 
 두 실험 모두 `latestMetrics`의 likes/comments/saves/shares/organicInteractions/profileVisits/follows = 0.
@@ -267,25 +267,27 @@ gh workflow run instagram-reel-publish.yml --repo 6Soo/marketing \
 Meta 개발자 계정 차단 기간과 겹쳤고, **Instagram Insights는 누적 lifetime 값**이라 지각 수집이
 불가능하다. 26시간 뒤에 받은 숫자를 `24h 관측치`로 기록하면 거짓이 박제된다.
 그래서 `COLLECTION_GRACE_HOURS = 6`(`tools/instagram-activation-report.mjs:20`)을 도입해
-유예를 넘기면 `missed`로 확정하고 수집 후보에서 제외한다. **다음 유효 창은 72h다.**
+유예를 넘기면 `missed`로 확정하고 수집 후보에서 제외한다. 72h는 아래 복구 절차로 수집했고,
+**다음 유효 창은 7d다.**
 
-### 5-2. ⚠⚠ 72h를 잡을 크론 기회가 **딱 한 번뿐이다**
+### 5-2. ✅ 72h 체크포인트 장애 및 유예 내 복구 완료
 
 | | 기한(UTC) | 유예 만료(UTC) | 유예 안에 도는 크론 |
 |---|---|---|---|
 | sado-003 | 2026-07-29T18:47 | 2026-07-30T00:47 | **`00:15Z` 단 1회** |
 | northern-alps-004 | 2026-07-29T19:15 | 2026-07-30T01:15 | **`00:15Z` 단 1회** |
 
-크론은 `00:15 / 06:15 / 12:15 / 18:15 Z`다. `18:15Z`는 기한 **전**이라 못 잡고,
-`06:15Z`는 유예 **만료 후**라 못 잡는다. **`2026-07-30T00:15Z`(= 07-30 09:15 KST) 실행 한 번이
-실패하면 72h도 24h처럼 영구 손실된다.**
+정기 실행 `30485400588`은 FEED/CAROUSEL에 지원되지 않는 `profile_visits,follows`를 요청해
+Graph API code 100으로 실패했다. 미디어 유형별 메트릭을 분리했으며, 이어 발견된 워크플로
+조건식 오류도 실제 스냅샷 파일 존재 여부를 셸에서 검증하도록 고쳤다.
 
-→ **보험**: 07-30 00:15Z 직후 `gh run list`로 성공 여부를 확인하고, 실패했으면 유예가 남아 있는
-동안(sado 00:47Z / 알프스 01:15Z 이전) 즉시 수동 디스패치한다.
-```bash
-gh workflow run instagram-activation-checkpoints.yml --repo 6Soo/marketing
-gh run list --repo 6Soo/marketing --limit 3
-```
+- 사도 복구 실행 `30503086785`: 전체 성공, Graph API·foresttour 기록 저장
+- 북알프스 복구 실행 `30503139708`: 전체 성공, Graph API·foresttour 기록 저장
+- 로컬 보고서 재검증: 두 실험 모두 72h `recorded`, missing source group 없음
+- 회귀 테스트: `npm run test:instagram` 74/74 통과
+
+두 실행은 각각 00:47Z·01:15Z 유예 만료 전에 끝났다. 다음 자동 관측 대상은
+2026-08-02의 7d 체크포인트다.
 
 ---
 
@@ -574,8 +576,8 @@ Pixabay 라이선스 화면에 `Content ID Registered` 배지가 있고, 업로�
 
 ## 12. 다음 세션이 할 일 — 순서대로
 
-1. **07-30 09:15 KST 직후 체크포인트 워크플로 성공 여부 확인**(§5-2). 실패했으면 유예가
-   남아 있는 동안 즉시 수동 디스패치. 놓치면 72h도 영구 손실이다. **시한이 있는 유일한 항목.**
+1. ~~**72h 체크포인트 워크플로 복구 및 기록 확인**~~ — ✅ **완료** (§5-2).
+   두 실험 모두 Graph API·foresttour 소스를 유예 내 저장했고, 다음 대상은 7d다.
 2. ~~릴스 게시 워크플로 작성~~ — ✅ **완료** (`instagram-reel-publish.yml`, §4-3-A).
    `--verify-only` 모드와 릴스 분기의 게이트 공백 2건(중복 캡션·지문 형식)도 함께 메웠다.
 3. ~~게시 전 사전 검증 2건~~ — ✅ **완료** (§9-1). 러너 자격·Meta의 raw URL 소화 둘 다 실증.
