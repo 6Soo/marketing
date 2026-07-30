@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "experiment": "northern-alps-reel-005",
+  "checkpoint": "24h",
+  "source": "foresttour-admin",
+  "observedAt": "2026-07-30T19:48:30.792Z",
+  "metrics": {
+    "story_northern-alps_visit": 1,
+    "story_northern-alps_context": 0,
+    "story_northern-alps_related": 0,
+    "story_northern-alps_discoveries": 0,
+    "story_northern-alps_tour": 0
+  }
+}
