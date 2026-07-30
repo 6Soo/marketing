@@ -61,7 +61,39 @@ function graphUrl(path, params) {
  * @param {string} mediaId
  * @param {boolean} live
  */
-export async function getMediaInsights(mediaId, live = false) {
+const BASE_MEDIA_METRICS = [
+  'reach',
+  'views',
+  'saved',
+  'likes',
+  'comments',
+  'shares',
+  'total_interactions',
+];
+
+/**
+ * 미디어 상품 유형별 Graph API 허용 지표를 반환한다.
+ * profile_visits·follows는 REELS에서만 요청한다. FEED/CAROUSEL에 섞으면
+ * 지표 하나 때문에 요청 전체가 code 100으로 실패한다.
+ *
+ * @param {string} mediaProductType
+ * @returns {string[]}
+ */
+export function mediaMetricsForType(mediaProductType = '') {
+  const metrics = [...BASE_MEDIA_METRICS];
+  if (String(mediaProductType).toUpperCase() === 'REELS') {
+    metrics.push('profile_visits', 'follows');
+  }
+  return metrics;
+}
+
+export async function getMediaInsights(mediaId, mediaProductType = '', live = false) {
+  // 기존 getMediaInsights(mediaId, live) 호출과 호환한다.
+  if (typeof mediaProductType === 'boolean') {
+    live = mediaProductType;
+    mediaProductType = '';
+  }
+
   if (!live) {
     console.log(`[Dry Run] 미디어 인사이트 요청 확인 (Media ID: ${mediaId}) — 가상 수치는 만들지 않습니다.`);
     return null;
@@ -71,11 +103,12 @@ export async function getMediaInsights(mediaId, live = false) {
     throw new Error('IG_USER_ID 또는 IG_ACCESS_TOKEN이 설정되지 않았습니다.');
   }
 
-  // 지원 지표는 2026-07-29 실측으로 확정했다(CAROUSEL_ALBUM/FEED 기준).
+  // 기본 지원 지표는 2026-07-29 실측으로 확정했다(CAROUSEL_ALBUM/FEED 기준).
   // impressions·navigation은 이 미디어 타입에서 거부되며(code 100), impressions의 대체는 views다.
+  // profile_visits·follows는 REELS에만 허용되고 FEED/CAROUSEL에서는 거부된다.
   // 지표 하나가 거부되면 요청 전체가 실패하므로 미검증 지표를 임의로 추가하지 말 것.
   const url = graphUrl(`${mediaId}/insights`, {
-    metric: 'reach,views,saved,likes,comments,shares,total_interactions,profile_visits,follows',
+    metric: mediaMetricsForType(mediaProductType).join(','),
   });
   const data = await fetchJson(url);
   return data;
@@ -126,14 +159,14 @@ export async function collectInsights(live = false) {
     accountData = await getAccountInsights(true);
     // 미디어 목록 조회
     const mediaUrl = graphUrl(`${IG_USER_ID}/media`, {
-      fields: 'id,permalink,caption,timestamp,media_type,like_count,comments_count',
+      fields: 'id,permalink,caption,timestamp,media_type,media_product_type,like_count,comments_count',
     });
     const mediaList = await fetchJson(mediaUrl);
 
     mediaData = [];
     if (mediaList && mediaList.data) {
       for (const media of mediaList.data) {
-        const insights = await getMediaInsights(media.id, true);
+        const insights = await getMediaInsights(media.id, media.media_product_type, true);
         mediaData.push({ media, insights });
       }
     }
