@@ -75,5 +75,19 @@
       "story_sado_discoveries": 0,
       "story_sado_tour": 0
     }
+  },
+  {
+    "schemaVersion": 1,
+    "experiment": "sado-003",
+    "checkpoint": "72h",
+    "source": "foresttour-admin",
+    "observedAt": "2026-07-30T00:33:37.694Z",
+    "metrics": {
+      "story_sado_visit": 0,
+      "story_sado_context": 0,
+      "story_sado_related": 0,
+      "story_sado_discoveries": 0,
+      "story_sado_tour": 0
+    }
   }
 ]
