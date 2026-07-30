@@ -21,5 +21,19 @@
       "story_northern-alps_discoveries": 0,
       "story_northern-alps_tour": 0
     }
+  },
+  {
+    "schemaVersion": 1,
+    "experiment": "northern-alps-scenic-reel-006",
+    "checkpoint": "24h",
+    "source": "foresttour-admin",
+    "observedAt": "2026-07-30T19:48:59.877Z",
+    "metrics": {
+      "story_northern-alps_visit": 1,
+      "story_northern-alps_context": 0,
+      "story_northern-alps_related": 0,
+      "story_northern-alps_discoveries": 0,
+      "story_northern-alps_tour": 0
+    }
   }
 ]
