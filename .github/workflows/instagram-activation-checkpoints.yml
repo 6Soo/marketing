@@ -143,10 +143,6 @@ jobs:
           ${{
             always()
             && steps.due.outputs.checkpoint != ''
-            && (
-              steps.instagram_snapshot.outcome == 'success'
-              || steps.instagram_snapshot_file.outcome == 'success'
-            )
           }}
         continue-on-error: true
         shell: bash
@@ -154,6 +150,10 @@ jobs:
           INSIGHTS_FILE="${{ inputs.instagram_snapshot_path }}"
           if [[ -z "${INSIGHTS_FILE}" ]]; then
             INSIGHTS_FILE="$(find data/insights -type f -name '*.json' -print | sort | tail -n 1)"
+          fi
+          if [[ -z "${INSIGHTS_FILE}" || ! -f "${INSIGHTS_FILE}" ]]; then
+            echo "Instagram Insights snapshot is unavailable." >&2
+            exit 1
           fi
           node tools/collect-instagram-activation-metrics.mjs \
             --experiment="${EXPERIMENT}" \
