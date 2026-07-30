@@ -142,10 +142,6 @@ jobs:
         if: >-
           ${{
             always()
-            && (
-              vars.ACTIVATION_COLLECT_ENABLED == 'true'
-              || inputs.instagram_snapshot_path != ''
-            )
             && steps.due.outputs.checkpoint != ''
             && (
               steps.instagram_snapshot.outcome == 'success'

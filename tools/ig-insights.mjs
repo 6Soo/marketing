@@ -59,6 +59,7 @@ function graphUrl(path, params) {
 /**
  * 인스타그램 미디어 인사이트 수집
  * @param {string} mediaId
+ * @param {string|boolean} mediaProductType 미디어 상품 유형. boolean이면 기존 live 인자로 처리한다.
  * @param {boolean} live
  */
 const BASE_MEDIA_METRICS = [
