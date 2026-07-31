@@ -1254,3 +1254,76 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
 - 마케팅 리포는 이미 PUBLIC이고 `bfb998c`에 남은 과거 Pexels 키가 2026-07-31 API HTTP 200으로
   아직 유효하다. 이번 변경이 새로 공개한 비밀은 아니지만 기존 노출 자격정보이므로 Pexels에서
   재발급·기존 키 폐기가 필요하다. 외부 계정 권한 없이 git 히스토리를 파괴적으로 재작성하지 않았다.
+
+---
+
+## 2026-07-31 — 네이버 블로그 자동화 방향 정정·안전한 발행 파이프라인
+
+### 정정
+
+- 직전 세션의 `foresttour.kr` 자사 블로그 구현은 네이버 블로그 자체가 아니었다.
+- 네이버 채널은 `HANDOFF-NAVER-BLOG.md`로 분리했고, `HANDOFF-BLOG.md`는 자사 블로그 전용임을
+  명시했다.
+
+### 공식 제약 실측
+
+- 네이버 로그인 방식 글쓰기 API는 2020-05-06 종료, 블로그앱 URL Scheme은 2022-12-23 종료됐다.
+- 현재 공식 블로그 공유 URL은 WSL 전용 `agent-browser`에서 실제 로그인 화면까지 열렸다.
+- 블로그 운영정책의 “자동화 수단으로 기계적인 패턴 글 반복 게재” 제한을 반영해
+  SmartEditor 무인 대량입력·로그인/CAPTCHA 우회를 구현하지 않았다.
+- 현재 Windows Edge를 더 조작하지 않고 WSL 프로필
+  `~/.agent-browser/profiles/naver-blog`와 session `naver-blog-wsl`만 사용한다.
+
+### 구현
+
+- `tools/naver-blog-content.mjs`
+  - `list`: verified 현지 사진과 상세 여행 정보가 모두 있는 원고만 준비 가능 표시
+  - `prepare`: `destination-guide-with-practical-access` 장문 패키지 생성
+  - `--download-images`: 사진 다운로드, SHA-256, 업로드 순서 manifest 생성
+  - `validate`: 이야기/여행 정보/콘텐츠 digest, 사진 권리·출처, 캡션, 태그 검증
+  - `open --open`: WSL 전용 브라우저에서 SmartEditor를 열고 자동 공개하지 않음
+  - `stage --stage`: 보이는 SmartEditor에 제목·문단·사진을 넣되 저장·공개하지 않음
+  - `verify --url --record`: 공개 URL의 제목·원문 링크·실용 정보·사진 출처를 브라우저로 재확인한 뒤
+    `naver-blog/published.json`에 blogId/logNo를 기록
+- 사도 패키지와 현지 사진 4장·업로드 manifest 생성 성공.
+- `hida`, `sanriku`는 placeholder 사진, `northern-alps`는 상세 여행 정보 부재로 차단. `sado`만 준비 가능.
+- `tools/naver-blog-content.test.mjs` **8/8 통과**.
+
+### 모델 교차검증
+
+- 저추론 수행: **AGY Gemini 3.6 Flash high**.
+- 고추론 검증: **Claude Fable 5 medium**.
+- 구현·반박 수용/기각·최종 판단: **GPT-5.6 Sol medium**.
+- 수용: 전문 복제 대신 요약+원문, stage/publish 멱등성, 실제 공개 URL과 D+3/D+7 검색 노출을
+  별도 완료 기준으로 둠, 사람 로그인·사람 공개 유지.
+- 기각: Flash의 탐지 회피로 읽힐 수 있는 랜덤 지연 제안. Fable의 검색 알고리즘 명칭은
+  파일·공식 원문 증거가 없는 순수 텍스트 주장이라 운영 근거로 사용하지 않음.
+- 폴백: `tools/gemini.mjs`는 `GEMINI_API_KEY`가 없어 실패했으나 AGY CLI의
+  `gemini-3.6-flash-high`가 실제 응답해 기본 수행 모델을 지켰다.
+
+### 남은 외부 상태
+
+- 아래 후속 작업에서 WSL 네이버 전용 프로필 로그인을 완료하고 SmartEditor 초안 배치까지
+  실측했다. 실제 임시저장·공개 URL·D+3/D+7 검색 노출은 아직 없다.
+
+---
+
+## 2026-07-31 — 네이버 글 컨셉 확정·WSL SmartEditor 초안 실측
+
+- 사장님이 글의 전체 컨셉을 확정했다. 여행지를 충분히 소개하고 독자가 직접 갈 수 있는
+  교통·동선·예약 정보를 상세히 주되, 여러 예약과 환승을 맞추는 실제 수고가 자연스럽게
+  드러나 정확히 같은 숲길여행 상품으로 연결하는 구조다.
+- 반대로 핵심 정보를 일부러 빼거나 “혼자서는 못 간다”고 과장해 구매를 압박하는 방식은
+  금지했다. 공개 예약 화면에 같은 상품이 없으면 링크를 붙이지 않는다.
+- `naver-blog/travel-guides.json`에 정본 계약과 사도 공식 여행 정보를 추가했다. 사도기센·
+  사도관광협회 공식 자료로 입도, 섬 내 이동, 2박 3일 권역 분리, 체크리스트, 실제 준비 난점을
+  기록했고 정보 확인일과 변경 가능성도 표시했다.
+- 공식 공유 UI는 실측상 500자 링크 스크랩이라 장문 경로에서 제외했다. 로그인된 WSL의 보이는
+  Chrome/SmartEditor를 사용했고 현재 Windows Edge는 조작하지 않았다.
+- 편집 화면 실측: 제목 일치, 장문 원고 5,534자, SmartEditor 문단 113개, 현지 사진 4장. 여행 정보의
+  공식 링크까지 확장한 검증 앵커 27개 모두 통과. 저장·발행은 누르지 않았고 임시저장 수는 0이다.
+- `stage` 명령은 줄바꿈을 지우는 `inserttext` 대신 실제 키 입력을 쓰고, 기본 headed 모드와
+  SmartEditor 문단 수·사진 수 검증을 강제한다.
+- 수행·최종 판단: GPT-5.6 Sol medium. 검증: 직전 Claude Fable 5 medium 반박을 재대조했다.
+  주요 수용은 보이는 브라우저 기본값, 중간 무사진 절의 사진 오연결 수정, 공개 URL 엄격 파싱,
+  사진 캡션·원문까지 공개 앵커 확장이다. 별도 신규 Fable 호출은 현재 런타임에서 불가했다.
