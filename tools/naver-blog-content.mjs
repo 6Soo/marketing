@@ -516,6 +516,64 @@ export function verifyRenderedText(pkg, renderedText) {
   return { ok: missing.length === 0, missing };
 }
 
+export async function validateUploadManifest(pkg, manifest, manifestPath) {
+  const errors = [];
+  if (!isPlainObject(manifest)) return ['업로드 manifest 루트는 객체여야 합니다.'];
+  if (manifest.schemaVersion !== 1) errors.push('업로드 manifest schemaVersion은 1이어야 합니다.');
+  if (manifest.channel !== CHANNEL) errors.push(`업로드 manifest channel은 ${CHANNEL}이어야 합니다.`);
+  if (manifest.idempotencyKey !== pkg.idempotencyKey) {
+    errors.push('업로드 manifest와 패키지의 멱등 키가 다릅니다.');
+  }
+  if (!Array.isArray(manifest.uploadOrder) || !Array.isArray(manifest.images)) {
+    return [...errors, '업로드 manifest에는 uploadOrder와 images 배열이 필요합니다.'];
+  }
+  if (manifest.uploadOrder.length !== pkg.images.length || manifest.images.length !== pkg.images.length) {
+    errors.push('업로드 manifest의 이미지 수가 패키지와 다릅니다.');
+  }
+
+  const manifestDir = dirname(resolve(manifestPath));
+  for (let index = 0; index < pkg.images.length; index += 1) {
+    const expected = pkg.images[index];
+    const image = manifest.images[index];
+    const orderedPath = manifest.uploadOrder[index];
+    const label = `업로드 manifest images[${index}]`;
+    if (!isPlainObject(image)) {
+      errors.push(`${label}는 객체여야 합니다.`);
+      continue;
+    }
+    if (image.order !== expected.order || image.order !== index + 1) {
+      errors.push(`${label}.order가 패키지 순서와 다릅니다.`);
+    }
+    if (image.localPath !== orderedPath) errors.push(`${label}.localPath가 uploadOrder와 다릅니다.`);
+    if (!/^images\/[A-Za-z0-9._-]+$/.test(String(orderedPath ?? ''))) {
+      errors.push(`${label}.localPath는 manifest 옆 images 폴더의 안전한 상대 경로여야 합니다.`);
+      continue;
+    }
+    if (image.sourcePageUrl !== expected.sourcePageUrl) errors.push(`${label}.sourcePageUrl이 패키지와 다릅니다.`);
+    if (image.alt !== expected.alt) errors.push(`${label}.alt가 패키지와 다릅니다.`);
+    if (image.caption !== expected.caption) errors.push(`${label}.caption이 패키지와 다릅니다.`);
+    if (nonEmptyString(expected.url) && image.sourceUrl !== expected.url) {
+      errors.push(`${label}.sourceUrl이 패키지 이미지 URL과 다릅니다.`);
+    }
+    if (nonEmptyString(expected.sha256) && image.sha256 !== expected.sha256) {
+      errors.push(`${label}.sha256이 패키지와 다릅니다.`);
+    }
+    if (!/^image\//.test(String(image.contentType ?? ''))) errors.push(`${label}.contentType이 이미지가 아닙니다.`);
+    if (!Number.isInteger(image.byteLength) || image.byteLength <= 0 || image.byteLength > 15 * 1024 * 1024) {
+      errors.push(`${label}.byteLength는 1byte~15MB여야 합니다.`);
+    }
+    try {
+      const bytes = await readFile(resolve(manifestDir, orderedPath));
+      const actualSha256 = createHash('sha256').update(bytes).digest('hex');
+      if (bytes.length !== image.byteLength) errors.push(`${label}.byteLength가 실제 파일과 다릅니다.`);
+      if (actualSha256 !== image.sha256) errors.push(`${label}.sha256이 실제 파일과 다릅니다.`);
+    } catch (error) {
+      errors.push(`${label} 파일을 읽지 못했습니다: ${error.message}`);
+    }
+  }
+  return errors;
+}
+
 export function validateRegistry(registry) {
   const errors = [];
   if (!isPlainObject(registry)) return ['공개 기록 루트는 객체여야 합니다.'];
@@ -566,8 +624,15 @@ async function readGuide(slug, guidesPath = DEFAULT_GUIDES_PATH) {
   return guide;
 }
 
-async function readPackage(packagePath, args = new Map()) {
+export async function readPackage(packagePath, args = new Map()) {
   const pkg = await readJson(packagePath);
+  if (pkg.editorialMode === 'search-support-guide') {
+    const support = await import('./naver-blog-support.mjs');
+    const state = await support.loadSupportState(args);
+    const errors = await support.validateSupportPackage(pkg, state);
+    if (errors.length) throw new Error(`네이버 검색 지원 패키지 검증 실패:\n- ${errors.join('\n- ')}`);
+    return pkg;
+  }
   const story = await readStory(pkg.source?.slug, args.get('--source') || DEFAULT_SOURCE_PATH);
   const guide = await readGuide(pkg.source?.slug, args.get('--guides') || DEFAULT_GUIDES_PATH);
   const errors = validateNaverPackage(pkg, story, guide);
@@ -778,11 +843,9 @@ async function stageCommand(args) {
   requireUserBrowserApproval(args, 'SmartEditor 초안 배치');
   const pkg = await readPackage(packagePath, args);
   const manifest = await readJson(manifestPath);
-  if (manifest.idempotencyKey !== pkg.idempotencyKey) {
-    throw new Error('업로드 manifest와 패키지의 멱등 키가 다릅니다. prepare를 다시 실행하세요.');
-  }
-  if (!Array.isArray(manifest.uploadOrder) || manifest.uploadOrder.length !== pkg.images.length) {
-    throw new Error('업로드 manifest의 이미지 수가 패키지와 다릅니다.');
+  const manifestErrors = await validateUploadManifest(pkg, manifest, manifestPath);
+  if (manifestErrors.length) {
+    throw new Error(`업로드 manifest 검증 실패:\n- ${manifestErrors.join('\n- ')}\nprepare를 다시 실행하세요.`);
   }
 
   const blogId = parseBlogId(args);

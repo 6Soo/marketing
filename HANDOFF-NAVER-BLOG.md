@@ -120,6 +120,30 @@ npm run naver-blog:support:validate
 # 브라우저를 열지 않는 로컬 미리보기. 기둥 글 공개 전에는 발행 패키지를 만들지 않음
 npm run naver-blog:support:preview -- --slug=sado-access
 
+# 기둥 글 공개 URL이 published.json에서 검증된 뒤에만 지원 글 package·원고·사진 manifest 생성
+# 현재는 기둥 글 공개 기록이 없어 의도적으로 실패함
+npm run naver-blog:support:prepare -- --slug=sado-access
+
+# 지원 글도 생성 뒤에는 기둥 글과 같은 validate → stage → verify 계약을 사용
+npm run naver-blog:validate -- \
+  --package=_stage/naver-blog/sado-access/package.json
+
+# 아래 stage·verify는 실행 직전 사용자 허락과 --user-approved가 반드시 필요함
+npm run naver-blog:stage -- \
+  --package=_stage/naver-blog/sado-access/package.json \
+  --manifest=_stage/naver-blog/sado-access/upload-manifest.json \
+  --blog-id=<blogId> --stage --user-approved
+
+npm run naver-blog:verify -- \
+  --package=_stage/naver-blog/sado-access/package.json \
+  --url=https://blog.naver.com/<blogId>/<logNo> \
+  --user-approved --record
+
+# 사람이 지원 글을 공개하고 verify --record가 공개 URL을 기록한 같은 변경에서
+# growth-plan.json의 해당 support article.status를 published로 바꾼 뒤 두 계약을 다시 확인
+npm run naver-blog:support:validate
+npm run naver-blog:growth:validate
+
 # 공개 URL 검증 뒤에만 집계 관측 기록
 npm run naver-blog:growth:record -- \
   --slug=sado --checkpoint=D+3 \
@@ -163,6 +187,8 @@ npm run naver-blog:growth:record -- \
 - 지원 글 사진이 CC BY-SA이거나 장변 2700px 미만, 고정 Commons 리비전·실제 파일 SHA-256 불일치,
   기둥 글 또는 다른 지원 글의 사진 재사용
 - 지원 글의 기둥 네이버 글 공개 URL이 아직 `published.json`에서 검증되지 않음
+- 업로드 manifest의 이미지 순서·안전한 상대 경로·SHA-256·바이트 수·캡션·원문 URL이 패키지와
+  실제 파일 중 하나라도 다름
 - 공개 URL 검증 전 성과값 기록, D+3·D+7·D+28 외 체크포인트 또는 개인 단위 데이터 기록
 
 placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 검증 사진은 있지만 상세
@@ -191,7 +217,11 @@ placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 �
   4,935자 독립 원고, 공식 출처 7개(기둥 글에 없던 신규 6개), CC BY 현지 사진 2장까지 확보했고
   기둥 글과 5어절 중복률은 1.3%로 실측되어 `draft-ready`입니다.
 - `sado-access`는 정보·사진 준비가 끝났어도 기둥 글 공개 URL이 없으므로 로컬 미리보기만 만들고
-  발행을 차단합니다. `sado-transport`와 `sado-itinerary`는 아직 `research-required`입니다.
+  `support:prepare`부터 실패-폐쇄로 차단합니다. 기둥 글 공개 뒤 생성되는 지원 글 패키지는 공통
+  `validate → stage → verify` 흐름을 사용하며, manifest와 실제 이미지 파일도 브라우저 입력 전에
+  SHA-256으로 다시 확인합니다. 지원 글 공개 기록이 생긴 뒤에는 성장 계획의 해당 글 상태가
+  `published`여야 두 계약을 함께 통과합니다. `sado-transport`와 `sado-itinerary`는 아직
+  `research-required`입니다.
 - 화면 재배치·저장·공개는 사용자가 마우스 사용을 멈추고 명시적으로 허락한 뒤에만 진행합니다.
 
 ## 8. 모델 교차검증 기록
@@ -219,3 +249,9 @@ placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 �
 - 최신 `sado-access` 지원 글은 GPT-5.6 Sol medium이 수행·최종 확정하고 AGY Gemini 3.6 Flash
   high가 읽기 전용 검증했습니다. Flash의 미니라이너 `1,300엔` 보고는 공식 원문과 달라 기각했고,
   변동 운임을 본문에 고정하지 않았습니다. Fable 5와 Opus 5는 현재 런타임에 없어 호출하지 않았습니다.
+- 지원 글 공통 패키지 연결도 **GPT-5.6 Sol medium**이 구현·최종 판정하고 **AGY Gemini 3.6
+  Flash high**가 두 차례 읽기 전용 반박 검토했습니다. 1차 Flash는 P0/P1/P2 없음으로 봤지만,
+  Sol이 공개 후 `published.json`과 growth-plan 상태를 동시에 만족하지 못하는 수명주기 충돌을
+  추가로 찾아 수정했습니다. 수정 뒤 2차 Flash는 P0/P1 없음으로 판정했고 Sol이 실제 파일과
+  네이버 30/30 회귀 테스트로 재확인했습니다. AGY 모델 목록에 Fable 5와 Opus 5가 없어 지정
+  고추론 상대 모델은 호출하지 못했으며, Opus 4.6을 Opus 5로 가장하지 않았습니다.

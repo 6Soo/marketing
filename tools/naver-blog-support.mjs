@@ -2,7 +2,7 @@
 
 import { createHash } from 'node:crypto';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { basename, dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import {
@@ -25,6 +25,7 @@ const ALLOWED_OFFICIAL_HOSTS = new Set([
 const RIGHTS_RE = /^(?:CC BY(?: \d(?:\.\d)?)?|CC0|Public domain)$/i;
 const PRESSURE_RE = /혼자(?:서는)?\s*(?:절대|불가능|못)|우리와\s*가야|패키지가\s*답/i;
 const PRODUCT_FIRST_RE = /(?:상품|패키지|가격|출발일|잔여석|모객)/;
+const SUPPORT_PACKAGE_SCHEMA_VERSION = 2;
 
 function parseArgs(tokens) {
   const args = new Map();
@@ -126,6 +127,105 @@ export function renderSupportBody(draft, registry) {
   }
   blocks.push('', '숲길여행 일정 연결', '', normalizeSpace(draft.productConnection.note));
   return blocks.join('\n').replaceAll(/\n{3,}/g, '\n\n').trim();
+}
+
+function normalizeTag(value) {
+  return normalizeSpace(value).replace(/^#+/, '').replaceAll(/\s+/g, '');
+}
+
+function supportPackageContentInput(pkg) {
+  return {
+    title: pkg.title,
+    body: pkg.body,
+    tags: pkg.tags,
+    images: pkg.images,
+    sourceCatalog: pkg.sourceCatalog,
+    internalLinks: pkg.internalLinks,
+    productConnection: pkg.productConnection,
+    verificationAnchors: pkg.verificationAnchors,
+    source: pkg.source,
+  };
+}
+
+function createSupportPackage(draft, state) {
+  const parentPost = state.registry.posts.find((post) => post.slug === draft.parentSlug);
+  if (!parentPost) throw new Error(`기둥 글 '${draft.parentSlug}'의 검증된 공개 URL이 없습니다.`);
+  const body = renderSupportBody(draft, state.registry);
+  const internalLinks = resolveSupportLinks(draft, state.registry);
+  const images = draft.images.map((image) => ({
+    ...image,
+    section: draft.sections.find((section) => section.id === image.afterSectionId)?.title,
+    caption: imageCaption(image),
+  }));
+  const tags = [...new Set([
+    draft.searchIntent.primaryQuery,
+    ...draft.searchIntent.secondaryQueries,
+  ].map(normalizeTag).filter(Boolean))].slice(0, 10);
+  const draftDigest = digest(draft);
+  const pkg = {
+    schemaVersion: SUPPORT_PACKAGE_SCHEMA_VERSION,
+    channel: CHANNEL,
+    status: 'prepared',
+    editorialMode: 'search-support-guide',
+    source: {
+      slug: draft.slug,
+      parentSlug: draft.parentSlug,
+      parentUrl: parentPost.url,
+      parentContentDigest: parentPost.contentDigest,
+      checkedAt: draft.checkedAt,
+      draftDigest,
+    },
+    title: draft.title,
+    body,
+    tags,
+    images,
+    sourceCatalog: draft.sourceCatalog,
+    internalLinks,
+    productConnection: draft.productConnection,
+    verificationAnchors: [...new Set([
+      draft.title,
+      parentPost.url,
+      ...internalLinks.filter((link) => link.status === 'verified').map((link) => link.url),
+      ...draft.sections.map((section) => section.title),
+      ...draft.sourceCatalog.map((source) => source.url),
+      ...images.flatMap((image) => [image.caption, image.sourcePageUrl]),
+    ])],
+    contentDigest: '',
+    idempotencyKey: '',
+  };
+  pkg.contentDigest = digest(supportPackageContentInput(pkg));
+  pkg.idempotencyKey = `${draft.slug}:${draftDigest.slice(0, 12)}:${parentPost.contentDigest.slice(0, 12)}:${pkg.contentDigest.slice(0, 12)}`;
+  return pkg;
+}
+
+export async function buildSupportPackage(slug, state) {
+  const result = await validateSupportWorkspace(state);
+  if (result.errors.length) throw new Error(`지원 글 계약 검증 실패:\n- ${result.errors.join('\n- ')}`);
+  const draft = state.drafts.drafts.find((candidate) => candidate.slug === slug);
+  if (!draft) throw new Error(`지원 글 '${slug}'를 찾지 못했습니다.`);
+  const metric = result.metrics.get(slug);
+  if (!metric?.publishReady) {
+    throw new Error(`기둥 글 '${draft.parentSlug}'의 검증된 공개 URL이 없어 지원 글 발행 패키지를 만들 수 없습니다.`);
+  }
+  return createSupportPackage(draft, state);
+}
+
+export async function validateSupportPackage(pkg, state) {
+  const errors = [];
+  if (!isPlainObject(pkg)) return ['지원 패키지 루트는 객체여야 합니다.'];
+  const slug = pkg.source?.slug;
+  const draft = state.drafts.drafts?.find((candidate) => candidate.slug === slug);
+  if (!draft) return [`지원 글 '${slug ?? 'unknown'}'의 정본 초안이 없습니다.`];
+  const result = await validateSupportWorkspace(state);
+  if (result.errors.length) return result.errors;
+  if (!result.metrics.get(slug)?.publishReady) {
+    return [`기둥 글 '${draft.parentSlug}'의 검증된 공개 URL이 없어 지원 패키지를 검증할 수 없습니다.`];
+  }
+  const expected = createSupportPackage(draft, state);
+  if (JSON.stringify(stableValue(pkg)) !== JSON.stringify(stableValue(expected))) {
+    errors.push('지원 패키지가 현재 초안·공개 기둥 글·사진·공식 출처로 재생성한 값과 다릅니다.');
+  }
+  return errors;
 }
 
 function wordNgrams(value, size = 5) {
@@ -289,6 +389,7 @@ export async function validateSupportWorkspace(state, { requirePlanEvidence = tr
   }
   const registryErrors = validateRegistry(state.registry);
   if (registryErrors.length) errors.push(...registryErrors.map((error) => `공개 기록: ${error}`));
+  const registrySlugs = new Set(state.registry.posts?.map((post) => post.slug) ?? []);
   const slugs = new Set();
   const imageOwners = new Map();
   for (const [draftIndex, draft] of state.drafts.drafts.entries()) {
@@ -309,7 +410,10 @@ export async function validateSupportWorkspace(state, { requirePlanEvidence = tr
     if (!article || article.role !== 'support') {
       draftErrors.push('growth-plan의 support 글과 연결되지 않습니다.');
     } else {
-      if (requirePlanEvidence && article.status !== draft.status) draftErrors.push('status가 growth-plan과 다릅니다.');
+      const expectedArticleStatus = registrySlugs.has(draft.slug) ? 'published' : draft.status;
+      if (requirePlanEvidence && article.status !== expectedArticleStatus) {
+        draftErrors.push(`growth-plan status는 공개 기록에 따라 '${expectedArticleStatus}'여야 합니다.`);
+      }
       if (draft.parentSlug !== cluster.destinationSlug) draftErrors.push('parentSlug가 클러스터 여행지와 다릅니다.');
       if (draft.title !== article.title || draft.question !== article.question) draftErrors.push('title 또는 question이 growth-plan과 다릅니다.');
       if (draft.searchIntent?.primaryQuery !== article.primaryQuery
@@ -396,6 +500,14 @@ export async function validateSupportWorkspace(state, { requirePlanEvidence = tr
       }
       const links = resolveSupportLinks(draft, state.registry);
       const parentLinkResolved = links.some((link) => link.kind === 'parent-naver-post' && link.status === 'verified' && nonEmptyString(link.url));
+      const publishedPost = state.registry.posts.find((post) => post.slug === draft.slug);
+      if (publishedPost && parentLinkResolved) {
+        const expectedPackage = createSupportPackage(draft, state);
+        if (publishedPost.idempotencyKey !== expectedPackage.idempotencyKey
+          || publishedPost.contentDigest !== expectedPackage.contentDigest) {
+          draftErrors.push('공개 지원 글 기록의 멱등 키·contentDigest가 현재 초안과 다릅니다.');
+        }
+      }
       metrics.set(draft.slug, {
         bodyLength: [...supportBody].length,
         overlapPercent,
@@ -436,11 +548,11 @@ async function readJson(path) {
   return JSON.parse(await readFile(resolve(path), 'utf8'));
 }
 
-async function loadState(args) {
+export async function loadSupportState(args = new Map()) {
   const paths = {
-    drafts: args.get('--drafts') || DEFAULT_DRAFTS_PATH,
+    drafts: args.get('--drafts') || args.get('--support-drafts') || DEFAULT_DRAFTS_PATH,
     plan: args.get('--plan') || DEFAULT_PLAN_PATH,
-    stories: args.get('--stories') || DEFAULT_STORIES_PATH,
+    stories: args.get('--stories') || args.get('--source') || DEFAULT_STORIES_PATH,
     guides: args.get('--guides') || DEFAULT_GUIDES_PATH,
     registry: args.get('--registry') || DEFAULT_REGISTRY_PATH,
   };
@@ -454,15 +566,74 @@ async function loadState(args) {
   return { paths, drafts, plan, stories, guides, registry, rootDir: process.cwd() };
 }
 
+async function writeIdempotent(path, content, allowReplace) {
+  const absolute = resolve(path);
+  await mkdir(dirname(absolute), { recursive: true });
+  try {
+    const existing = await readFile(absolute);
+    const next = Buffer.isBuffer(content) ? content : Buffer.from(content, 'utf8');
+    if (existing.equals(next)) return 'unchanged';
+    if (!allowReplace) throw new Error(`${path}가 이미 있고 내용이 다릅니다. 교체하려면 --replace를 명시하세요.`);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+  await writeFile(absolute, content);
+  return 'written';
+}
+
+function renderSupportText(pkg) {
+  return [
+    pkg.title,
+    '',
+    pkg.body,
+    '',
+    pkg.tags.map((tag) => `#${tag}`).join(' '),
+    '',
+  ].join('\n');
+}
+
+async function writeSupportAssets(pkg, draft, outputDir, allowReplace, rootDir) {
+  const manifestImages = [];
+  for (const image of draft.images) {
+    const filename = basename(image.localPath);
+    const relativePath = `images/${filename}`;
+    const bytes = await readFile(resolve(rootDir, image.localPath));
+    await writeIdempotent(resolve(outputDir, relativePath), bytes, allowReplace);
+    manifestImages.push({
+      order: image.order,
+      localPath: relativePath,
+      sourcePageUrl: image.sourcePageUrl,
+      sha256: image.sha256,
+      byteLength: bytes.length,
+      contentType: 'image/jpeg',
+      alt: image.alt,
+      caption: imageCaption(image),
+    });
+  }
+  const manifest = {
+    schemaVersion: 1,
+    channel: CHANNEL,
+    idempotencyKey: pkg.idempotencyKey,
+    uploadOrder: manifestImages.map((image) => image.localPath),
+    images: manifestImages,
+  };
+  await writeIdempotent(
+    resolve(outputDir, 'upload-manifest.json'),
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    allowReplace,
+  );
+  return manifest;
+}
+
 async function analyzeCommand(args) {
-  const state = await loadState(args);
+  const state = await loadSupportState(args);
   const result = await validateSupportWorkspace(state, { requirePlanEvidence: false });
   if (result.errors.length) throw new Error(`지원 글 조사·초안 검증 실패:\n- ${result.errors.join('\n- ')}`);
   console.log(renderSupportReport(state, result));
 }
 
 async function validateCommand(args) {
-  const state = await loadState(args);
+  const state = await loadSupportState(args);
   const result = await validateSupportWorkspace(state);
   if (result.errors.length) throw new Error(`지원 글 계약 검증 실패:\n- ${result.errors.join('\n- ')}`);
   console.log(`✓ 네이버 검색 지원 글 계약 통과 · ${state.drafts.drafts.length}편`);
@@ -470,7 +641,7 @@ async function validateCommand(args) {
 }
 
 async function previewCommand(args) {
-  const state = await loadState(args);
+  const state = await loadSupportState(args);
   const slug = args.get('--slug');
   if (!nonEmptyString(slug)) throw new Error('preview에는 --slug=<지원 글 slug>가 필요합니다.');
   const draft = state.drafts.drafts.find((candidate) => candidate.slug === slug);
@@ -487,17 +658,49 @@ async function previewCommand(args) {
   }
 }
 
+export async function prepareSupportPackage(slug, state, outputDir, allowReplace = false) {
+  const draft = state.drafts.drafts.find((candidate) => candidate.slug === slug);
+  if (!draft) throw new Error(`지원 글 '${slug}'를 찾지 못했습니다.`);
+  const pkg = await buildSupportPackage(slug, state);
+  const [packageState, textState, manifest] = await Promise.all([
+    writeIdempotent(
+      resolve(outputDir, 'package.json'),
+      `${JSON.stringify(pkg, null, 2)}\n`,
+      allowReplace,
+    ),
+    writeIdempotent(resolve(outputDir, 'post.txt'), renderSupportText(pkg), allowReplace),
+    writeSupportAssets(pkg, draft, outputDir, allowReplace, state.rootDir),
+  ]);
+  return { pkg, packageState, textState, manifest, outputDir: resolve(outputDir) };
+}
+
+async function prepareCommand(args) {
+  const state = await loadSupportState(args);
+  const slug = args.get('--slug');
+  if (!nonEmptyString(slug)) throw new Error('prepare에는 --slug=<지원 글 slug>가 필요합니다.');
+  const outputDir = args.get('--output-dir') || `_stage/naver-blog/${slug}`;
+  const result = await prepareSupportPackage(slug, state, outputDir, args.has('--replace'));
+  const { packageState, textState, manifest } = result;
+  console.log(`✓ 네이버 검색 지원 패키지 ${packageState === 'unchanged' && textState === 'unchanged' ? '동일' : '준비 완료'}`);
+  console.log(`  JSON: ${resolve(result.outputDir, 'package.json')}`);
+  console.log(`  복사용 원고: ${resolve(result.outputDir, 'post.txt')}`);
+  console.log(`  업로드 이미지: ${manifest.images.length}개 · ${resolve(result.outputDir, 'upload-manifest.json')}`);
+  console.log('  브라우저·저장·공개 동작은 하지 않았습니다.');
+}
+
 async function main() {
   const command = process.argv[2];
   const args = parseArgs(process.argv.slice(3));
   if (command === 'analyze') return analyzeCommand(args);
   if (command === 'validate') return validateCommand(args);
   if (command === 'preview') return previewCommand(args);
+  if (command === 'prepare') return prepareCommand(args);
   throw new Error(
     '사용법:\n'
     + '  node tools/naver-blog-support.mjs analyze\n'
     + '  node tools/naver-blog-support.mjs validate\n'
-    + '  node tools/naver-blog-support.mjs preview --slug=sado-access',
+    + '  node tools/naver-blog-support.mjs preview --slug=sado-access\n'
+    + '  node tools/naver-blog-support.mjs prepare --slug=sado-access [--replace]',
   );
 }
 

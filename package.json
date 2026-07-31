@@ -33,6 +33,7 @@
     "naver-blog:support:analyze": "node tools/naver-blog-support.mjs analyze",
     "naver-blog:support:validate": "node tools/naver-blog-support.mjs validate",
     "naver-blog:support:preview": "node tools/naver-blog-support.mjs preview",
+    "naver-blog:support:prepare": "node tools/naver-blog-support.mjs prepare",
     "test:naver-blog": "node --test tools/naver-blog-content.test.mjs tools/naver-blog-growth.test.mjs tools/naver-blog-support.test.mjs"
   },
   "devDependencies": {
