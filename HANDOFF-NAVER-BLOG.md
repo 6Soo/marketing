@@ -54,6 +54,8 @@ SmartEditor에 **검증된 원고와 사진을 초안으로 배치**합니다. �
 blog/published/stories.json             ← 검증된 여행지 이야기
 naver-blog/travel-guides.json           ← 상세 교통·동선·체크리스트·상품 연결 상태
 naver-blog/growth-plan.json             ← 검색 의도·글별 독립 질문·발행 게이트
+naver-blog/support-drafts.json           ← 지원 글의 독립 장문 원고·공식 출처·내부 링크
+naver-blog/photos/<support-slug>/        ← 지원 글 전용 사진·고정 리비전·SHA-256
         ↓ naver-blog:prepare
 _stage/naver-blog/<slug>/
   package.json                          ← 두 원천 digest·중복 키·검증 앵커
@@ -111,6 +113,13 @@ npm run test:naver-blog
 npm run naver-blog:growth:validate
 npm run naver-blog:growth:report
 
+# 검색 지원 글의 공식 출처·사진 바이트·본문 중복률·내부 링크 계약 확인
+npm run naver-blog:support:analyze
+npm run naver-blog:support:validate
+
+# 브라우저를 열지 않는 로컬 미리보기. 기둥 글 공개 전에는 발행 패키지를 만들지 않음
+npm run naver-blog:support:preview -- --slug=sado-access
+
 # 공개 URL 검증 뒤에만 집계 관측 기록
 npm run naver-blog:growth:record -- \
   --slug=sado --checkpoint=D+3 \
@@ -151,6 +160,9 @@ npm run naver-blog:growth:record -- \
 - 공개 화면에서 제목·원문 링크·실용 정보 제목·사진 캡션/원문 중 하나라도 누락
 - 같은 slug 또는 같은 공개 URL의 중복 기록
 - 지원 글이 신규 공식 출처 2개·독립 검증 사진 2장·본문 중복률 25% 이하를 입증하지 못함
+- 지원 글 사진이 CC BY-SA이거나 장변 2700px 미만, 고정 Commons 리비전·실제 파일 SHA-256 불일치,
+  기둥 글 또는 다른 지원 글의 사진 재사용
+- 지원 글의 기둥 네이버 글 공개 URL이 아직 `published.json`에서 검증되지 않음
 - 공개 URL 검증 전 성과값 기록, D+3·D+7·D+28 외 체크포인트 또는 개인 단위 데이터 기록
 
 placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 검증 사진은 있지만 상세
@@ -175,8 +187,11 @@ placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 �
   첫 문단에서도 일본·니가타를 명시해 여수 사도·신안 12사도와 검색 의도를 분리합니다.
 - `사도섬 여행`의 동명 지역 충돌은 확인했지만 검색량은 확인하지 못했습니다. 검색량을 추정하지
   않고 `relative-volume-unverified`로 유지합니다.
-- 사도 기둥 글과 가는 법·섬 내 교통·2박 3일의 지원 글 3편을 계획했으며, 지원 글은 기둥 글 공개
-  검증과 신규 공식 출처·독립 사진 확보 전에는 `research-required`에서 올릴 수 없습니다.
+- 사도 기둥 글과 가는 법·섬 내 교통·2박 3일의 지원 글 3편을 계획했습니다. `sado-access`는
+  4,935자 독립 원고, 공식 출처 7개(기둥 글에 없던 신규 6개), CC BY 현지 사진 2장까지 확보했고
+  기둥 글과 5어절 중복률은 1.3%로 실측되어 `draft-ready`입니다.
+- `sado-access`는 정보·사진 준비가 끝났어도 기둥 글 공개 URL이 없으므로 로컬 미리보기만 만들고
+  발행을 차단합니다. `sado-transport`와 `sado-itinerary`는 아직 `research-required`입니다.
 - 화면 재배치·저장·공개는 사용자가 마우스 사용을 멈추고 명시적으로 허락한 뒤에만 진행합니다.
 
 ## 8. 모델 교차검증 기록
@@ -201,3 +216,6 @@ placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 �
   사용 가능한 공식 AGY CLI의 `gemini-3.6-flash-high`가 실제 응답해 지정 기본 모델을 수행했습니다.
   최신 컨셉 반영 때는 별도 신규 Fable 호출 수단이 없어 직전 Fable 반박을 파일·테스트·브라우저로
   재대조했습니다.
+- 최신 `sado-access` 지원 글은 GPT-5.6 Sol medium이 수행·최종 확정하고 AGY Gemini 3.6 Flash
+  high가 읽기 전용 검증했습니다. Flash의 미니라이너 `1,300엔` 보고는 공식 원문과 달라 기각했고,
+  변동 운임을 본문에 고정하지 않았습니다. Fable 5와 Opus 5는 현재 런타임에 없어 호출하지 않았습니다.

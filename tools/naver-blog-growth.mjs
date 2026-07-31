@@ -22,7 +22,7 @@ const REQUIRED_METRICS = new Set([
   'searchInflows',
   'foresttourClicks',
 ]);
-const SUPPORT_STATUSES = new Set(['research-required', 'ready', 'staged', 'published']);
+const SUPPORT_STATUSES = new Set(['research-required', 'draft-ready', 'ready', 'staged', 'published']);
 const RANK_BANDS = new Set(['1-3', '4-10', '11-20', '21-30', '31-50', '50+', 'not-found']);
 const PRODUCT_FIRST_RE = /(?:상품|패키지|가격|출발일|잔여석|모객|예약\s*(?:하기|상품))/;
 const OBSERVATION_KEYS = new Set([
@@ -398,6 +398,8 @@ export function renderGrowthReport(plan, observations, registry) {
     lines.push(`  기둥 글: ${publicPost ? '공개 URL 검증 완료' : `${pillar.status} · 공개 미확인`}`);
     lines.push(`  상대 검색량: ${cluster.searchEvidence.demandStatus === 'relative-volume-unverified' ? '미확인' : cluster.searchEvidence.demandStatus}`);
     lines.push(`  지원 글: ${supports.filter((article) => article.status === 'research-required').length}/${supports.length}편 추가 조사 필요`);
+    const draftReady = supports.filter((article) => article.status === 'draft-ready').length;
+    if (draftReady > 0) lines.push(`  로컬 초안: ${draftReady}편 준비 완료 · 기둥 글 공개 전 발행 차단`);
   }
   if (observations.observations.length === 0) lines.push('- 성과 관측: 공개 전이라 기록 없음');
   for (const observation of observations.observations) {

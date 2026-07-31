@@ -75,6 +75,7 @@ test('대표·보조 검색어를 포함해 한 검색어는 한 글만 소유�
 test('지원 글은 신규 공식 출처·사진·낮은 중복률 없이 ready가 될 수 없다', () => {
   const current = state();
   current.plan.clusters[0].articles[1].status = 'ready';
+  delete current.plan.clusters[0].articles[1].researchEvidence;
   const errors = validateGrowthPlan(current.plan, current);
   assert.ok(errors.some((error) => error.includes('researchEvidence')));
 });
