@@ -26,7 +26,7 @@
 정본 데이터와 게이트는 `naver-blog/travel-guides.json`에 있습니다.
 
 Instagram 릴스의 비팔로워 추천 도달, DM, 팔로우 관계를 동일하게 복제한다고 주장하지 않습니다.
-네이버 검색 노출도 게시 성공만으로 확정하지 않고 D+3·D+7 실측으로 판정합니다.
+네이버 검색 노출도 게시 성공만으로 확정하지 않고 D+3·D+7·D+28 실측으로 판정합니다.
 
 ## 2. 왜 “완전 무인 API 발행”이 아닌가
 
@@ -53,6 +53,7 @@ SmartEditor에 **검증된 원고와 사진을 초안으로 배치**합니다. �
 ```text
 blog/published/stories.json             ← 검증된 여행지 이야기
 naver-blog/travel-guides.json           ← 상세 교통·동선·체크리스트·상품 연결 상태
+naver-blog/growth-plan.json             ← 검색 의도·글별 독립 질문·발행 게이트
         ↓ naver-blog:prepare
 _stage/naver-blog/<slug>/
   package.json                          ← 두 원천 digest·중복 키·검증 앵커
@@ -64,6 +65,8 @@ _stage/naver-blog/<slug>/
         ↓ 사람 최종 검수·명시적 저장/공개
         ↓ naver-blog:verify --record
 naver-blog/published.json               ← 공개 URL·blogId·logNo·검증 시각
+        ↓ D+3·D+7·D+28 집계
+naver-blog/observations.json            ← 노출·조회·검색 유입·자사 링크 클릭 집계
 ```
 
 `_stage/`는 gitignore 대상입니다. 인증정보, 쿠키, QR 코드, 임시 원고, 내려받은 이미지가
@@ -86,23 +89,35 @@ npm run naver-blog:validate -- \
 npm run naver-blog:open -- \
   --package=_stage/naver-blog/sado/package.json \
   --blog-id=<blogId> \
-  --open
+  --open --user-approved
 
 # 새 SmartEditor 탭에 제목·문단·사진을 배치하되 저장·발행하지 않음
 npm run naver-blog:stage -- \
   --package=_stage/naver-blog/sado/package.json \
   --manifest=_stage/naver-blog/sado/upload-manifest.json \
   --blog-id=<blogId> \
-  --stage
+  --stage --user-approved
 
 # 사람이 공개한 뒤 실제 URL과 제목·원문 링크·본문 제목 2개를 브라우저로 재확인
 npm run naver-blog:verify -- \
   --package=_stage/naver-blog/sado/package.json \
   --url=https://blog.naver.com/<blogId>/<logNo> \
-  --record
+  --user-approved --record
 
 # 회귀 테스트
 npm run test:naver-blog
+
+# 검색 의도·콘텐츠 중복·발행 속도·측정 계약 확인과 현재 상태 보고
+npm run naver-blog:growth:validate
+npm run naver-blog:growth:report
+
+# 공개 URL 검증 뒤에만 집계 관측 기록
+npm run naver-blog:growth:record -- \
+  --slug=sado --checkpoint=D+3 \
+  --observed-at=2026-08-03T09:00:00+09:00 \
+  --target-query-found=true --rank-band=11-20 \
+  --post-views=0 --search-inflows=0 --foresttour-clicks=0 \
+  --record
 ```
 
 기본 WSL 브라우저 계약:
@@ -114,6 +129,8 @@ npm run test:naver-blog
 - 다른 위치가 필요하면 `NAVER_BLOG_BROWSER_PROFILE` 또는 `--profile=` 사용
 - 기본은 `--headed=true`; 사용자에게 보이지 않는 브라우저로 초안을 만들지 않음
 - 로그인·2차 인증·CAPTCHA는 우회하지 않음
+- 사용자가 마우스를 쓰는 동안에는 `open`, `stage`, `verify`를 포함해 보이는 브라우저에 어떤
+  입력도 보내지 않음. 실행 직전에 사용자의 명시적 허락을 받고 `--user-approved`를 함께 명시함
 
 ## 5. 공개 게이트
 
@@ -123,6 +140,7 @@ npm run test:naver-blog
 - 현지 촬영 고지, 재사용 라이선스, 저작자, 원문 URL 누락
 - 이미지 캡션이 본문에 없거나 업로드 순서가 1부터 연속되지 않음
 - 원고 600자 미만, HTML 포함, Instagram 의존 문구 또는 불안 과장 문구 포함
+- 제목 40자 초과, 대표 검색어 또는 동명 여행지 구분어가 제목·첫 문단에서 누락
 - `access`, `transport`, `plan`, `checklist`, `complexity` 여행 정보 구간 누락
 - 여행 정보 확인일·공식 출처·변경 가능성 고지 누락
 - 원본에 `connectedTour`가 없는데 상품 링크를 추가함
@@ -132,6 +150,8 @@ npm run test:naver-blog
 - 네이버 외 공개 URL 또는 blogId/logNo 파싱 실패
 - 공개 화면에서 제목·원문 링크·실용 정보 제목·사진 캡션/원문 중 하나라도 누락
 - 같은 slug 또는 같은 공개 URL의 중복 기록
+- 지원 글이 신규 공식 출처 2개·독립 검증 사진 2장·본문 중복률 25% 이하를 입증하지 못함
+- 공개 URL 검증 전 성과값 기록, D+3·D+7·D+28 외 체크포인트 또는 개인 단위 데이터 기록
 
 placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 검증 사진은 있지만 상세
 여행 정보가 없어 차단합니다. 현재 준비 가능한 원고는 `sado` 한 편입니다.
@@ -148,11 +168,16 @@ placeholder 사진인 `hida`, `sanriku`는 차단합니다. `northern-alps`는 �
 ## 7. 현재 상태
 
 - WSL `agent-browser` 전용 프로필에서 정상 로그인했고, 현재 보이는 WSL Chrome의 SmartEditor가
-  열려 있습니다. 현재 Windows Edge는 사용하지 않았습니다.
-- 사도 장문 원고 5,534자, SmartEditor 문단 113개, 현지 사진 4장을 편집 화면에 배치했습니다.
-- 제목·원문 링크·실용 정보 제목과 공식 링크·사진 캡션/원문으로 구성한 검증 앵커 27개가
-  모두 통과했습니다.
-- 편집 화면의 저장 카운트는 0입니다. 실제 임시저장·공개 URL은 아직 없습니다.
+  열려 있습니다. 이 화면은 사용자의 마우스를 방해하지 않도록 더 이상 조작하지 않습니다.
+- 보이는 편집 화면에는 이전 제목과 이전 본문이 들어간 미저장 초안이 남아 있습니다. 저장 카운트는
+  0이고 실제 임시저장·공개 URL도 없습니다. 화면 초안은 현재 로컬 정본이 아닙니다.
+- 로컬 패키지는 `일본 니가타 사도섬 여행 | 가는 법·금산·슈쿠네기 2박 3일 동선`으로 갱신했습니다.
+  첫 문단에서도 일본·니가타를 명시해 여수 사도·신안 12사도와 검색 의도를 분리합니다.
+- `사도섬 여행`의 동명 지역 충돌은 확인했지만 검색량은 확인하지 못했습니다. 검색량을 추정하지
+  않고 `relative-volume-unverified`로 유지합니다.
+- 사도 기둥 글과 가는 법·섬 내 교통·2박 3일의 지원 글 3편을 계획했으며, 지원 글은 기둥 글 공개
+  검증과 신규 공식 출처·독립 사진 확보 전에는 `research-required`에서 올릴 수 없습니다.
+- 화면 재배치·저장·공개는 사용자가 마우스 사용을 멈추고 명시적으로 허락한 뒤에만 진행합니다.
 
 ## 8. 모델 교차검증 기록
 

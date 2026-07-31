@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 import {
   buildNaverPackage,
   parseNaverPublicUrl,
+  requireUserBrowserApproval,
   validateNaverPackage,
   validateRegistry,
   validateTravelGuide,
@@ -39,6 +40,10 @@ test('verified 현지 사진 원고를 결정적 네이버 장문 패키지로 �
   assert.ok(first.images.every((image) => first.body.includes(image.caption)));
   assert.ok(first.images.every((image) => first.body.includes(image.sourcePageUrl)));
   assert.ok(travelGuide.sections.every((section) => first.body.includes(section.title)));
+  assert.ok(first.body.startsWith(travelGuide.searchDescription));
+  assert.ok(travelGuide.searchIntent.disambiguationTerms.every(
+    (term) => first.title.includes(term) && first.body.slice(0, 200).includes(term),
+  ));
   assert.equal(first.productConnection.status, 'unavailable');
 });
 
@@ -132,6 +137,17 @@ test('실용 여행 정보와 과장 없는 상품 연결을 강제한다', () =
   assert.ok(validateTravelGuide(fakeProduct, source).some((error) => error.includes('connectedTour')));
 });
 
+test('검색 제목·첫 문단에 일본 사도를 구분하는 검색 의도를 강제한다', () => {
+  const source = story('sado');
+  const ambiguous = guide('sado');
+  ambiguous.title = '사도섬 여행 | 가는 법과 2박 3일 동선';
+  ambiguous.searchDescription = '사도섬 여행을 위한 배편과 동선을 정리합니다.';
+  const errors = validateTravelGuide(ambiguous, source);
+  assert.ok(errors.some((error) => error.includes('primaryQuery')));
+  assert.ok(errors.some((error) => error.includes("구분어 '일본'")));
+  assert.ok(errors.some((error) => error.includes("구분어 '니가타'")));
+});
+
 test('공개 기록은 slug와 URL 중복을 거부한다', () => {
   const registry = {
     schemaVersion: 1,
@@ -160,4 +176,14 @@ test('공개 기록은 slug와 URL 중복을 거부한다', () => {
   const errors = validateRegistry(registry);
   assert.ok(errors.some((error) => error.includes('slug가 중복')));
   assert.ok(errors.some((error) => error.includes('url이 중복')));
+});
+
+test('보이는 브라우저 명령은 실행 직전 사용자 승인 표식이 필요하다', () => {
+  assert.throws(
+    () => requireUserBrowserApproval(new Map(), 'SmartEditor 초안 배치'),
+    /--user-approved/,
+  );
+  assert.doesNotThrow(
+    () => requireUserBrowserApproval(new Map([['--user-approved', true]]), 'SmartEditor 초안 배치'),
+  );
 });

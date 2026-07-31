@@ -156,6 +156,8 @@ function renderSummaryBody(story, guide, images) {
   const hero = images[0];
   const imagesBySectionId = new Map(images.map((image) => [image.sectionId, image]));
   const blocks = [
+    normalizeSpace(guide.searchDescription),
+    '',
     normalizeSpace(story.description),
     '',
     ...story.intro.flatMap((paragraph) => [normalizeSpace(paragraph), '']),
@@ -244,6 +246,40 @@ export function validateTravelGuide(guide, story) {
   const errors = [];
   if (!isPlainObject(guide)) return ['여행 정보 객체가 필요합니다.'];
   if (guide.slug !== story?.slug) errors.push('guide.slug가 원본 여행지와 다릅니다.');
+  if (!nonEmptyString(guide.title) || [...String(guide.title ?? '')].length > 40) {
+    errors.push('guide.title은 검색 의도가 드러나는 1~40자여야 합니다.');
+  }
+  if (!nonEmptyString(guide.searchDescription) || [...String(guide.searchDescription ?? '')].length > 160) {
+    errors.push('guide.searchDescription은 1~160자의 검색 요약이어야 합니다.');
+  }
+  const searchIntent = guide.searchIntent;
+  if (!isPlainObject(searchIntent)) {
+    errors.push('guide.searchIntent가 필요합니다.');
+  } else {
+    if (!nonEmptyString(searchIntent.primaryQuery)) {
+      errors.push('guide.searchIntent.primaryQuery가 필요합니다.');
+    } else if (!String(guide.title ?? '').includes(searchIntent.primaryQuery)) {
+      errors.push('guide.title에 primaryQuery가 정확히 포함되어야 합니다.');
+    }
+    if (!Array.isArray(searchIntent.secondaryQueries)
+      || searchIntent.secondaryQueries.length < 3
+      || !searchIntent.secondaryQueries.every(nonEmptyString)
+      || new Set(searchIntent.secondaryQueries).size !== searchIntent.secondaryQueries.length) {
+      errors.push('guide.searchIntent.secondaryQueries는 서로 다른 검색어 3개 이상이어야 합니다.');
+    } else if (searchIntent.secondaryQueries.includes(searchIntent.primaryQuery)) {
+      errors.push('guide.searchIntent.primaryQuery와 secondaryQueries는 중복될 수 없습니다.');
+    }
+    if (!Array.isArray(searchIntent.disambiguationTerms)
+      || searchIntent.disambiguationTerms.length < 2
+      || !searchIntent.disambiguationTerms.every(nonEmptyString)) {
+      errors.push('guide.searchIntent.disambiguationTerms는 동명 여행지를 구분하는 말 2개 이상이어야 합니다.');
+    } else {
+      const opening = `${guide.title ?? ''}\n${guide.searchDescription ?? ''}`;
+      for (const term of searchIntent.disambiguationTerms) {
+        if (!opening.includes(term)) errors.push(`검색 첫 화면에 구분어 '${term}'이 필요합니다.`);
+      }
+    }
+  }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(guide.checkedAt ?? ''))) {
     errors.push('guide.checkedAt은 YYYY-MM-DD 형식이어야 합니다.');
   }
@@ -324,11 +360,11 @@ export function validateNaverPackage(pkg, sourceStory, guide) {
     }
   }
 
-  if (!nonEmptyString(pkg.title) || pkg.title.length > 70) {
-    errors.push('title은 1~70자 편집 규칙을 지켜야 합니다.');
+  if (!nonEmptyString(pkg.title) || [...String(pkg.title ?? '')].length > 40) {
+    errors.push('title은 검색 의도가 드러나는 1~40자 편집 규칙을 지켜야 합니다.');
   }
   if (!nonEmptyString(pkg.body) || pkg.body.length < 600) {
-    errors.push('body는 600자 이상의 네이버용 요약 원고여야 합니다.');
+    errors.push('body는 600자 이상의 네이버용 장문 원고여야 합니다.');
   }
   if (/<[a-z][\s\S]*>/i.test(String(pkg.body ?? ''))) {
     errors.push('body에는 HTML을 넣을 수 없습니다.');
@@ -410,6 +446,14 @@ export function validateNaverPackage(pkg, sourceStory, guide) {
     errors.push(...validateTravelGuide(guide, sourceStory));
     if (pkg.source?.guideDigest !== digest(guide)) errors.push('source.guideDigest가 현재 여행 정보와 다릅니다.');
     if (pkg.source?.guideCheckedAt !== guide.checkedAt) errors.push('source.guideCheckedAt이 현재 여행 정보와 다릅니다.');
+    if (!String(pkg.body ?? '').startsWith(normalizeSpace(guide.searchDescription))) {
+      errors.push('body 첫 문단에 searchDescription이 필요합니다.');
+    }
+    for (const term of guide.searchIntent?.disambiguationTerms ?? []) {
+      if (!String(pkg.body ?? '').slice(0, 200).includes(term)) {
+        errors.push(`body 첫 200자에 동명 여행지 구분어 '${term}'이 필요합니다.`);
+      }
+    }
     for (const section of guide.sections ?? []) {
       if (!String(pkg.body ?? '').includes(normalizeSpace(section.title))) {
         errors.push(`여행 정보 구간 '${section.title}'이 body에서 누락되었습니다.`);
@@ -647,6 +691,12 @@ function editorUrl(blogId) {
   return new URL(`/${blogId}/postwrite`, NAVER_BLOG_ORIGIN).toString();
 }
 
+export function requireUserBrowserApproval(args, action = '브라우저 조작') {
+  if (!args?.has?.('--user-approved')) {
+    throw new Error(`${action}은 사용자의 마우스를 방해할 수 있습니다. 실행 직전 허락을 받은 뒤 --user-approved를 명시하세요.`);
+  }
+}
+
 async function prepareCommand(args) {
   const slug = args.get('--slug');
   if (!slug) throw new Error('prepare에는 --slug=<원본 slug>가 필요합니다.');
@@ -702,6 +752,7 @@ async function openCommand(args) {
   const packagePath = args.get('--package');
   if (!packagePath) throw new Error('open에는 --package=<package.json>이 필요합니다.');
   if (!args.has('--open')) throw new Error('WSL 브라우저를 열려면 --open을 명시하세요.');
+  requireUserBrowserApproval(args, 'SmartEditor 열기');
   await readPackage(packagePath, args);
   const blogId = parseBlogId(args);
   const prefix = browserPrefix(args);
@@ -724,6 +775,7 @@ async function stageCommand(args) {
   const manifestPath = args.get('--manifest') || resolve(dirname(packagePath || ''), 'upload-manifest.json');
   if (!packagePath) throw new Error('stage에는 --package=<package.json>이 필요합니다.');
   if (!args.has('--stage')) throw new Error('SmartEditor에 초안을 넣으려면 --stage를 명시하세요. 공개는 하지 않습니다.');
+  requireUserBrowserApproval(args, 'SmartEditor 초안 배치');
   const pkg = await readPackage(packagePath, args);
   const manifest = await readJson(manifestPath);
   if (manifest.idempotencyKey !== pkg.idempotencyKey) {
@@ -786,6 +838,7 @@ async function verifyCommand(args) {
   if (!packagePath || !publicUrl) {
     throw new Error('verify에는 --package=<package.json>과 --url=<공개 URL>이 필요합니다.');
   }
+  requireUserBrowserApproval(args, '보이는 브라우저 공개 글 검증');
   const pkg = await readPackage(packagePath, args);
   const parsed = parseNaverPublicUrl(publicUrl);
   const expectedBlogId = args.get('--blog-id') || process.env.NAVER_BLOG_ID;
@@ -853,9 +906,9 @@ async function main() {
     + '  node tools/naver-blog-content.mjs list\n'
     + '  node tools/naver-blog-content.mjs prepare --slug=sado [--download-images]\n'
     + '  node tools/naver-blog-content.mjs validate --package=_stage/naver-blog/sado/package.json\n'
-    + '  node tools/naver-blog-content.mjs open --package=... --blog-id=... --open\n'
-    + '  node tools/naver-blog-content.mjs stage --package=... --blog-id=... --stage\n'
-    + '  node tools/naver-blog-content.mjs verify --package=... --url=... [--record]',
+    + '  node tools/naver-blog-content.mjs open --package=... --blog-id=... --open --user-approved\n'
+    + '  node tools/naver-blog-content.mjs stage --package=... --blog-id=... --stage --user-approved\n'
+    + '  node tools/naver-blog-content.mjs verify --package=... --url=... --user-approved [--record]',
   );
 }
 

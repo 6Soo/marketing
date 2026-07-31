@@ -27,7 +27,10 @@
     "naver-blog:open": "node tools/naver-blog-content.mjs open",
     "naver-blog:stage": "node tools/naver-blog-content.mjs stage",
     "naver-blog:verify": "node tools/naver-blog-content.mjs verify",
-    "test:naver-blog": "node --test tools/naver-blog-content.test.mjs"
+    "naver-blog:growth:validate": "node tools/naver-blog-growth.mjs validate",
+    "naver-blog:growth:report": "node tools/naver-blog-growth.mjs report",
+    "naver-blog:growth:record": "node tools/naver-blog-growth.mjs record",
+    "test:naver-blog": "node --test tools/naver-blog-content.test.mjs tools/naver-blog-growth.test.mjs"
   },
   "devDependencies": {
     "ffmpeg-static": "^5.3.0"
