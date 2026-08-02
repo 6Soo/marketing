@@ -117,5 +117,33 @@
       "story_sado_discoveries": 0,
       "story_sado_tour": 0
     }
+  },
+  {
+    "schemaVersion": 1,
+    "experiment": "sado-003",
+    "checkpoint": "7d",
+    "source": "graph-api",
+    "observedAt": "2026-08-02T19:32:32.641Z",
+    "metrics": {
+      "reach": 1,
+      "saves": 0,
+      "shares": 0,
+      "likes": 0,
+      "comments": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "experiment": "sado-003",
+    "checkpoint": "7d",
+    "source": "foresttour-admin",
+    "observedAt": "2026-08-02T19:32:34.952Z",
+    "metrics": {
+      "story_sado_visit": 0,
+      "story_sado_context": 0,
+      "story_sado_related": 0,
+      "story_sado_discoveries": 0,
+      "story_sado_tour": 0
+    }
   }
 ]
