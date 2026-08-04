@@ -499,13 +499,9 @@ git 증거로 확정:
 ※ **북알프스는 무결하다.** 사진 8장 → 저작자 5인(663highland·Raita Futo·くろふね·Σ64·Paul Keller)이
 `cardnews/photos/northern-alps/출처.md`와 캡션에서 정확히 일치함을 전수 대조로 확인했다.
 
-### (3) CTA 관측성 브랜치 — ⚠ **유실 위험**
-`reservation` 리포의 `cta-observability` @ `9e79b69`. `src/lib/storyCtaStatus.ts` 신설
-(스토리 CTA 상태 판정 + 36시간 staleness). 테스트 94/94 · tsc 0 · ESLint 0 · build 성공은
-확인됐으나 독립 검증 판정을 못 받았다.
-**2026-07-29 확인: 이 브랜치는 원격(`origin`)에 없다.** `git ls-remote --heads` 결과 0건.
-예약 리포의 별도 CTA 작업트리에만 있고 **미푸시**다.
-→ 그 머신이 정리되면 사라진다. **먼저 푸시해 보존할 것.**
+### (3) CTA 관측성 브랜치 — 폐기됨
+과거 별도 CTA 관측성 실험(`9e79b69`)은 독립 검증과 운영 반영이 끝나지 않아 정리했다.
+현재 `main`·로컬 브랜치·worktree에는 포함하지 않으며, 복구·푸시·배포하지 않는다.
 
 ### (4) placeholder 시리즈 2건 (히다 001 · 산리쿠 002)
 `photoStatus: placeholder`라 게이트에 막힌다. 릴스도 못 만든다. 사진 교체가 선행 조건.
@@ -664,10 +660,7 @@ GPT 5.6 Sol 측 교차검증은 이 환경에 브리지가 없어 **미수행**�
 2. **성과 해석 보류**: 7d Instagram 지표가 실제 저장되기 전에는 V2가 더 낫다고 결론내리지 않는다.
 3. **사도 공개 캡션 크레딧**: `/p/DbRD-fWkyUL/`의 잘못된 `Tensaibuta` 표기는 이 세션에서
    수정하지 못했다. 로그인된 UI에서 실제 렌더 자산 기준 저작자 4인으로 수동 교정하고 재확인한다.
-4. **CTA 브랜치 보존**: 손상된 Windows worktree에서 알려진 10개 파일을 임시 clone
-   `/tmp/cta-recovery.S5RFvT`에 복원해 91 tests·tsc·변경 파일 ESLint·build 통과까지 확인했지만,
-   이 세션에서는 커밋·푸시하지 않았다. 임시 경로는 영구 보존으로 간주하지 말고 reservation 리포에서
-   다시 확인한다.
+4. **CTA 관측성 실험**: 과거 미병합 실험은 이번 정리에서 폐기했다. 현재 저장소에서 재개하지 않는다.
 5. 히다·산리쿠는 여전히 `photoStatus: placeholder`다. 사진 권리와 수량을 먼저 확보한다.
 
 ### 모델·검증 기록
