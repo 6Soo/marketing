@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "channel": "naver-blog",
+  "posts": [
+    {
+      "slug": "sado",
+      "idempotencyKey": "sado:4020b0e85863:9a0d1621b26e:3b47630794eb",
+      "contentDigest": "3b47630794eb6bbeaacbc88bea86cee88059c5398acfe97a075f628a00d3d52a",
+      "url": "https://blog.naver.com/kkokko_hero/224364700027",
+      "blogId": "kkokko_hero",
+      "logNo": "224364700027",
+      "verifiedAt": "2026-08-01T13:38:11+09:00"
+    },
+    {
+      "slug": "northern-alps",
+      "idempotencyKey": "northern-alps:photo-first:8eb199fa0cb8",
+      "contentDigest": "8eb199fa0cb87b8df197f381c5fe51f96a93149b7133d9f2b9c8ab86f9a3fca2",
+      "url": "https://blog.naver.com/kkokko_hero/224364780223",
+      "blogId": "kkokko_hero",
+      "logNo": "224364780223",
+      "verifiedAt": "2026-08-01T13:38:11+09:00"
+    }
+  ]
+}

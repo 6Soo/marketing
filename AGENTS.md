@@ -8,7 +8,7 @@
 1. **§0-A 모델 라우팅 지침**(바로 아래) — 어느 모델이 무엇을 맡는지의 정본.
 2. **CLAUDE.md** (리포 루트) — 회사 컨텍스트·마케팅 원칙.
 3. 작업할 채널의 단일 인계서 — BAND는 **HANDOFF-BAND.md**, Instagram은 **HANDOFF-INSTAGRAM.md**,
-   foresttour.kr 블로그는 **HANDOFF-BLOG.md**.
+   foresttour.kr 블로그는 **HANDOFF-BLOG.md**, 네이버 블로그는 **HANDOFF-NAVER-BLOG.md**.
 4. 상세 이력이 필요한 경우에만 **LOG.md** 맨 아래 최신 "세션 핸드오프" 블록.
 5. 작업에 직접 관련된 하위 문서만 읽는다. 전체 `learning/`을 선행 로드하지 않는다.
 

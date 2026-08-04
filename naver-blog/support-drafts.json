@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "channel": "naver-blog",
+  "drafts": [
+    {
+      "slug": "sado-access",
+      "parentSlug": "sado",
+      "status": "draft-ready",
+      "title": "일본 사도섬 가는 법 | 니가타항 카페리·제트포일 비교",
+      "searchDescription": "일본 니가타역·니가타공항에서 사도기센 터미널로 이동하고 카페리와 제트포일을 예약해 료쓰항에 도착하는 전 과정을 정리합니다.",
+      "searchIntent": {
+        "primaryQuery": "일본 사도섬 가는 법",
+        "secondaryQueries": [
+          "니가타항 사도 페리",
+          "료쓰항 제트포일",
+          "사도기센 예약"
+        ],
+        "disambiguationTerms": [
+          "일본",
+          "니가타"
+        ]
+      },
+      "question": "니가타역에서 항구를 거쳐 사도 료쓰항까지 어떤 배를 어떻게 연결해야 하는가?",
+      "checkedAt": "2026-07-31",
+      "freshnessNotice": "선박 운항표, 좌석, 운임, 공항 셔틀과 역 앞 버스는 계절·날씨·공사에 따라 바뀝니다. 출발 직전에 각 공식 링크에서 다시 확인해 주세요.",
+      "sections": [
+        {
+          "id": "route-map",
+          "title": "한국에서 사도까지, 네 구간으로 나눠 봅니다",
+          "paragraphs": [
+            "일본 사도섬은 니가타현 앞바다에 있습니다. 이 글은 한국에서 니가타로 이동한 뒤 니가타항 사도기센 터미널을 거쳐 배로 료쓰항에 들어가는 대표 경로를 기준으로 설명합니다. 항공 또는 일본 국내 철도, 도심에서 항구, 선박, 섬 안 교통이라는 네 구간을 따로 맞춰야 합니다.",
+            "항공편만 먼저 결제한 뒤 배를 고르기보다, 결제 전에 실제 여행일의 항공·철도 후보와 사도기센 운항표·남은 좌석을 함께 봅니다. 배의 출항 시각에서 터미널 도착 권장 시간, 니가타역이나 공항에서 항구까지의 이동 시간, 앞 구간의 지연 여유를 거꾸로 빼면 놓치기 쉬운 구간이 보입니다. 돌아오는 날도 같은 방식으로 료쓰항 출항편부터 역산합니다."
+          ],
+          "bullets": [
+            "1구간: 한국 → 니가타공항 또는 일본 국내 철도 환승",
+            "2구간: 니가타역·니가타공항 → 니가타항 사도기센 터미널",
+            "3구간: 니가타항 → 사도 료쓰항",
+            "4구간: 료쓰항 → 렌터카·노선버스·택시"
+          ],
+          "sources": [
+            "access-map",
+            "airport-shuttle",
+            "shared-timetable"
+          ]
+        },
+        {
+          "id": "station-airport",
+          "title": "니가타역과 니가타공항에서 항구로 이동하는 법",
+          "paragraphs": [
+            "사도기센 공식 안내 기준으로 JR 니가타역에서 니가타항까지는 사도기센선 버스로 약 15분, 택시로 약 10분입니다. 공식 페이지에는 버스 운임 260엔, 소형 택시 약 1,500엔이 안내돼 있지만 요금과 정류장은 바뀔 수 있습니다. 니가타역 공사로 버스 승강장이 바뀐 이력이 있으므로 당일에는 연결된 니가타교통 안내도 함께 확인합니다.",
+            "니가타공항에서는 정규 직행 노선버스 대신 사도기센 터미널 직행 미니라이너가 운행되는 기간이 있습니다. 2026년 여름·가을 공개표는 약 25분, 현금 결제, 13명 정원으로 안내합니다. 예약이 필요 없다는 표기와 별개로 만석이면 탈 수 없고 운행 기간과 시각도 바뀌므로, 항공 도착편과 맞지 않으면 택시 또는 니가타역 경유 동선을 같이 준비합니다."
+          ],
+          "bullets": [
+            "니가타역 출발: 사도기센선 버스 정류장과 최신 운임 확인",
+            "니가타공항 출발: 직행 미니라이너 운행 기간·시각·현금 준비 확인",
+            "모든 경로: 교통 지연과 터미널 내 이동 시간을 별도로 확보"
+          ],
+          "sources": [
+            "access-map",
+            "airport-shuttle"
+          ]
+        },
+        {
+          "id": "ship-choice",
+          "title": "카페리와 제트포일, 무엇을 고를까요",
+          "paragraphs": [
+            "니가타항과 료쓰항 사이의 카페리는 공식 운항표 기준 약 2시간 30분, 제트포일은 약 1시간 7분입니다. 카페리는 사람과 차량이 함께 탈 수 있고 이동 시간이 긴 대신 배 안에서 쉬며 바다를 건너는 방식입니다. 제트포일은 승객 전용 좌석 지정 고속선으로, 섬에서 쓸 시간을 늘리고 싶을 때 유리합니다.",
+            "어느 쪽이 늘 정답인 것은 아닙니다. 첫날 섬 안에서 먼 권역까지 이동한다면 제트포일의 시간이 중요하고, 렌터카 대신 자기 차량을 싣거나 배 이동 자체를 여유 있게 두고 싶다면 카페리를 봅니다. 편도씩 다른 배를 고를 수도 있으므로 출국·귀국 연결과 섬 안 렌터카 인수·반납 시각을 함께 놓고 비교합니다."
+          ],
+          "bullets": [
+            "카페리: 차량 선적 가능, 약 2시간 30분",
+            "제트포일: 승객 전용 지정 좌석, 약 1시간 7분",
+            "선택 기준: 항공·철도 연결, 섬 체류시간, 차량 선적 여부"
+          ],
+          "sources": [
+            "shared-timetable",
+            "ship-guide"
+          ]
+        },
+        {
+          "id": "reservation",
+          "title": "사도기센 예약은 배편 두 방향을 함께 봅니다",
+          "paragraphs": [
+            "사도기센 온라인 예약은 카페리 승객·차량과 제트포일을 지원합니다. 공식 안내 기준 예약 접수는 승선일 두 달 전부터 시작하며, 차량을 싣는 카페리는 전날 오후 9시까지, 승객만 타는 경우에는 출항 30분 전까지 온라인 신청할 수 있습니다. 카드 결제가 끝나면 QR 코드가 있는 디지털 승선권이 발급되고, 제트포일과 카페리 일부 좌석을 고를 수 있습니다.",
+            "갈 때 한 편만 잡고 돌아오는 배를 나중에 고르면 숙소·렌터카 반납·항공 연결이 함께 흔들릴 수 있습니다. 왕복 후보를 먼저 확인하고, 양쪽 배가 확보된 뒤 섬 안 일정을 맞추는 편이 안전합니다. 변경과 취소 조건, 기상에 따른 결항 가능성도 결제 전에 읽고, 출항 당일에는 운항 상태를 다시 확인합니다."
+          ],
+          "bullets": [
+            "예약 시작: 공식 안내 기준 승선일 두 달 전",
+            "차량 동반: 전날 오후 9시까지 온라인 예약 안내",
+            "승객만 탑승: 출항 30분 전까지 온라인 예약 안내",
+            "승선 직전: 스마트폰에 디지털 승선권 QR 코드 준비"
+          ],
+          "sources": [
+            "reservation-guide",
+            "boarding-guide"
+          ]
+        },
+        {
+          "id": "boarding",
+          "title": "출항 당일, 항구에서 놓치지 않을 순서",
+          "paragraphs": [
+            "당일 현장 구매자는 공식 안내상 출항 30~40분 전에 항구에 도착해 승선권을 사도록 권고됩니다. 개찰은 대략 출항 15~20분 전에 열립니다. 디지털 승선권이 있어도 교통 지연과 터미널 층간 이동을 생각하면 출항 시각에 맞춰 도착하는 일정은 피합니다. 차량을 싣는 경우에는 카페리 대기장에 적어도 출항 1시간 전 도착하라는 별도 안내가 있습니다.",
+            "수하물도 선박 연결의 일부입니다. 공식 기준으로 객실 반입 수하물은 세 변 합이 2m 미만, 30kg 이하, 1인 2개가 기본입니다. 자전거처럼 별도 수하물 운임이 필요한 물품은 당일 발권 절차가 추가될 수 있습니다. 큰 짐이 있다면 항공 수하물 기준만 볼 것이 아니라 사도기센 기준도 함께 확인합니다."
+          ],
+          "bullets": [
+            "운항 상태와 일주일 운항 전망 재확인",
+            "현장 구매라면 출항 30~40분 전 도착",
+            "디지털 승선권 QR 코드와 화면 밝기 준비",
+            "차량 선적·대형 짐·자전거는 별도 조건 확인"
+          ],
+          "sources": [
+            "boarding-guide",
+            "baggage-guide"
+          ]
+        },
+        {
+          "id": "complexity",
+          "title": "직접 갈 수 있지만, 연결 하나가 바뀌면 다음 예약도 움직입니다",
+          "paragraphs": [
+            "사도는 이 정보대로 직접 찾아갈 수 있습니다. 다만 국제선 또는 일본 국내 이동, 항구행 교통, 왕복 선박, 섬 안 렌터카나 버스가 차례로 연결됩니다. 앞 구간이 늦어지면 뒤 구간의 좌석·인수 시각·마지막 버스를 다시 맞춰야 한다는 점이 실제 준비의 어려움입니다.",
+            "그래서 혼자 준비할 때는 예약을 한 번에 끝내려 하기보다 변경 가능한 것과 변경하기 어려운 것을 구분합니다. 왕복 배편과 귀국 연결을 먼저 고정하고, 첫날과 마지막 날에는 섬 반대편까지 가는 일정을 넣지 않으며, 결항 때 머물 곳과 다음 이동편을 미리 적어 둡니다. 정보가 부족해서가 아니라 여러 운영 주체의 시간표를 한 일정으로 묶는 일이 이 여행의 핵심입니다."
+          ],
+          "bullets": [
+            "먼저 고정: 왕복 선박과 귀국 항공·철도 연결",
+            "함께 확인: 렌터카 인수·반납과 숙소 체크인",
+            "여유 확보: 첫날·마지막 날 장거리 섬 내 이동 제외",
+            "대안 준비: 결항·지연 때 숙박과 다음 이동편"
+          ],
+          "sources": [
+            "shared-timetable",
+            "reservation-guide",
+            "boarding-guide"
+          ]
+        }
+      ],
+      "sourceCatalog": [
+        {
+          "id": "shared-timetable",
+          "label": "사도기센 공식 · 니가타항↔료쓰항 최신 운항표",
+          "url": "https://www.sadokisen.co.jp/en/reservation/timetables/",
+          "official": true
+        },
+        {
+          "id": "access-map",
+          "label": "사도기센 공식 · 니가타역·공항에서 니가타항 이동",
+          "url": "https://www.sadokisen.co.jp/en/access-map/",
+          "official": true
+        },
+        {
+          "id": "airport-shuttle",
+          "label": "니가타공항 공식 · 사도기센 터미널 직행 미니라이너",
+          "url": "https://www.niigata-airport.gr.jp/access/liner/sado/?lang=en",
+          "official": true
+        },
+        {
+          "id": "ship-guide",
+          "label": "사도기센 공식 · 카페리와 제트포일 선박 안내",
+          "url": "https://www.sadokisen.co.jp/en/about-ships/",
+          "official": true
+        },
+        {
+          "id": "reservation-guide",
+          "label": "사도기센 공식 · 온라인 예약과 디지털 승선권",
+          "url": "https://www.sadokisen.co.jp/en/user-guide/reservation/",
+          "official": true
+        },
+        {
+          "id": "boarding-guide",
+          "label": "사도기센 공식 · 승객·차량 승선 절차",
+          "url": "https://www.sadokisen.co.jp/en/user-guide/without-car/",
+          "official": true
+        },
+        {
+          "id": "baggage-guide",
+          "label": "사도기센 공식 · 선내 반입 수하물 기준",
+          "url": "https://www.sadokisen.co.jp/en/user-guide/baggage/",
+          "official": true
+        }
+      ],
+      "images": [
+        {
+          "order": 1,
+          "afterSectionId": "route-map",
+          "localPath": "naver-blog/photos/sado-access/01-ryotsu-terminal.jpg",
+          "alt": "일본 니가타현 사도섬 료쓰항 사도기센 터미널 외관과 보행 연결교",
+          "credit": "ブルーノ・プラス · CC BY 4.0",
+          "notice": "2024년 사도 료쓰항 현지 촬영",
+          "sourcePageUrl": "https://commons.wikimedia.org/wiki/File:Ryoutsu_port_Terminal_2024.jpg",
+          "revisionUrl": "https://commons.wikimedia.org/w/index.php?title=File%3ARyoutsu%20port%20Terminal%202024.jpg&oldid=1214910983",
+          "photoStatus": "verified",
+          "license": "CC BY 4.0",
+          "width": 3840,
+          "height": 2880,
+          "sha256": "30e3cc4acf3967dda83eae2d5569d570984c14e57ca594def7a605df1eb2dd80"
+        },
+        {
+          "order": 2,
+          "afterSectionId": "boarding",
+          "localPath": "naver-blog/photos/sado-access/02-ticket-counter.jpg",
+          "alt": "사도 료쓰항 터미널의 카페리·제트포일 자동발권기와 개찰구",
+          "credit": "inunami · CC BY 2.0",
+          "notice": "2022년 사도 료쓰항 현지 촬영",
+          "sourcePageUrl": "https://commons.wikimedia.org/wiki/File:Sado_20220502183449_(52277212499).jpg",
+          "revisionUrl": "https://commons.wikimedia.org/w/index.php?title=File%3ASado%2020220502183449%20(52277212499).jpg&oldid=897854892",
+          "photoStatus": "verified",
+          "license": "CC BY 2.0",
+          "width": 3840,
+          "height": 2880,
+          "sha256": "b14587595f15599a3d55b490fa26a1170d5929006e97b0c363e5488299da2019"
+        }
+      ],
+      "internalLinks": [
+        {
+          "kind": "parent-naver-post",
+          "targetSlug": "sado",
+          "anchor": "일본 니가타 사도섬 2박 3일 전체 동선",
+          "status": "pending-public-url"
+        },
+        {
+          "kind": "foresttour-record",
+          "url": "https://foresttour.kr/stories/sado",
+          "anchor": "사도 금산·북택·슈쿠네기 여행지 기록",
+          "status": "verified"
+        }
+      ],
+      "productConnection": {
+        "status": "unavailable",
+        "note": "현재 공개 예약 화면에서 이 사도 동선과 정확히 일치하는 숲길여행 상품을 확인하지 못했습니다. 여행 정보만 제공합니다."
+      }
+    }
+  ]
+}

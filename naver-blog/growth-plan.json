@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "channel": "naver-blog",
+  "objective": "새로운 일본 여행지 소개 목적을 훼손하지 않으면서 네이버 검색 유입을 최대화한다.",
+  "officialGuidanceCheckedAt": "2026-07-31",
+  "officialGuidance": [
+    {
+      "label": "네이버 서치어드바이저 · 콘텐츠 작성시 권장 사항",
+      "url": "https://searchadvisor.naver.com/guide/content-basic"
+    },
+    {
+      "label": "네이버 서치어드바이저 · SEO 기본 가이드",
+      "url": "https://searchadvisor.naver.com/guide/seo-help"
+    },
+    {
+      "label": "네이버 데이터랩 · 검색어 트렌드",
+      "url": "https://datalab.naver.com/"
+    }
+  ],
+  "guardrails": {
+    "maxPostsPerWeek": 2,
+    "minimumDaysBetweenPosts": 3,
+    "maximumTitleLength": 40,
+    "maximumBodyOverlapPercent": 25,
+    "minimumNewOfficialSourcesForSupportPost": 2,
+    "minimumDistinctVerifiedImagesForSupportPost": 2,
+    "rules": [
+      "관련 없는 인기 검색어를 제목·태그·본문에 넣지 않는다.",
+      "같은 키워드를 반복하거나 비슷한 글을 기계적으로 양산하지 않는다.",
+      "모든 글은 새로운 일본 여행지를 이해하는 독립적인 질문 하나에 답한다.",
+      "지원 글은 기존 글을 잘라 재게시하지 않고 새로운 공식 자료와 현지 사진을 추가한다.",
+      "검색량이 높아도 여행지 발견 목적과 맞지 않는 주제는 발행하지 않는다.",
+      "정확히 일치하는 공개 상품이 없으면 상품 CTA를 붙이지 않는다."
+    ]
+  },
+  "clusters": [
+    {
+      "id": "sado-discovery",
+      "destinationSlug": "sado",
+      "country": "일본",
+      "region": "니가타",
+      "status": "pilot",
+      "searchEvidence": {
+        "checkedAt": "2026-07-31",
+        "method": "네이버 비로그인 검색 결과의 상위 제목을 제한적으로 수동 대조",
+        "demandStatus": "relative-volume-unverified",
+        "findings": [
+          "'사도섬 여행'은 여수 사도와 신안 12사도 결과가 다수를 차지해 검색 의도가 충돌한다.",
+          "'일본 사도섬 여행'과 '니가타 사도섬 여행'은 일본 사도 관련 결과로 정렬된다.",
+          "'사도섬 가는법'도 국내 섬 결과가 섞이므로 일본·니가타 한정어가 필요하다.",
+          "네이버 데이터랩 상대 검색량은 API 자격정보가 없어 아직 확인하지 못했다."
+        ]
+      },
+      "articles": [
+        {
+          "slug": "sado",
+          "role": "pillar",
+          "status": "published",
+          "publicUrl": "https://blog.naver.com/kkokko_hero/224364700027",
+          "publishedAt": "2026-08-01T13:38:11+09:00",
+          "primaryQuery": "일본 니가타 사도섬 여행",
+          "secondaryQueries": [
+            "니가타 사도 여행",
+            "일본 사도가시마 여행",
+            "사도 금산 여행",
+            "슈쿠네기 여행"
+          ],
+          "title": "일본 니가타 사도섬 여행 | 가는 법·금산·슈쿠네기 2박 3일 동선",
+          "question": "일본 사도섬은 어디에 있고, 어떻게 들어가며, 금산과 남쪽 항구 마을을 며칠에 나눠 봐야 하는가?",
+          "sourceGuideSections": [
+            "access",
+            "transport",
+            "plan",
+            "checklist",
+            "complexity"
+          ]
+        },
+        {
+          "slug": "sado-access",
+          "role": "support",
+          "status": "draft-ready",
+          "primaryQuery": "일본 사도섬 가는 법",
+          "secondaryQueries": [
+            "니가타항 사도 페리",
+            "료쓰항 제트포일",
+            "사도기센 예약"
+          ],
+          "title": "일본 사도섬 가는 법 | 니가타항 카페리·제트포일 비교",
+          "question": "니가타역에서 항구를 거쳐 사도 료쓰항까지 어떤 배를 어떻게 연결해야 하는가?",
+          "sourceGuideSections": [
+            "access"
+          ],
+          "draftSource": "naver-blog/support-drafts.json",
+          "researchEvidence": {
+            "officialSources": [
+              {
+                "label": "사도기센 공식 · 니가타역·공항에서 니가타항 이동",
+                "url": "https://www.sadokisen.co.jp/en/access-map/"
+              },
+              {
+                "label": "니가타공항 공식 · 사도기센 터미널 직행 미니라이너",
+                "url": "https://www.niigata-airport.gr.jp/access/liner/sado/?lang=en"
+              },
+              {
+                "label": "사도기센 공식 · 카페리와 제트포일 선박 안내",
+                "url": "https://www.sadokisen.co.jp/en/about-ships/"
+              },
+              {
+                "label": "사도기센 공식 · 온라인 예약과 디지털 승선권",
+                "url": "https://www.sadokisen.co.jp/en/user-guide/reservation/"
+              },
+              {
+                "label": "사도기센 공식 · 승객·차량 승선 절차",
+                "url": "https://www.sadokisen.co.jp/en/user-guide/without-car/"
+              },
+              {
+                "label": "사도기센 공식 · 선내 반입 수하물 기준",
+                "url": "https://www.sadokisen.co.jp/en/user-guide/baggage/"
+              }
+            ],
+            "verifiedImages": [
+              {
+                "photoStatus": "verified",
+                "sourcePageUrl": "https://commons.wikimedia.org/wiki/File:Ryoutsu_port_Terminal_2024.jpg",
+                "credit": "ブルーノ・プラス · CC BY 4.0",
+                "sha256": "30e3cc4acf3967dda83eae2d5569d570984c14e57ca594def7a605df1eb2dd80"
+              },
+              {
+                "photoStatus": "verified",
+                "sourcePageUrl": "https://commons.wikimedia.org/wiki/File:Sado_20220502183449_(52277212499).jpg",
+                "credit": "inunami · CC BY 2.0",
+                "sha256": "b14587595f15599a3d55b490fa26a1170d5929006e97b0c363e5488299da2019"
+              }
+            ],
+            "bodyOverlapPercent": 0.8
+          },
+          "publishGate": "기둥 글 공개·검증 후 새로운 공식 출처 2개와 독립 사진 2장을 추가"
+        },
+        {
+          "slug": "sado-transport",
+          "role": "support",
+          "status": "research-required",
+          "primaryQuery": "사도섬 렌터카 버스",
+          "secondaryQueries": [
+            "사도섬 버스 시간표",
+            "사도섬 렌터카",
+            "료쓰항 사도 금산 버스"
+          ],
+          "title": "일본 사도섬 교통 | 렌터카와 버스로 금산·오기 이동하기",
+          "question": "운전 가능 여부와 체류일에 따라 렌터카·버스·택시 중 무엇을 골라야 하는가?",
+          "sourceGuideSections": [
+            "transport",
+            "complexity"
+          ],
+          "publishGate": "실제 최신 버스 시간표와 렌터카 조건을 재확인하고 독립 사진 2장을 추가"
+        },
+        {
+          "slug": "sado-itinerary",
+          "role": "support",
+          "status": "research-required",
+          "primaryQuery": "니가타 사도섬 2박 3일",
+          "secondaryQueries": [
+            "사도섬 여행 코스",
+            "사도 금산 슈쿠네기 코스",
+            "사도섬 숙소 위치"
+          ],
+          "title": "니가타 사도섬 2박 3일 | 금산·오기·슈쿠네기 동선",
+          "question": "아이카와와 오기를 무리 없이 나누려면 2박 3일의 숙박·이동 순서를 어떻게 잡아야 하는가?",
+          "sourceGuideSections": [
+            "plan",
+            "checklist"
+          ],
+          "publishGate": "숙박 권역과 배편별 두 가지 동선을 추가하고 기존 본문과 중복률 25% 이하 확인"
+        }
+      ]
+    }
+  ],
+  "measurement": {
+    "checkpoints": [
+      "D+3",
+      "D+7",
+      "D+28"
+    ],
+    "metrics": [
+      "publicUrlVerified",
+      "targetQueryFound",
+      "rankBand",
+      "postViews",
+      "searchInflows",
+      "foresttourClicks"
+    ],
+    "rules": [
+      "공개 성공과 검색 노출 성공을 분리한다.",
+      "D+7에 목표 검색어로 발견되지 않으면 발행량을 늘리지 않고 제목·첫 문단·블로그 주제 설정을 먼저 진단한다.",
+      "D+28에 검색 유입이 확인된 질문만 다음 여행지 클러스터에 재사용한다.",
+      "개별 방문자의 검색어·계정·개인정보는 저장하지 않고 집계 수치만 기록한다."
+    ]
+  }
+}

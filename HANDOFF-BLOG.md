@@ -1,6 +1,7 @@
 # HANDOFF-BLOG.md — foresttour.kr 블로그 단일 인계서
 
 > 공개 원고, foresttour.kr 반영, 검색 발견, 익명 계측의 정본입니다.
+> **네이버 블로그 운영·발행 인계서는 `HANDOFF-NAVER-BLOG.md`입니다.**
 > 변하지 않는 편집 원칙은 `CLAUDE.md`, 설계와 완료 기준은
 > `strategy/foresttour-블로그-자동화-0731.md`, 최신 실행 증거는 `LOG.md` 맨 아래를 봅니다.
 >
