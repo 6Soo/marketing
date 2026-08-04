@@ -1349,3 +1349,54 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
   `HANDOFF-BAND.md` / `HANDOFF-INSTAGRAM.md` / `HANDOFF-BLOG.md`를 읽는다.
 - 이 세션에서 콘텐츠·운영 코드·외부 서비스 상태는 변경하지 않았다. 하네스 문서와 이 LOG만
   변경했다.
+
+---
+
+## 2026-08-04 — Instagram 릴스 재제작·실게시 세션 최종 인계
+
+### 요청부터 결과까지
+
+- Instagram 관련 전체 인계를 받아 우선순위대로 자동 진행했다. 사용자는 브라우저를 WSL 안에서
+  작동시키고 필요 시 인증을 요청하라고 했으며, headed 브라우저에서 직접 Instagram 로그인을 마쳤다.
+- 최초 북알프스 카드 기반 릴스를 실험 `northern-alps-reel-005`로 분리해 게시했다.
+  공개 URL은 https://www.instagram.com/reel/DbYStVwAgWC/, media_id `17900043246542457`,
+  Actions 실행 `30459242585`다.
+- 사용자가 “북알프스 전환에 비해 텍스트가 너무 많다”고 반박해 여행 계정 릴스를 실물 조사했다.
+  풍경 중심 계정의 반복 패턴을 따라 카드 PNG·질문 훅·화면 CTA를 폐기하고 10초 원본 사진형 V2를
+  새로 제작했다. 텍스트는 `북알프스` 한 번만 1.8초 노출한다.
+- V2는 `northern-alps-scenic-reel-006`으로 별도 게시했다. 공개 URL은
+  https://www.instagram.com/reel/DbYtkZ_Dr1f/, media_id `18151561438511467`, Actions 실행
+  `30477994943`다. 구현 `bbcf689`, 게시 변형·실험 `766dd6b`, 게시 기록 `f979b24`.
+
+### 설계 검증
+
+- GPT-5.6 Sol medium이 구현했고 Claude Opus 5 medium이 반박·검증했다.
+- Opus는 3개 문구를 남긴 초기 안을 “카드뉴스 축약”으로 반려해 장소명 한 줄만 남기게 했다.
+- 첫 완성본의 1600×1067 로프웨이 사진도 9:16 크롭 실효 폭 600px로 부족하다고 반려했다.
+  Commons CC0 `AlpineRoute6302.jpg`(lumoplank, 로컬 3840×2559)로 교체해 최종 PASS를 받았다.
+
+### GitHub Actions 실패 화면 진단
+
+- 사용자 제공 화면은 게시 실패가 아니라 체크포인트 실행 `30502992132`의 상태 보고 실패였다.
+  foresttour 수집 뒤 Instagram 스냅샷 기록이 조건식 때문에 건너뛰어져 보고서가 종료 코드 2를 냈다.
+- `68e7102`로 스냅샷 소비 조건을 고쳤고 실행 `30503086785`·`30503139708`은 성공했다.
+- 그러나 북알프스 릴스 두 실험의 24h·72h Instagram source group은 이미 유예를 지나 영구 누락이다.
+  현재 report는 둘 다 `collecting`, 다음 창은 7d로 판정한다.
+
+### 다음 작업의 정확한 시작점
+
+1. 7d 수집: `northern-alps-reel-005`는 2026-08-05 23:08 KST,
+   `northern-alps-scenic-reel-006`은 2026-08-06 03:02 KST 이후 결과를 확인한다.
+2. Instagram + foresttour source group이 모두 있어야 두 형식의 성과를 비교한다. 현재 웹 행동은
+   visit 1, 나머지 0이라 우열 판단 근거가 없다.
+3. 사도 공개 캐러셀 `/p/DbRD-fWkyUL/`의 `Tensaibuta` 크레딧은 UI에서 아직 교정하지 않았다.
+4. reservation CTA 복원본은 `/tmp/cta-recovery.S5RFvT`에서 91 tests·tsc·변경 파일 ESLint·build를
+   통과했지만 미커밋·미푸시다. 임시 경로를 영구 보존으로 간주하지 않는다.
+5. 히다·산리쿠 placeholder 사진 교체는 미착수다.
+
+### 이번 인계 문서 갱신 검증
+
+- 원격 main을 fast-forward한 뒤 `HANDOFF-INSTAGRAM.md`와 `LOG.md`만 갱신했다.
+- 사용자 기존 변경 `package-lock.json`은 stash 후 그대로 복원해 커밋 대상에서 제외했다.
+- 수행: GPT-5.6 Sol medium. 현재 Orca 워커 규칙에 따라 새 모델·CLI 재위임 없이 실제 파일,
+  git 이력, `npm run activation:status` 출력으로 재검증했다.

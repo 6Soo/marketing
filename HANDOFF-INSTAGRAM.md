@@ -609,3 +609,71 @@ Pixabay 라이선스 화면에 `Content ID Registered` 배지가 있고, 업로�
 *이 문서의 사실 검증: Opus 5(설계·최종 확정) ↔ Fable 5(반박 검증) 상호 검증 — `AGENTS.md` §0-A 절차.
 GPT 5.6 Sol 측 교차검증은 이 환경에 브리지가 없어 **미수행**이다. 인벤토리 수집은 저추론 레인
 위임(AGY Flash 3.6 불가 → Sonnet 대체) 후 Opus가 `gh`·파일 실조회로 재검증했다.*
+
+---
+
+## 13. 최신 세션 인계 — 2026-08-04 (이전의 “릴스 미게시” 상태를 대체)
+
+### 실제 게시 완료
+
+| 실험 | 형식 | 공개 URL | media_id | Actions 실행 |
+|---|---|---|---|---|
+| `northern-alps-reel-005` | 기존 카드 기반 릴스 | https://www.instagram.com/reel/DbYStVwAgWC/ | `17900043246542457` | `30459242585` |
+| `northern-alps-scenic-reel-006` | 풍경 중심 V2 | https://www.instagram.com/reel/DbYtkZ_Dr1f/ | `18151561438511467` | `30477994943` |
+
+따라서 §9·§12 및 문서 중간의 **“생성 완료·미게시”, “한 번의 디스패치가 남음”은 과거 상태**다.
+두 게시물 모두 Graph API 게시와 0h 기록까지 완료됐다.
+
+### 풍경 중심 V2의 확정 설계와 자산
+
+- 사용자 피드백: 북알프스 전환본은 텍스트가 지나치게 많고 카드뉴스를 영상으로 옮긴 수준이었다.
+- 로그인된 Instagram 여행 릴스 실물 대조 결과, 성과가 큰 풍경 릴스는 화면 문구가 없거나 장소명
+  한 줄만 쓰는 경우가 반복됐다. 이에 기존 카드 PNG를 읽지 않는 방식으로 처음부터 다시 만들었다.
+- `cardnews/tools/build-scenic-reel.mjs` →
+  `cardnews/out/northern-alps/reel-scenic-v2.mp4`:
+  10.00초, 1080×1920, H.264 High, 30fps, AAC 44.1kHz, 약 8.8MB.
+- 구성은 설원 산장 → 미쿠리가이케 → 가을 능선 → 겨울 폭포의 계절 루프이며, 화면 텍스트는
+  첫 1.8초의 `북알프스` 한 번뿐이다. 질문 훅·화면 CTA·카드 레이아웃은 제거했다.
+- Opus 5 medium의 1차 검증에서 로프웨이 사진의 세로 크롭 실효 해상도가 부족해 반려됐다.
+  Commons CC0 `AlpineRoute6302.jpg`(lumoplank, 로컬 3840×2559)로 교체한 뒤 재검증 **PASS**를 받았다.
+- 관련 구현 커밋: `bbcf689`; 게시 변형·실험 추가: `766dd6b`; 게시 기록: `f979b24`.
+
+### 체크포인트와 실패 화면의 정확한 의미
+
+- 사용자가 전달한 GitHub Actions 실패 화면은 릴스 업로드 실패가 아니다. 실행 `30502992132`
+  (`Instagram activation checkpoints #32`)의 마지막 상태 보고 단계가 종료 코드 2를 낸 것이다.
+- 당시 foresttour 기록은 저장됐지만 Instagram 스냅샷 소비 조건이 잘못되어 source group이 비었다.
+  `68e7102`에서 실제 생성된 Instagram 스냅샷을 무조건 소비하도록 고쳤고, 후속 실행
+  `30503086785`·`30503139708`은 성공했다.
+- 다만 릴스 두 실험의 24h·72h에는 `foresttour-admin`만 있고 Graph API/UI 소스가 없다.
+  `npm run activation:status`의 현재 판정은 두 창 모두 **missed(복구 불가)**다. 수집된 웹 방문 수도
+  각 1이며 context/related/discoveries/tour는 0이라, 카드형과 풍경형의 성과 우열을 주장할 수 없다.
+- 다음 유효 창은 7d다: 기존 릴스 `2026-08-05 23:08 KST`, 풍경 V2 `2026-08-06 03:02 KST`.
+  자동 수집 후 Instagram + foresttour 두 source group이 모두 기록됐는지 확인해야 한다.
+
+### 브라우저·인증 상태
+
+- 브라우저 조작은 WSL에서 시작했고, Instagram 로그아웃 상태에서 headed 브라우저를 열어 사용자가
+  직접 로그인했다. 로그인 완료 뒤 여행 릴스 조사와 공개 URL 확인을 진행했다.
+- 다음 세션도 브라우저 조작 전 WSL Orca computer-use의 `status`·capabilities를 확인한다.
+  세션 만료·2차 인증·CAPTCHA는 우회하지 말고 사용자 인증을 요청한다.
+
+### 미결 사항 — 우선순위
+
+1. **7d 체크포인트 보존**: 두 릴스 모두 해당 시각 뒤 자동 수집 결과와 source group 완결성을 확인한다.
+2. **성과 해석 보류**: 7d Instagram 지표가 실제 저장되기 전에는 V2가 더 낫다고 결론내리지 않는다.
+3. **사도 공개 캡션 크레딧**: `/p/DbRD-fWkyUL/`의 잘못된 `Tensaibuta` 표기는 이 세션에서
+   수정하지 못했다. 로그인된 UI에서 실제 렌더 자산 기준 저작자 4인으로 수동 교정하고 재확인한다.
+4. **CTA 브랜치 보존**: 손상된 Windows worktree에서 알려진 10개 파일을 임시 clone
+   `/tmp/cta-recovery.S5RFvT`에 복원해 91 tests·tsc·변경 파일 ESLint·build 통과까지 확인했지만,
+   이 세션에서는 커밋·푸시하지 않았다. 임시 경로는 영구 보존으로 간주하지 말고 reservation 리포에서
+   다시 확인한다.
+5. 히다·산리쿠는 여전히 `photoStatus: placeholder`다. 사진 권리와 수량을 먼저 확보한다.
+
+### 모델·검증 기록
+
+- 콘텐츠 재설계·구현: GPT-5.6 Sol medium.
+- 디자인 반박·최종 검증: Claude Opus 5 medium. “3문구도 카드뉴스 축약” 및 첫 컷 해상도 부족
+  반박을 모두 수용했고, 교체본에 최종 PASS를 받았다.
+- 이 2026-08-04 인계 갱신은 현재 워커 규칙에 따라 GPT-5.6 Sol medium이 실제 파일·git 이력·
+  activation report를 직접 재검증했으며 새 모델 재위임은 하지 않았다.
