@@ -1,0 +1,40 @@
+{
+  "commonsTitle": "File:田老海岸 - panoramio.jpg",
+  "descriptionPage": "https://commons.wikimedia.org/wiki/File:%E7%94%B0%E8%80%81%E6%B5%B7%E5%B2%B8_-_panoramio.jpg",
+  "revisionId": 1087804616,
+  "revisionTimestamp": "2025-09-19T15:09:43Z",
+  "revisionUrl": "https://commons.wikimedia.org/w/index.php?title=File%3A%E7%94%B0%E8%80%81%E6%B5%B7%E5%B2%B8%20-%20panoramio.jpg&oldid=1087804616",
+  "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3c/%E7%94%B0%E8%80%81%E6%B5%B7%E5%B2%B8_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/%E7%94%B0%E8%80%81%E6%B5%B7%E5%B2%B8_-_panoramio.jpg/3840px-%E7%94%B0%E8%80%81%E6%B5%B7%E5%B2%B8_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "description": "田老海岸",
+  "categories": [
+    "CC-BY-3.0",
+    "Files with coordinates missing SDC location of creation",
+    "Geography of Miyako, Iwate",
+    "Japan photographs taken on 2014-11-04",
+    "Panoramio files uploaded by Panoramio upload bot",
+    "Panoramio images reviewed by trusted users",
+    "Photos from Panoramio",
+    "Photos from Panoramio ID 1146018",
+    "Sanriku-Fukko National Park"
+  ],
+  "gps": {
+    "latitude": "39.734733",
+    "longitude": "141.984944"
+  },
+  "author": "Yoshio Kohara",
+  "credit": "https://web.archive.org/web/20161101005617/http://www.panoramio.com/photo/115945895",
+  "license": "CC BY 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+  "usageTerms": "Creative Commons Attribution 3.0",
+  "dateCreated": "Taken on 4 November 2014",
+  "downloadedAt": "2026-08-04T13:02:57.956Z",
+  "mime": "image/jpeg",
+  "originalWidth": 4509,
+  "originalHeight": 2300,
+  "width": 2000,
+  "height": 1020,
+  "commonsSha1": "efd02900bd64235f953ca355398ee044d2c45766",
+  "sha256": "d9cff6e89f1d4a46b114060a12ad4d1c98990debb507b7a69b0fc94b2fcff9c4",
+  "importModification": "Wikimedia Commons가 원본을 2000×1020 썸네일로 축소"
+}

@@ -1331,3 +1331,33 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
   `HANDOFF-BAND.md` / `HANDOFF-INSTAGRAM.md` / `HANDOFF-BLOG.md`를 읽는다.
 - 이 세션에서 콘텐츠·운영 코드·외부 서비스 상태는 변경하지 않았다. 하네스 문서와 이 LOG만
   변경했다.
+## 2026-08-04 네이버 블로그 인계 재개와 산리쿠 현지 사진 교체
+
+- `HANDOFF-BLOG.md` 기준 미완료 작업을 복원했다. 네이버 서치어드바이저는 WSL computer-use의
+  지정 실행 파일 `orca-ide`가 설치되어 있지 않아 `command not found`로 중단했다. 로그인·2차
+  인증을 우회하거나 다른 Orca 빌드로 임의 전환하지 않았다.
+- 다음 편집 우선순위였던 산리쿠·히다 placeholder 사진을 실제 현지 촬영 7장으로 교체했다.
+  - 다로 해안: Yoshio Kohara, CC BY 3.0
+  - 산리쿠 철도 오사와 교량: くろふね, CC BY 3.0
+  - 기타야마자키: Raita Futo, CC BY 2.0
+  - 조도가하마: Raita Futo, CC BY 2.0
+- 히다에는 663highland의 다카야마 산마치·시라카와고·게로 온천 현지 사진 3장(CC BY 2.5)을
+  적용했다.
+- Wikimedia Commons 원문 리비전·GPS·저작자·라이선스·SHA-256을
+  `cardnews/photos/sanriku/blog-*.jpg.source.json`에 보존했다. CC BY-SA 후보는 프로젝트 정책에
+  따라 제외했다. 미치노쿠 시오카제 트레일 절은 정확한 장면의 사진을 확보하지 못해 대역 이미지를
+  남기지 않고 해당 절 이미지를 생략했다. 고소데 해안 후보는 원고에 반영하지 않았다.
+- `blog/published/stories.json`과 예약 리포의 폴백 번들을 동기화하고, 예약 리포
+  `public/stories/sanriku/`와 `public/stories/hida/`에 렌더 자산 7장을 추가했다. 산리쿠·히다는
+  모두 `photoStatus: verified`이며 대표 OG도 현지 사진을 쓴다.
+- 검증: 마케팅 `blog:validate`, `test:blog` 4/4, 양쪽 원고 byte 일치. 예약 리포 전체 테스트
+  90/90, TypeScript, Next.js 16.2.9 프로덕션 빌드(53페이지), 로컬 발견 퍼널 14개 URL 통과.
+- 예약 리포에는 기존 사용자 작업인 `LOG.md`, `src/app/leader/[token]/page.tsx`,
+  `src/lib/leaderRosterStorage.ts`, `tests/leaderRosterStorage.test.ts` 변경이 있어 건드리거나
+  스테이징하지 않았다. 커밋·푸시·배포도 수행하지 않았다.
+- 수행·최종 판단 모델: GPT-5.6 Sol. 별도 검증 모델: 미사용. 현재 세션은 AGENTS 워커 규칙상
+  다른 모델·CLI 재위임이 금지되어 Fable 교차검증을 호출하지 못했다. 주요 자체 반박은 “트레일에
+  유사 현지 사진을 넣지 말 것”이었고, 이미지 생략으로 수용했다. 실제 파일·라이선스 메타데이터·
+  테스트·로컬 HTTP 결과로 재검증했다.
+- 다음 작업: 네이버 UI 작업은 WSL에 지정 Orca CLI가 복구된 뒤 재개한다. 새 글을 만들 때는
+  카드 사실 검증을 재사용하되 초안 결과를 사실로 간주하지 않는다.

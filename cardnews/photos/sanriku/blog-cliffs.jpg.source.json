@@ -1,0 +1,36 @@
+{
+  "commonsTitle": "File:Iwate Coastal Cliff (51971269859).jpg",
+  "descriptionPage": "https://commons.wikimedia.org/wiki/File:Iwate_Coastal_Cliff_(51971269859).jpg",
+  "revisionId": 1135370677,
+  "revisionTimestamp": "2025-12-23T05:50:57Z",
+  "revisionUrl": "https://commons.wikimedia.org/w/index.php?title=File%3AIwate%20Coastal%20Cliff%20(51971269859).jpg&oldid=1135370677",
+  "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/15/Iwate_Coastal_Cliff_%2851971269859%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Iwate_Coastal_Cliff_%2851971269859%29.jpg/3840px-Iwate_Coastal_Cliff_%2851971269859%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "description": "岩手の北山崎",
+  "categories": [
+    "CC-BY-2.0",
+    "Files with coordinates missing SDC location of creation",
+    "Flickr images missing SDC published in",
+    "Flickr images reviewed by FlickreviewR 2",
+    "Kitayamazaki"
+  ],
+  "gps": {
+    "latitude": "39.979044",
+    "longitude": "141.955777"
+  },
+  "author": "Raita Futo from Tokyo, Japan",
+  "credit": "Iwate Coastal Cliff",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "usageTerms": "Creative Commons Attribution 2.0",
+  "dateCreated": "2020-11-05 15:11",
+  "downloadedAt": "2026-08-04T13:05:10.552Z",
+  "mime": "image/jpeg",
+  "originalWidth": 5893,
+  "originalHeight": 3929,
+  "width": 2000,
+  "height": 1333,
+  "commonsSha1": "acec17746179fe3d5ba5f7168a871aaad6acd5dc",
+  "sha256": "bab2eef3cd87d8bf52006bd4db880fda126e76b7dabe12526018be872bbe3c97",
+  "importModification": "Wikimedia Commons가 원본을 2000×1333 썸네일로 축소"
+}
