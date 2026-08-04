@@ -1122,6 +1122,24 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
 
 ---
 
+## 2026-08-04 — BAND 전면 인계 세션 종료
+
+- BAND 전략·운영·OG·도구 상태를 `HANDOFF-BAND.md` 단일 인계서로 통합했다.
+- WSL Orca CLI → Windows Edge 경로로 BAND UI를 실측하고 `post/1425`의 5시간 값
+  (`0 읽음 / 댓글 0 / 반응 0`)과 일정 자동 공유글 최소 6건 연속·읽음 1~2를 확인했다.
+- Fable 5 medium 반박에 따라 쿠키 없는 WSL HTTP 요청으로 공개 HTML의 제목·설명·canonical을
+  확인했다. 공개성 검증은 수용했고 게시 실패 가설은 기각했다.
+- `tools/band-publish.mjs`를 fail-closed로 변경했다. Gemini 오류·빈 응답 시 원문을 성공 초안처럼
+  저장하지 않는다. `npm run test:band` 2건 통과.
+- 최종 커밋 `a09163b`를 `origin/main`에 푸시했다. 원격 선행 변경은 rebase로 통합했고,
+  사용자 소유 `package-lock.json` 변경은 SHA-256 동일 상태로 보존했다.
+- 예정된 24h(07-30 17:46)·72h(08-01 17:46) BAND 체크포인트는 이 세션에서 기한 내 수집하지
+  못했다. 현재 누적값을 과거 체크포인트로 소급하지 않고 두 지점은 `missed`, 다음 조회는
+  `late_current`로 기록한다.
+- 전체 세션 상세: `HANDOFF-SESSION-2026-08-04.md`.
+
+---
+
 ## 2026-07-29 — Instagram 전면 인계 후 자동 실행 착수
 
 - 인계 문서의 우선순위를 재검증하고, 북알프스 릴스를 기존 캐러셀 실험에 섞지 않기 위해
