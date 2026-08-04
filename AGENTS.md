@@ -5,12 +5,12 @@
 > 그래서 이 파일이 공통 진입점입니다.
 
 ## 0. 먼저 읽을 순서
-1. **CLAUDE.md** (리포 루트) — 회사 컨텍스트·마케팅 원칙.
-2. **§0-A 모델 라우팅 지침**(바로 아래) — 어느 모델이 무엇을 맡는지의 정본.
-3. 채널별 단일 인계서 — BAND는 **HANDOFF-BAND.md**, Instagram은 **HANDOFF-INSTAGRAM.md**,
+1. **§0-A 모델 라우팅 지침**(바로 아래) — 어느 모델이 무엇을 맡는지의 정본.
+2. **CLAUDE.md** (리포 루트) — 회사 컨텍스트·마케팅 원칙.
+3. 작업할 채널의 단일 인계서 — BAND는 **HANDOFF-BAND.md**, Instagram은 **HANDOFF-INSTAGRAM.md**,
    foresttour.kr 블로그는 **HANDOFF-BLOG.md**.
-4. **LOG.md** 맨 아래 "세션 핸드오프" 블록 — 최신 세션이 한 일 / 배포·런타임 상태 / 미결 / 함정 / 부트스트랩.
-5. (있으면) 하위 `docs/`, `learning/`.
+4. 상세 이력이 필요한 경우에만 **LOG.md** 맨 아래 최신 "세션 핸드오프" 블록.
+5. 작업에 직접 관련된 하위 문서만 읽는다. 전체 `learning/`을 선행 로드하지 않는다.
 
 ## 0-A. 모델 교차검증·폴백 정책 (사장 지시 2026-07-29)
 
@@ -49,38 +49,9 @@
   공개 URL로 결과를 재검증한다.
 - 로그인 만료·2차 인증·CAPTCHA·권한 부족은 우회하지 않는다.
 
-## 1. MCP 설정 — Antigravity 동등 구성
-이 프로젝트의 Claude 세션이 쓴 MCP 서버:
-- **GitHub**(PR·이슈·코드) — 공식 `github/github-mcp-server`.
-- **Gmail · Google Drive · Google Calendar** — 구글 공식 Google Workspace MCP 또는 `aaronsb/google-workspace-mcp`.
-- **Figma**(디자인 작업 시).
-- **claude-code-remote**(send_later·트리거·PR 활동 구독) — **Claude 전용, 이식 불가**(§3).
+## 1. 도구·에이전트 차이
 
-**Antigravity 설정 위치**: 설정 파일 `~/.gemini/antigravity/mcp_config.json`, 또는 IDE 에이전트 패널
-`···` → **MCP Servers → View raw config**. 형식(`mcpServers`): 로컬 서버는 `command`/`args`/`env`,
-원격 서버는 `serverUrl`/`headers`.
-```json
-{
-  "mcpServers": {
-    "github": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-github"], "env": { "GITHUB_TOKEN": "<토큰>" } },
-    "google-workspace": { "command": "uvx", "args": ["google-workspace-mcp"], "env": { "GOOGLE_OAUTH_CLIENT_ID": "...", "GOOGLE_OAUTH_CLIENT_SECRET": "..." } }
-  }
-}
-```
-**OAuth 인증 계정**: Gmail·Drive·Calendar는 반드시 **kkokkohero6@gmail.com**(운영 계정 — 메일함·시트·드라이브 소유)로
-인증. GitHub는 **6Soo** 조직 접근 권한이 있는 계정.
-
-**설정 안 하면**: 코드 작업(편집·빌드·git)은 되지만 **메일/드라이브/캘린더는 수동**이 됩니다. 이 세션이 만든
-메일 초안(있다면)은 **Gmail 임시보관함(Drafts)** 에 있고, 자동 발송은 하지 않습니다.
-
-## 2. Gemini/GLM 브리지 (이 리포의 모델 위임 실체)
-CLAUDE.md "모델 역할 분담"의 실체는 `tools/gemini.mjs`(기본 `gemini-3.6-flash`) ·
-`tools/llm-bridge.mjs --provider=glm`. 순수 텍스트 API라 파일·git 접근이 없어, Claude 세션에서는
-저비용 sonnet 래퍼가 이들을 호출·적용한다. **Antigravity/Cursor에서는 이 위임 구조가 그대로
-넘어가지 않으므로**, 그 에이전트의 기본 모델이 직접 수행하면 된다(키만 있으면 브리지 스크립트 자체는 실행 가능).
-
-## 3. 에이전트 차이 — Claude 전용 기능은 안 넘어감
-- **서브에이전트 병렬 위임**(Opus가 sonnet+gemini 래퍼를 띄우는 구조): Claude 전용. 다른 에이전트는 직접 수행.
-- **claude-code-remote**(send_later 예약·PR 구독·트리거): Claude 세션 바인딩. 대체 = OS 크론 / GitHub Actions.
-- **Artifact 렌더·SendUserFile**: Claude UI 전용 전달 방식.
-→ 요약: **코드/문서 작업은 어느 에이전트든 이어받을 수 있으나, 조율·자동화·전달 계층은 다시 구성해야 함.**
+- 현재 환경에 실제로 노출된 도구만 사용하고, 없는 MCP·모델·UI 기능을 썼다고 기록하지 않는다.
+- Gmail·Drive·Calendar 작업은 운영 Google 계정, GitHub 작업은 조직 접근 계정의 인증이 필요하다.
+  인증이 없으면 우회하지 말고 로컬에서 가능한 작업까지만 수행한다.
+- 외부 메시지는 초안까지만 만들며, 명시적 발송 요청 없이는 보내지 않는다.
