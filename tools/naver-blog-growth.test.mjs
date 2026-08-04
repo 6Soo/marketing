@@ -82,6 +82,11 @@ test('지원 글은 신규 공식 출처·사진·낮은 중복률 없이 ready�
 
 test('공개 URL 검증 전에는 검색 관측값을 만들 수 없다', () => {
   const current = state();
+  current.registry = {
+    schemaVersion: 1,
+    channel: 'naver-blog',
+    posts: [],
+  };
   assert.throws(
     () => createObservation({
       slug: 'sado',

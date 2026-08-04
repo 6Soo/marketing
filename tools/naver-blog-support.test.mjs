@@ -34,12 +34,21 @@ const registryPayload = JSON.parse(
 const rootDir = fileURLToPath(new URL('..', import.meta.url));
 
 function state() {
+  const plan = structuredClone(planPayload);
+  const pillar = plan.clusters[0].articles.find((article) => article.slug === 'sado');
+  pillar.status = 'staged';
+  delete pillar.publicUrl;
+  delete pillar.publishedAt;
   return {
     drafts: structuredClone(draftsPayload),
-    plan: structuredClone(planPayload),
+    plan,
     stories: structuredClone(storiesPayload),
     guides: structuredClone(guidesPayload),
-    registry: structuredClone(registryPayload),
+    registry: {
+      schemaVersion: registryPayload.schemaVersion,
+      channel: registryPayload.channel,
+      posts: [],
+    },
     rootDir,
   };
 }
@@ -66,7 +75,7 @@ test('사도 가는 법 지원 글은 신규 공식 출처·별도 사진·낮�
   assert.deepEqual(result.errors, []);
   const metric = result.metrics.get('sado-access');
   assert.equal(metric.bodyLength, 4935);
-  assert.equal(metric.overlapPercent, 1.3);
+  assert.equal(metric.overlapPercent, 0.8);
   assert.equal(metric.newOfficialSourceCount, 6);
   assert.equal(metric.verifiedImageCount, 2);
   assert.equal(metric.publishReady, false);
@@ -267,7 +276,7 @@ test('growth-plan의 검색 의도·출처·실측 중복률과 초안이 어긋
   const result = await validateSupportWorkspace(current);
   assert.ok(result.errors.some((error) => error.includes('searchIntent가 growth-plan과 다릅니다')));
   assert.ok(result.errors.some((error) => error.includes('신규 공식 출처가 지원 글 실제 출처와 다릅니다')));
-  assert.ok(result.errors.some((error) => error.includes('실측 1.3')));
+  assert.ok(result.errors.some((error) => error.includes('실측 0.8')));
 });
 
 test('5어절 중복률은 지원 글 기준으로 결정적으로 계산한다', () => {

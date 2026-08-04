@@ -72,6 +72,20 @@ function imageCaption(image) {
   return `사진 출처: ${normalizeSpace(image.credit)} · ${normalizeSpace(image.notice)}`;
 }
 
+function imageAttributionToken(image) {
+  const credit = normalizeSpace(image.credit);
+  const creator = credit.split(' · ')[0];
+  const rights = credit.match(/CC BY(?: [0-9.]+)?|CC0|Public Domain|퍼블릭 도메인/i)?.[0];
+  if (!creator || !rights) return '';
+  const compactRights = /Public Domain|퍼블릭 도메인/i.test(rights) ? 'PD' : rights;
+  return `${creator}(${compactRights})`;
+}
+
+function renderPhotoAttribution(story, images) {
+  const tokens = [...new Set(images.map(imageAttributionToken).filter(Boolean))];
+  return `사진: ${tokens.join(', ')} · 상세: ${story.canonical}`;
+}
+
 function normalizeTag(value) {
   return normalizeSpace(value)
     .replace(/^#+/, '')
@@ -84,6 +98,7 @@ function contentDigestInput(pkg) {
     body: pkg.body,
     tags: pkg.tags,
     images: pkg.images,
+    photoAttribution: pkg.photoAttribution,
     source: pkg.source,
     verificationAnchors: pkg.verificationAnchors,
     productConnection: pkg.productConnection,
@@ -115,12 +130,7 @@ function collectStoryImages(story) {
 
 function renderImageBlock(image) {
   if (!image) return [];
-  return [
-    `[사진 ${image.order}] ${image.alt}`,
-    image.caption,
-    `사진 원문: ${image.sourcePageUrl}`,
-    '',
-  ];
+  return [];
 }
 
 function renderGuideSection(section) {
@@ -152,7 +162,7 @@ function renderProductConnection(story, guide) {
   ];
 }
 
-function renderSummaryBody(story, guide, images) {
+function renderSummaryBody(story, guide, images, photoAttribution) {
   const hero = images[0];
   const imagesBySectionId = new Map(images.map((image) => [image.sectionId, image]));
   const blocks = [
@@ -184,7 +194,7 @@ function renderSummaryBody(story, guide, images) {
   story.sources.forEach((source) => {
     blocks.push(`- ${normalizeSpace(source.label)}: ${source.url}`);
   });
-  blocks.push('', '※ 사진의 촬영지·저작자·라이선스는 각 이미지 아래에 표시했습니다.');
+  blocks.push('', photoAttribution);
 
   return blocks.join('\n').replaceAll(/\n{3,}/g, '\n\n').trim();
 }
@@ -202,14 +212,15 @@ export function buildNaverPackage(story, guide) {
   const sourceDigest = digest(story);
   const guideDigest = digest(guide);
   const tags = [...new Set([...story.keywords, ...guide.keywords].map(normalizeTag).filter(Boolean))].slice(0, 10);
-  const body = renderSummaryBody(story, guide, images);
+  const photoAttribution = renderPhotoAttribution(story, images);
+  const body = renderSummaryBody(story, guide, images, photoAttribution);
   const verificationAnchors = [
     title,
     story.canonical,
     ...story.sections.slice(0, 2).map((section) => normalizeSpace(section.title)),
     ...guide.sections.map((section) => normalizeSpace(section.title)),
     ...guide.sections.flatMap((section) => section.sources.map((source) => source.url)),
-    ...images.flatMap((image) => [image.caption, image.sourcePageUrl]),
+    photoAttribution,
   ];
 
   const pkg = {
@@ -229,6 +240,7 @@ export function buildNaverPackage(story, guide) {
     body,
     tags,
     images,
+    photoAttribution,
     productConnection: guide.productConnection,
     verificationAnchors,
     contentDigest: '',
@@ -412,13 +424,21 @@ export function validateNaverPackage(pkg, sourceStory, guide) {
       if (!String(image.notice ?? '').includes('현지 촬영')) {
         errors.push(`${label}.notice에 현지 촬영을 명시해야 합니다.`);
       }
-      if (nonEmptyString(image.caption) && !String(pkg.body ?? '').includes(image.caption)) {
-        errors.push(`${label}.caption이 body에서 누락되었습니다.`);
-      }
-      if (nonEmptyString(image.sourcePageUrl) && !String(pkg.body ?? '').includes(image.sourcePageUrl)) {
-        errors.push(`${label}.sourcePageUrl이 body에서 누락되었습니다.`);
-      }
     });
+  }
+
+  if (!nonEmptyString(pkg.photoAttribution)) {
+    errors.push('photoAttribution이 필요합니다.');
+  } else {
+    const expectedAttribution = sourceStory && Array.isArray(pkg.images)
+      ? renderPhotoAttribution(sourceStory, pkg.images)
+      : '';
+    if (expectedAttribution && pkg.photoAttribution !== expectedAttribution) {
+      errors.push('photoAttribution이 현재 이미지 저작자·라이선스와 다릅니다.');
+    }
+    if (!String(pkg.body ?? '').includes(pkg.photoAttribution)) {
+      errors.push('photoAttribution이 body에서 누락되었습니다.');
+    }
   }
 
   if (!Array.isArray(pkg.verificationAnchors) || pkg.verificationAnchors.length < 4) {

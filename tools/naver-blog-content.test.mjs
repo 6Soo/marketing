@@ -37,8 +37,11 @@ test('verified 현지 사진 원고를 결정적 네이버 장문 패키지로 �
   assert.equal(validateNaverPackage(first, source, travelGuide).length, 0);
   assert.equal(first.editorialMode, 'destination-guide-with-practical-access');
   assert.ok(first.body.includes(source.canonical));
-  assert.ok(first.images.every((image) => first.body.includes(image.caption)));
-  assert.ok(first.images.every((image) => first.body.includes(image.sourcePageUrl)));
+  assert.ok(first.body.includes(first.photoAttribution));
+  assert.equal((first.body.match(/사진:/g) || []).length, 1);
+  assert.equal(first.body.includes('사진 출처:'), false);
+  assert.equal(first.body.includes('사진 원문:'), false);
+  assert.ok(first.images.every((image) => !first.body.includes(image.sourcePageUrl)));
   assert.ok(travelGuide.sections.every((section) => first.body.includes(section.title)));
   assert.ok(first.body.startsWith(travelGuide.searchDescription));
   assert.ok(travelGuide.searchIntent.disambiguationTerms.every(
@@ -59,12 +62,12 @@ test('패키지 본문을 바꾸면 digest와 이미지 출처 게이트가 실�
   const travelGuide = guide('sado');
   travelGuide.slug = source.slug;
   const pkg = buildNaverPackage(source, travelGuide);
-  pkg.body = pkg.body.replace(pkg.images[0].caption, '');
+  pkg.body = pkg.body.replace(pkg.photoAttribution, '');
   pkg.images[0].credit = '출처 미상';
 
   const errors = validateNaverPackage(pkg, source, travelGuide);
   assert.ok(errors.some((error) => error.includes('credit에 재사용 라이선스')));
-  assert.ok(errors.some((error) => error.includes('caption이 body에서 누락')));
+  assert.ok(errors.some((error) => error.includes('photoAttribution이 body에서 누락')));
   assert.ok(errors.some((error) => error.includes('contentDigest')));
 });
 
@@ -98,7 +101,7 @@ test('공개 URL은 네이버 blogId와 숫자 logNo를 가져야 한다', () =>
 test('공개 본문은 패키지 앵커가 모두 있어야 통과한다', () => {
   const pkg = buildNaverPackage(story('sado'), guide('sado'));
   assert.equal(verifyRenderedText(pkg, pkg.body + '\n' + pkg.title).ok, true);
-  const result = verifyRenderedText(pkg, pkg.body.replace(pkg.source.canonical, '') + '\n' + pkg.title);
+  const result = verifyRenderedText(pkg, pkg.body.replaceAll(pkg.source.canonical, '') + '\n' + pkg.title);
   assert.equal(result.ok, false);
   assert.ok(result.missing.includes(pkg.source.canonical));
 });
@@ -112,9 +115,8 @@ test('이미지가 없는 중간 절 뒤의 사진을 잘못 연결하지 않는
   assert.equal(pkg.images.find((image) => image.sectionId === 'shukunegi').section, '배목수의 기술이 골목이 되었습니다');
   const taraibuneStart = pkg.body.indexOf('배가 둥근 데는 바다의 이유가 있습니다');
   const shukunegiStart = pkg.body.indexOf('배목수의 기술이 골목이 되었습니다');
-  const shukunegiPhoto = pkg.body.indexOf('사도 슈쿠네기의 좁은 골목');
-  assert.ok(shukunegiPhoto > shukunegiStart);
-  assert.ok(shukunegiPhoto > taraibuneStart);
+  assert.ok(shukunegiStart > taraibuneStart);
+  assert.equal(pkg.body.includes('사도 슈쿠네기의 좁은 골목'), false);
 });
 
 test('실용 여행 정보와 과장 없는 상품 연결을 강제한다', () => {
