@@ -51,8 +51,10 @@ test('verified 현지 사진 원고를 결정적 네이버 장문 패키지로 �
 });
 
 test('placeholder 사진 원고는 네이버 패키지 생성을 차단한다', () => {
+  const placeholder = story('sanriku');
+  placeholder.photoStatus = 'placeholder';
   assert.throws(
-    () => buildNaverPackage(story('sanriku'), guide('sado')),
+    () => buildNaverPackage(placeholder, guide('sado')),
     /verified 현지 사진 원고만/,
   );
 });
