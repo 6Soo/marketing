@@ -504,7 +504,7 @@ git 증거로 확정:
 (스토리 CTA 상태 판정 + 36시간 staleness). 테스트 94/94 · tsc 0 · ESLint 0 · build 성공은
 확인됐으나 독립 검증 판정을 못 받았다.
 **2026-07-29 확인: 이 브랜치는 원격(`origin`)에 없다.** `git ls-remote --heads` 결과 0건.
-Windows 머신 `C:/Users/kkokk/orca/workspaces/reservation/cta-observability`에만 있고 **미푸시**다.
+예약 리포의 별도 CTA 작업트리에만 있고 **미푸시**다.
 → 그 머신이 정리되면 사라진다. **먼저 푸시해 보존할 것.**
 
 ### (4) placeholder 시리즈 2건 (히다 001 · 산리쿠 002)
@@ -655,7 +655,7 @@ GPT 5.6 Sol 측 교차검증은 이 환경에 브리지가 없어 **미수행**�
 
 - 브라우저 조작은 WSL에서 시작했고, Instagram 로그아웃 상태에서 headed 브라우저를 열어 사용자가
   직접 로그인했다. 로그인 완료 뒤 여행 릴스 조사와 공개 URL 확인을 진행했다.
-- 다음 세션도 브라우저 조작 전 WSL Orca computer-use의 `status`·capabilities를 확인한다.
+- 다음 세션도 브라우저를 조작하기 전 현재 화면과 로그인 상태를 직접 확인한다.
   세션 만료·2차 인증·CAPTCHA는 우회하지 말고 사용자 인증을 요청한다.
 
 ### 미결 사항 — 우선순위

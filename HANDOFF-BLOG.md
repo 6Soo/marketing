@@ -141,9 +141,8 @@ Google Search Console 확인 파일은
 - Google Search Console: 운영 계정에서 `https://foresttour.kr/` URL 접두어 속성 소유 확인 완료.
   `sitemap.xml`은 **성공·발견 6페이지**, `stories/feed.xml`은 **성공·발견 5페이지**입니다.
 - 네이버 서치어드바이저: 로그인 화면까지 확인했으나 로그인 세션이 없어 중단했습니다.
-  운영자가 네이버 로그인한 뒤 사이트 소유 확인과 sitemap/RSS 제출을 해야 합니다.
-  2026-08-04 재개 시도에서는 WSL computer-use의 지정 실행 파일 `orca-ide`가 설치되어 있지 않아
-  `command not found`로 UI 확인을 시작하지 못했습니다. 다른 Orca 빌드로 임의 전환하지 않았습니다.
+  운영자가 네이버 로그인한 뒤 사이트 소유 확인과 sitemap/RSS 제출을 해야 합니다. 자동 UI 조작은
+  사용하지 않고, 운영자가 직접 확인한 화면과 공개 URL만 증거로 남깁니다.
 - 공통 후속: 색인 수·검색 노출·검색 유입 퍼널을 4주 단위로 확인합니다.
 
 로그인 만료·2차 인증·CAPTCHA는 우회하지 않습니다.

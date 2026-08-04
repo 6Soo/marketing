@@ -3,7 +3,7 @@
 > 대상: `https://www.band.us/band/56995933`
 >
 > 최종 갱신: 2026-08-04. 숫자는 저장소 파일·예약 API·로그인된 BAND UI를
-> WSL의 Orca computer-use CLI로 직접 확인한 값만 적는다. PII는 기록하지 않는다.
+> 운영자가 직접 확인한 값만 적는다. PII는 기록하지 않는다.
 > 직전 세션의 커밋·모델·검증 상세는 `HANDOFF-SESSION-2026-08-04.md`를 따른다.
 
 ## 1. 한 장 요약
@@ -53,7 +53,7 @@
 - `?from=band` 딥링크 적용
 - 참여 질문 글 게시: `https://www.band.us/band/56995933/post/1425`
 - 운영 로그 표준: `operations/band/TEMPLATE.md`
-- WSL→Orca CLI→로그인된 Windows Edge 제어 경로 실증
+- 로그인된 브라우저에서 BAND 공개 화면을 확인하는 경로 실증
 - WSL 비로그인 요청으로 `post/1425` 공개 메타데이터 확인
 
 ## 4. 현재 실측
@@ -125,12 +125,9 @@
 
 ## 6. 브라우저 실행 계약
 
-- WSL에서 `ORCA_CLI_COMMAND`가 있으면 그 실행 파일을 사용한다.
-- 시작 전 `status --json`, `computer capabilities --json`, `computer list-apps --json`.
-- 대상은 로그인된 Edge의 BAND 탭이다.
-- 접근성 트리의 요소 인덱스는 매 동작 뒤 새로 받는다.
-- 로그인·2차 인증·CAPTCHA·권한을 우회하지 않는다.
+- 운영자가 로그인한 브라우저에서 BAND 화면을 직접 확인한다.
 - 외부 쓰기 뒤 공개 URL·본문·게시판·읽음/댓글 표시를 다시 연다.
+- 로그인·2차 인증·CAPTCHA·권한을 우회하지 않는다.
 
 ## 7. 금지와 안전 상한
 
