@@ -1,6 +1,6 @@
 # 야쿠시마 네이버 블로그 발행 대기본
 
-> 상태: **미발행** · 최종 갱신 2026-08-04
+> 상태: **미발행** · 최종 갱신 2026-08-05
 > 발행 순서: 세토우치 공개·검증 직후 2번째 글
 > 편집 규칙: 사진 1장 → 짧은 글 1개를 9회 반복하고, 출처·라이선스는 본문 끝 한 줄에만 둡니다.
 > 로컬 이미지: `_stage/naver-blog/yakushima/images/`
@@ -11,62 +11,66 @@
 - 제목: `야쿠시마 여행 | 시라타니 원시숲·조몬스기·폭포`
 - 상품: https://reserve.foresttour.kr/tour/fNhN?from=naver-blog
 - 일정: 2026-11-27~2026-11-30
-- 구성: 사진 9장 + 현장감 있는 짧은 문단 9개 + 여행 메모 + 저압력 상품 연결
+- 구성: 2문단 인트로 + 사진 9장 + 현장감 있는 짧은 문단 9개 + 여행 메모 + 저압력 상품 연결
 - 사실 경계: 직접 방문·직접 촬영을 확인할 증거가 없으므로 그런 1인칭 주장은 쓰지 않습니다.
 
 ## 복사용 원고
 
+야쿠시마는 조몬스기 한 그루로 끝나는 여행지가 아닙니다. 항구 뒤로 솟은 산에서 폭포와 이끼 숲, 긴 산길, 야생동물이 사는 해안까지 풍경의 밀도가 계속 바뀝니다.
+
+이 글은 명소 목록 대신 바다에서 산으로 들어가는 순서로 섬을 따라갑니다. 사진 한 장씩 항구·폭포·숲을 지나 조몬스기와 야생동물까지 이어지며, 첫 장면은 산을 바로 등진 야쿠시마항입니다.
+
 ### 사진 01 — 야쿠시마항과 산
 
-야쿠시마가 가까워지면 바다 바로 뒤로 산이 벽처럼 올라와 보여요. 항구에 닿기도 전에 ‘섬 하나가 거의 전부 숲이구나’ 싶은 첫인상이 확 들어와요.
+야쿠시마항에 서면 바다와 산 사이의 거리가 짧다는 말이 실감납니다. 항구 뒤로 능선이 바로 솟고, 해안 마을과 깊은 산을 한 시야에서 보는 섬입니다.
 
 ### 사진 02 — 센피로폭포
 
-센피로폭포 쪽에 서면 거대한 화강암 벽 사이로 물줄기가 가늘게 떨어져요. 사진에서는 작아 보이는데 주변 산까지 한꺼번에 보면 규모가 꽤 압도적이에요.
+센피로폭포는 물줄기 하나보다 그 주변의 화강암 사면이 먼저 들어옵니다. 안개가 끼면 흰 물이 바위 면을 길게 타고 내려오고, 폭포 아래 계곡은 더 멀게 느껴집니다. 사진 한 장으로는 다 담기 어려운 지형입니다.
 
 ### 사진 03 — 시라타니 원시숲
 
-시라타니 원시숲 안으로 몇 걸음만 들어가도 공기가 금세 촉촉해져요. 바위와 뿌리, 쓰러진 나무까지 이끼가 덮고 있어서 초록색이 한 가지가 아니라는 걸 여기서 알게 돼요.
+시라타니 운스이쿄는 입구를 지나면서 숲의 표정이 달라집니다. 바위와 뿌리, 쓰러진 나무에 붙은 이끼가 제각각 다른 초록을 보여 주니, 짧은 산책로라도 신발과 날씨를 함께 보세요.
 
 ### 사진 04 — 이끼 숲
 
-비가 지나간 뒤에는 이끼 끝마다 물방울이 매달려요. 햇빛이 잠깐 들어오면 숲 전체가 반짝하고, 다시 구름이 오면 금세 깊고 조용한 색으로 돌아가요.
+비가 그친 뒤 이끼 끝에 맺힌 물은 숲의 색을 더 선명하게 만듭니다. 햇빛이 잠깐 들어왔다가 구름에 가리면 같은 길도 금세 달라집니다. 야쿠시마의 숲을 한 가지 초록으로 설명하기 어려운 이유입니다.
 
 ### 사진 05 — 윌슨 그루터기
 
-윌슨 그루터기 안에서는 자연스럽게 위를 올려다보게 돼요. 어두운 나무 속에 열린 하늘이 하트 모양으로 겹치는 순간이라, 긴 숲길 중간의 작은 선물처럼 느껴져요.
+윌슨 그루터기 안쪽은 하트 모양만으로 설명하기 어렵습니다. 나무 속살이 벽처럼 둘러서고, 위쪽의 밝은 틈과 바깥 숲이 한꺼번에 들어옵니다. 오래된 나무가 비어 있는 공간으로 바뀌는 순간이 이 장소의 인상입니다.
 
 ### 사진 06 — 조몬스기
 
-조몬스기 앞에 서면 나무 한 그루라기보다 오랜 시간을 마주한 기분이에요. 보호 데크 너머에서도 굵은 줄기와 안개 낀 숲이 함께 보여서, 말보다 한참 바라보게 되는 장면이에요.
+조몬스기는 멀리서 한 번에 크기를 재는 나무가 아닙니다. 가까이 보면 줄기의 결이 여러 겹으로 갈라지고, 한 그루 안에 다른 나무처럼 보이는 표면이 이어집니다. 왕복 시간이 긴 코스의 끝에서 마주한다는 사실이 사진보다 먼저 기억에 남을 장면입니다.
 
 ### 사진 07 — 야쿠스기랜드 계곡
 
-야쿠스기랜드는 물소리가 계속 따라오는 숲이에요. 거친 바위 사이로 물이 흐르고 오래된 나무와 어린 잎이 한 화면에 겹쳐서, 걷는 속도가 자연히 느려져요.
+야쿠스기랜드에서는 물소리가 길을 따라옵니다. 계곡 아래로 흐르는 물과 오래된 나무, 새로 돋은 잎이 한 화면에 겹쳐 보여 거대한 나무 하나보다 계곡을 따라 걷는 숲에 가깝습니다.
 
 ### 사진 08 — 야쿠원숭이
 
-섬 길가에서는 야쿠원숭이를 만날 때가 있어요. 사람을 의식하기보다 햇빛 드는 자리에 가만히 앉아 있는 모습이라, 가까이 다가가지 않고 멀리서 조용히 보게 돼요.
+야쿠원숭이는 숲 안쪽뿐 아니라 도로 주변에서 보일 때도 있습니다. 차를 세우거나 먹이를 주지 말고, 다가오면 거리를 두세요. 잠깐 바라보고 길을 비켜 주는 정도가 이 섬의 야생동물과 만나는 방법입니다.
 
 ### 사진 09 — 야쿠사슴
 
-야쿠사슴도 숲빛과 닮은 색으로 서 있어요. 원시숲과 폭포, 동물까지 이어지고 나면 야쿠시마는 관광지 몇 곳보다 섬 전체가 하나의 큰 생태공원처럼 기억돼요.
+야쿠사슴을 숲길에서 만나도 가까이 붙지 말고 먼저 길을 비워 주세요. 원시림과 폭포, 동물이 사는 공간이 한 섬 안에서 이어지니 잠깐 멈춰 바라본 뒤 지나가는 것까지가 이 풍경을 보는 방법입니다.
 
 ### 여행 메모
 
-- 야쿠시마는 1993년 일본 최초의 유네스코 세계자연유산 중 한 곳으로 등재됐어요.
-- 시라타니운스이쿄는 짧은 산책부터 반나절 코스까지 선택할 수 있지만 비 뒤에는 길 상태가 크게 달라져요.
-- 조몬스기 코스는 보통 왕복 약 9~10시간이라 체력과 일몰 시각을 함께 확인해야 해요.
-- 시라타니·야쿠스기랜드·폭포는 섬 곳곳에 흩어져 있고 버스 간격이 길어 날씨와 이동 시간을 같이 맞춰야 해요.
-- 2026년 11월 27일 출발 상품은 후쿠오카~야쿠시마 국내선 왕복, 섬 전용차량, 온천호텔 3연박으로 구성돼요.
+- 야쿠시마는 1993년 일본 최초의 유네스코 세계자연유산 중 한 곳으로 등재됐습니다.
+- 시라타니운스이쿄는 짧은 산책부터 반나절 코스까지 선택할 수 있지만, 비 뒤에는 길 상태가 크게 달라집니다.
+- 조몬스기 코스는 보통 왕복 약 9~10시간이라 체력과 일몰 시각을 함께 확인해야 합니다.
+- 시라타니·야쿠스기랜드·폭포는 섬 곳곳에 흩어져 있고 버스 간격이 길어, 날씨와 이동 시간을 같이 맞춰야 합니다.
+- 2026년 11월 27일 출발 상품은 후쿠오카~야쿠시마 국내선 왕복, 섬 전용차량, 온천호텔 3연박으로 구성돼 있습니다.
 
-직접 준비해도 갈 수 있지만, 섬 항공편과 숙소를 잡은 뒤 날씨에 따라 숲길 코스와 폭포·해안 동선을 다시 맞추는 일이 남아요. 긴 코스와 짧은 코스를 나눠 원시숲을 보고 싶다면 11월 27일 출발 야쿠시마 여행도 함께 비교해 보세요.
+야쿠시마는 직접 준비할 수 있는 여행지입니다. 다만 항공편과 숙소를 잡은 뒤에도 날씨에 따라 숲길·폭포·해안 동선을 다시 맞춰야 합니다. 조몬스기 같은 긴 코스와 시라타니처럼 짧게 나눌 코스를 함께 보고 싶다면, 11월 27일 공개 일정과 직접 준비하는 경우를 비교해 보셔도 좋겠습니다.
 
 숲길여행 야쿠시마 원시숲 3박 일정
 
 https://reserve.foresttour.kr/tour/fNhN?from=naver-blog
 
-사진(Commons): Raita Futo·Dick Thomas Johnson(CC BY 2.0), Σ64(CC BY 3.0/4.0), yujing(CC BY 3.0), MaedaAkihiko·Higa4(CC0)
+사진(Commons): Raita Futo(CC BY 2.0), Σ64(CC BY 3.0/4.0), MaedaAkihiko·Higa4(CC0)
 
 #야쿠시마 #야쿠시마여행 #시라타니운스이쿄 #조몬스기 #윌슨그루터기 #야쿠스기랜드 #센피로폭포 #일본원시숲 #가고시마여행 #일본트레킹
 
@@ -81,15 +85,15 @@ https://reserve.foresttour.kr/tour/fNhN?from=naver-blog
 
 | 순서 | 파일 | 저작자·권리 | Commons 원문 | SHA-256 |
 |---|---|---|---|---|
-| 1 | `01-yakushima-port.jpg` | Raita Futo · CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Yakushima_port_(52930618547).jpg | `7eb4e9a0c3f129cc86f72a79911ae8b29e6d1856b4c3b0f84dc10adb6f595275` |
-| 2 | `02-senpiro-waterfall.jpg` | Dick Thomas Johnson · CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Senpiro_Waterfall,_Yakushima_-_Mar_15,_2013_(1).jpg | `aa1a6a07b4ce5c0f7042134b36dbe9bdab5520a3971f7b91608f74298fadb8a3` |
-| 3 | `03-shiratani-forest.jpg` | Σ64 · CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Shiratani_Unsui_Gorge_18.jpg | `87a3803936f27fff4de00450843ac03ee993a82b233233b154e02f2367471bdf` |
-| 4 | `04-shiratani-gorge.jpg` | MaedaAkihiko · CC0 | https://commons.wikimedia.org/wiki/File:Yaku-Island_Shiratani-Unsui-Gorge.jpg | `fdc90a810b0310f74f120d361c0ba0ebf7d079be38a8e05bf132a4a364cf797a` |
-| 5 | `05-wilson-heart.jpg` | yujing · CC BY 3.0 | https://commons.wikimedia.org/wiki/File:Wilsonheart.JPG | `f5d6a552253092f755d855e0f2313907c93a5ff4a7dca1a5dd2a71451a1767c1` |
-| 6 | `06-jomon-sugi.jpg` | Σ64 · CC BY 3.0 | https://commons.wikimedia.org/wiki/File:Jomon_Sugi_03.jpg | `f5fa02bf5c006271e2fb228cc768665e6d21ece13a7d917cbaa39792d51b9429` |
-| 7 | `07-yakusugi-land.jpg` | Higa4 · CC0 | https://commons.wikimedia.org/wiki/File:Yakusugi_Land_02.jpg | `4605c898f8d90f16a1fdb2c93180c74a62b4e55821ea7a1828934bc2a0030708` |
-| 8 | `08-yaku-monkey.jpg` | Raita Futo · CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Yakushima_monkey_(52931654393).jpg | `dda4891dc8ceefa86cc5aac3019be482d727afc3e46626f765d50e92a9c87e06` |
-| 9 | `09-yaku-deer.jpg` | Σ64 · CC BY 3.0 | https://commons.wikimedia.org/wiki/File:Cervus_nippon_yakushimae_03.jpg | `fc6930f59696be574fd1b1fc5f0f47b2a07b3a8635af8d2ff5656d4d18b930f5` |
+| 1 | `01-yakushima-port.jpg` | Raita Futo · CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Yakushima_port_(52930618547).jpg | `baf8db82f9a6d474f42c12f76d9cd845f538ae7a7420b398ea283376337704d0` |
+| 2 | `02-senpiro-falls-11.jpg` | Higa4 · CC0 | https://commons.wikimedia.org/wiki/File:Senpiro_Falls_11.jpg | `1320ca371e32f7cac114a968ec84940a81d3ab68d5341f934506f04a29060ebf` |
+| 3 | `03-shiratani-forest.jpg` | Σ64 · CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Shiratani_Unsui_Gorge_18.jpg | `e46bb36e2bd854380b302e6a7b793378b9df6ca9a7f2a16f7eb7cc2e4997976e` |
+| 4 | `04-shiratani-gorge.jpg` | MaedaAkihiko · CC0 | https://commons.wikimedia.org/wiki/File:Yaku-Island_Shiratani-Unsui-Gorge.jpg | `245e321c45c6492d9c0cb73c23156951466fc56484769a1b9ffea45a82fe33cf` |
+| 5 | `05-wilson-stump-inside.jpg` | Raita Futo · CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Inside_the_Cedar_Tree_(52931205586).jpg | `c5313828bc5f22a742108f6af64257afbe124405e6cff85755cf4387494db023` |
+| 6 | `06-jomon-sugi-futo.jpg` | Raita Futo · CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Jomonsugi_(52931651088).jpg | `20d58b99953f1c47994c0848880af53b1a88cb6aaef934b6b32eb88670325c82` |
+| 7 | `07-yakusugi-land-river.jpg` | Higa4 · CC0 | https://commons.wikimedia.org/wiki/File:Yakusugi_Land_03.jpg | `39dd41bc4c7b287f7e28d8dceaec0477bddbb8384dbe977c98fea197c438f007` |
+| 8 | `08-yaku-monkey.jpg` | Raita Futo · CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Yakushima_monkey_(52931654393).jpg | `0a403e6349038dbaa4524a83dfb64a594e890b057264c8f90db27ab3787c1b39` |
+| 9 | `09-yaku-deer.jpg` | Σ64 · CC BY 3.0 | https://commons.wikimedia.org/wiki/File:Cervus_nippon_yakushimae_03.jpg | `6a381573180d5c4d964d8a3e94e12243fd7a661a71fd47158a9616d7a2956de6` |
 
 ## 발행 전 확인
 

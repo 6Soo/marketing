@@ -74,9 +74,9 @@ test('사도 가는 법 지원 글은 신규 공식 출처·별도 사진·낮�
   const result = await validateSupportWorkspace(current);
   assert.deepEqual(result.errors, []);
   const metric = result.metrics.get('sado-access');
-  assert.equal(metric.bodyLength, 4935);
-  assert.equal(metric.overlapPercent, 0.8);
-  assert.equal(metric.newOfficialSourceCount, 6);
+  assert.equal(metric.bodyLength, 5927);
+  assert.equal(metric.overlapPercent, 0.6);
+  assert.equal(metric.newOfficialSourceCount, 7);
   assert.equal(metric.verifiedImageCount, 2);
   assert.equal(metric.publishReady, false);
 });
@@ -276,7 +276,7 @@ test('growth-plan의 검색 의도·출처·실측 중복률과 초안이 어긋
   const result = await validateSupportWorkspace(current);
   assert.ok(result.errors.some((error) => error.includes('searchIntent가 growth-plan과 다릅니다')));
   assert.ok(result.errors.some((error) => error.includes('신규 공식 출처가 지원 글 실제 출처와 다릅니다')));
-  assert.ok(result.errors.some((error) => error.includes('실측 0.8')));
+  assert.ok(result.errors.some((error) => error.includes('실측 0.6')));
 });
 
 test('5어절 중복률은 지원 글 기준으로 결정적으로 계산한다', () => {

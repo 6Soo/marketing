@@ -96,8 +96,11 @@ export function renderSupportBody(draft, registry) {
   const sourceById = new Map(draft.sourceCatalog.map((source) => [source.id, source]));
   const imagesAfterSection = new Map(draft.images.map((image) => [image.afterSectionId, image]));
   const links = resolveSupportLinks(draft, registry);
+  const introParagraphs = Array.isArray(draft.introParagraphs) && draft.introParagraphs.length > 0
+    ? draft.introParagraphs
+    : [draft.searchDescription];
   const blocks = [
-    normalizeSpace(draft.searchDescription),
+    ...introParagraphs.flatMap((paragraph) => [normalizeSpace(paragraph), '']),
     '',
     `정보 확인일: ${draft.checkedAt}`,
     normalizeSpace(draft.freshnessNotice),

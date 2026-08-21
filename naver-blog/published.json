@@ -18,7 +18,25 @@
       "url": "https://blog.naver.com/kkokko_hero/224364780223",
       "blogId": "kkokko_hero",
       "logNo": "224364780223",
-      "verifiedAt": "2026-08-01T13:38:11+09:00"
+      "verifiedAt": "2026-08-09T03:46:52+09:00"
+    },
+    {
+      "slug": "karuizawa-cafe-record",
+      "idempotencyKey": "karuizawa-cafe-record:published:224372220861",
+      "contentDigest": "8160b598fea6008fc9c6e3ccc89d8d3d036d541f6c407ca13b637d9398433a4b",
+      "url": "https://blog.naver.com/kkokko_hero/224372220861",
+      "blogId": "kkokko_hero",
+      "logNo": "224372220861",
+      "verifiedAt": "2026-08-09T03:46:52+09:00"
+    },
+    {
+      "slug": "setouchi-cafe-schedule-record",
+      "idempotencyKey": "setouchi-cafe-schedule-record:published:224372301821",
+      "contentDigest": "a8574638b9bb2162660408af8457ad59140386784bb221d2c756b3aab716b38d",
+      "url": "https://blog.naver.com/kkokko_hero/224372301821",
+      "blogId": "kkokko_hero",
+      "logNo": "224372301821",
+      "verifiedAt": "2026-08-11T11:49:02+09:00"
     }
   ]
 }

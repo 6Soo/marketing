@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "channel": "naver-blog",
+  "timezone": "Asia/Seoul",
+  "schedule": {
+    "localTime": "09:30",
+    "maxPostsPer24h": 1,
+    "failClosed": true
+  },
+  "entryContract": {
+    "status": "approved",
+    "reviewers": ["sol-high", "terra-high", "luna-high"],
+    "gates": [
+      "source-and-photo-rights-approved",
+      "facts-and-duplicate-check-passed",
+      "sol-human-writing-review-pass",
+      "terra-content-review-pass",
+      "luna-content-review-pass",
+      "product-route-gate-passed",
+      "image-text-dom-order-pass"
+    ],
+    "contentFile": "JSON with title, tags, images[].path, texts[], optional endBlocks[], ctaUrl",
+    "contentDigest": "SHA-256 of the normalized content JSON",
+    "reviewedContentDigest": "must equal contentDigest",
+    "imageSha256": "ordered SHA-256 list matching images[]"
+  },
+  "entries": []
+}

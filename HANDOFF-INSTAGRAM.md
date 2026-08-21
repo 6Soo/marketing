@@ -545,7 +545,7 @@ Commons 대체 가능성 판정은 `cardnews/docs/commons-대체가능성-실조
 9. **`.omc/`, `.codex-remote-attachments/`는 비소유다.** 커밋·전송 금지.
 10. **다른 에이전트·도구의 보고를 그대로 믿지 마라.** "치명적 결함"이라는 반박이 실은 경로
     문자열을 잘못 읽은 것이었던 전례가 있다. 파일:줄로 확인한다.
-11. ⚠ **`/home/kkokk/AX/marketing` 리눅스 체크아웃은 손상된 복사본이었다**(2026-07-29 복구 완료).
+11. ⚠ **`C:/AX/marketing` 리눅스 체크아웃은 손상된 복사본이었다**(2026-07-29 복구 완료).
     추적 파일 133건 CRLF 뒤집힘 + `reel-cover-a.mp4` 0바이트 + `node_modules` 바이너리 전부 0바이트.
     **같은 증상이 보이면 `git status`에 대량 변경이 뜨는지, `git diff --ignore-cr-at-eol`이
     비는지부터 확인하라.** 비면 순수 줄바꿈 사고이므로 `git restore .`로 복구된다.

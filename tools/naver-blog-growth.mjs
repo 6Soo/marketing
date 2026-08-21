@@ -158,6 +158,7 @@ export function validateGrowthPlan(plan, { stories, guides, registry }) {
   for (const key of [
     'maxPostsPerWeek',
     'minimumDaysBetweenPosts',
+    'maxPostsPer24h',
     'maximumTitleLength',
     'maximumBodyOverlapPercent',
     'minimumNewOfficialSourcesForSupportPost',
@@ -167,8 +168,9 @@ export function validateGrowthPlan(plan, { stories, guides, registry }) {
       errors.push(`guardrails.${key}는 양의 정수여야 합니다.`);
     }
   }
-  if (guardrails.maxPostsPerWeek > 2) errors.push('주 2편을 넘는 발행 계획은 기계적 양산 위험 때문에 차단합니다.');
-  if (guardrails.minimumDaysBetweenPosts < 3) errors.push('글 사이에는 최소 3일을 두어야 합니다.');
+  if (guardrails.maxPostsPerWeek > 7) errors.push('주 7편을 넘는 발행 계획은 자동 발행 상한을 초과합니다.');
+  if (guardrails.minimumDaysBetweenPosts < 1) errors.push('글 사이에는 최소 1일을 두어야 합니다.');
+  if (guardrails.maxPostsPer24h !== 1) errors.push('24시간 자동 발행 상한은 1편이어야 합니다.');
   if (guardrails.maximumTitleLength > 40) errors.push('제목 상한은 40자를 넘길 수 없습니다.');
   if (guardrails.maximumBodyOverlapPercent > 25) errors.push('지원 글 본문 중복률 상한은 25%를 넘길 수 없습니다.');
   if (!uniqueStrings(guardrails.rules) || guardrails.rules.length < 4) {
