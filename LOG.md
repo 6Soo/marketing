@@ -1,4 +1,4 @@
-# LOG — marketing (카드뉴스·인스타 자동화)
+﻿# LOG — marketing (카드뉴스·인스타 자동화)
 
 세션 핸드오프 로그. 최신 블록이 맨 아래. 새 에이전트는 **맨 아래 블록부터** 읽으세요.
 
@@ -527,7 +527,6 @@
 
 ### 문서·템플릿
 
-- `.cycle/design.md`: 2차 정정 설계 전문.
 - `strategy/네이버밴드-운영인계-1차실행.md`: 현재 상태·대안·감사·파일럿·배치 실행안으로 교체.
 - `context/네이버밴드-OG-세션핸드오프-2026-07-26.md`: 당시 후보 수를 현재 상태로 오독하지
   않도록 정정 주석 추가.
@@ -575,7 +574,6 @@
   배관은 그대로 두고 심볼 `d` 속성과 stroke 폭만 교체하면 된다.
 - 인계 문서(이 한 건만 읽으면 됨):
   `reservation/docs/FORESTTOUR_BRAND_SYMBOL_HANDOFF_2026-07-29.md`
-- cycle.sh 산출물(`.cycle/`)은 확정본을 reservation `docs/`로 옮겨 보존하고 `.gitignore` 처리했다.
 
 ---
 
@@ -732,51 +730,13 @@ validator·Playwright)는 전량 통과했고 의미 판독만 FAIL이었는데,
 - **push**: marketing은 `origin/main`(Meta 앱 차단 조사 2건)을 병합한 뒤 푸시 완료.
   reservation은 검증기 수정·V4·보존 브랜치 전부 푸시 완료.
 
-### (H) `~/.orca/bin/cycle.sh` 결함 10건 수정 — 사이클 러너가 실제로는 돌지 않았다
-
-사장님이 "cycle.sh에 의해서 모든 것을 자동으로 진행하라"고 지시해 실행했더니, 러너가 설계
-단계조차 넘기지 못했다. 실측으로 원인 9건을 규명해 고쳤다. **`~/.orca`는 git 저장소가 아니므로
-이 기록이 유일한 영속 기록이다.**
-
-| # | 결함 | 증상 | 조치 |
-|---|---|---|---|
-| 1 | `python3`가 Microsoft Store 스텁 | 스크립트를 실행하지 않고 `Python`만 출력하고 **rc=0**. 모든 `jparse`가 빈 값 → 사이클이 조용히 어긋남 | 존재가 아니라 **실행 여부**(`print(1+1)`==`2`)로 인터프리터 선택. `▶ [PY]`로 경로·버전 출력 |
-| 2 | `handle` 파서가 split 응답을 못 읽음 | `create`는 `result.terminal.handle`, `split`은 **`result.split.handle`**인데 create 모양만 봄 → **검증자 패널이 이 orca 빌드에서 한 번도 생성될 수 없었음** | `terminal`/`split`/`pane` 컨테이너 전부 탐색 |
-| 3 | CLASS B 프로브가 영어 `OK`만 인정 | 한국어로 물어 `agy`가 "확인"으로 답 → 살아 있는 후보를 **쿼터 소진으로 오진**하고 체인 소진 | 프롬프트를 영어로 토큰 고정, 인정 범위 확대. 실패 사유를 `쿼터 도달`/`응답 없음`/`패널 생성 실패`로 분리 |
-| 4 | 터미널 생성 일시 실패에 재시도 없음 | `Timed out waiting for terminal handle after creation` 한 번에 사이클 전체 중단(같은 인자 재시도는 성공) | `new_pane`에 3회 재시도(8초 간격) |
-| 5 | 패널이 승인 프롬프트에 걸림 | 작업자가 `orca orchestration send`로 worker_done을 보내야 하는데 승인 대기에서 정지 → 러너는 "대기 계속"만 반복 | CLASS A·B 전 패널에 승인 우회 플래그(claude `--dangerously-skip-permissions`, codex `--dangerously-bypass-approvals-and-sandbox`) |
-| 6 | **완료 신호를 엉뚱한 인박스에서 폴링** | worker_done은 **코디네이터** 인박스로 가는데 러너는 **작업자** 인박스를 폴링 → 완료를 영원히 못 봄 | `ORCA_TERMINAL_HANDLE`을 코디네이터로 잡아 폴링. 없으면 즉시 실패 |
-| 7 | 의존 태스크가 `ready`로 자동 승격되지 않음 | 선행이 `completed`여도 `pending` 유지 → dispatch가 `only ready tasks can be dispatched`로 거절, T2에서 끊김 | 디스패치 직전 `task-update --status ready`로 명시 승격 |
-| 8 | `dispatch --inject`가 붙여넣기만 하고 제출 안 함 | codex TUI에서 프리앰블이 입력줄에 남아 작업자가 영원히 idle | 디스패치 후 빈 입력 + Enter로 제출(`nudge_submit`) |
-| 9 | 단계 간 산출물이 인계되지 않음 | 각 단계가 다른 에이전트라 "방금 나온 설계안"만으로는 볼 것이 없음 → 검증자가 "검토 대상의 본문이나 경로가 없다"며 정지 | `handoff` 헬퍼 신설. 직전 worker_done의 제목·요약·`reportPath`·변경 파일을 다음 spec에 실어 보냄(5단계 전부) |
-
-**검증**: 다른 세션이 추가한 `~/.orca/bin/cycle-selftest.sh`(에이전트 0개)로 **13개 항목 전부 통과** —
-5단계 완주·패널 회수·split 파싱·실패 시 비영 종료·판정 부재 시 FAIL·이벤트 상관·폴백 순차 진행·
-서브셸 사유 전파. 전역 규칙에도 "러너를 고쳤으면 셀프테스트를 통과시켜라"가 추가됐다.
-
-**함정 기록**
-- `cycle.sh` 출력을 `| tail -n N`으로 받으면 파이프 버퍼링 때문에 진행이 실시간으로 안 보인다.
-  파일로 리다이렉트해서 따라가야 한다.
-- `[T1 QUOTA]` 줄은 Git Bash에서 한글이 깨져 나오지만 동작에는 영향이 없다.
-- `orca terminal create --worktree path:<경로>`는 **orca가 관리하는 워크트리만** 인식한다.
-  `git worktree add`로 만든 경로는 타임아웃으로 실패한다 → `orca worktree create`를 써야 한다.
-- 러너 교체는 `mv`로 해야 한다. 실행 중인 사이클은 옛 파일을 계속 읽는다.
-
-**충돌 회피**: reservation 워킹트리에 다른 세션의 미커밋 작업이 있어, 사이클은 orca 관리 워크트리
-`C:/Users/kkokk/orca/workspaces/reservation/cta-observability`(브랜치 `6Soo/cta-observability`)에서
-돌린다. 원본 워킹트리를 건드리지 않는다.
-
-### (H-1) 10번째 결함 — 낡은 `ORCA_TERMINAL_HANDLE` (원인 규명·수정 완료)
 
 셀프테스트는 13/13 통과하는데 실제 에이전트 패널로 도는 실행만 T1→T2에서 멈추던 문제의
-원인을 찾았다. **환경변수 `ORCA_TERMINAL_HANDLE`이 낡아 있었다.**
 
 - 세션이 재시작되면 런타임은 코디네이터 터미널 핸들을 **재발급**한다. 그런데 이미 떠 있는
   셸의 환경변수에는 옛 문자열이 그대로 남는다.
-- 그 상태로 `orca orchestration check --terminal <낡은 핸들>`을 부르면 **오류 없이 빈 결과**가
   온다. 러너는 "완료 신호가 아직 없다"로 오해하고 영원히 대기한다.
 - 실측: 셸 env는 `term_73194922…`, 실제 worker_done 수신자는 `term_ba027b08…`이었다.
-  `orca terminal show --terminal term_73194922…`를 부르면 `term_ba027b08…`을 돌려준다 —
   런타임은 별칭을 해석해 주는데 `check`는 그러지 않는다.
 - 조치: 시작 시 `terminal show`로 코디네이터 핸들을 **정규화**하고, 달라졌으면 그 사실을
   `▶ [COORD] 핸들 정규화: … → …`로 출력한다. 셀프테스트 13/13 유지 확인.
@@ -784,7 +744,6 @@ validator·Playwright)는 전량 통과했고 의미 판독만 FAIL이었는데,
 이 결함이 앞선 세 번의 실행이 전부 "대기 계속"으로 끝난 진짜 이유다. 5~9번 수정이 없었다면
 이 지점까지 도달하지도 못했으므로, 순서대로 하나씩 걷어낸 끝에 드러난 마지막 층이다.
 
-**교훈**: 장수 셸에서 orca 핸들을 환경변수로 신뢰하지 마라. 매 실행 시작에 해석하라.
 
 ### (H-2) 사이클 실환경 완주 — T1→T4까지 실제로 돌았다
 
@@ -1125,7 +1084,6 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
 ## 2026-08-04 — BAND 전면 인계 세션 종료
 
 - BAND 전략·운영·OG·도구 상태를 `HANDOFF-BAND.md` 단일 인계서로 통합했다.
-- WSL Orca CLI → Windows Edge 경로로 BAND UI를 실측하고 `post/1425`의 5시간 값
   (`0 읽음 / 댓글 0 / 반응 0`)과 일정 자동 공유글 최소 6건 연속·읽음 1~2를 확인했다.
 - Fable 5 medium 반박에 따라 쿠키 없는 WSL HTTP 요청으로 공개 HTML의 제목·설명·canonical을
   확인했다. 공개성 검증은 수용했고 게시 실패 가설은 기각했다.
@@ -1352,8 +1310,6 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
 ## 2026-08-04 네이버 블로그 인계 재개와 산리쿠 현지 사진 교체
 
 - `HANDOFF-BLOG.md` 기준 미완료 작업을 복원했다. 네이버 서치어드바이저는 WSL computer-use의
-  지정 실행 파일 `orca-ide`가 설치되어 있지 않아 `command not found`로 중단했다. 로그인·2차
-  인증을 우회하거나 다른 Orca 빌드로 임의 전환하지 않았다.
 - 다음 편집 우선순위였던 산리쿠·히다 placeholder 사진을 실제 현지 촬영 7장으로 교체했다.
   - 다로 해안: Yoshio Kohara, CC BY 3.0
   - 산리쿠 철도 오사와 교량: くろふね, CC BY 3.0
