@@ -1,4 +1,4 @@
-.env
+﻿.env
 # .env 사본·백업도 전부 제외 (.env.bak-*, .env.local 등 — 실제 유출 사고 방지 2026-07-29)
 .env.*
 blog/drafts/
@@ -16,5 +16,3 @@ node_modules/
 .omc/
 .codex-remote-attachments/
 
-# cycle.sh 작업 산출물(설계·반박·최종). 확정본은 대상 리포 docs/로 옮겨 보존한다.
-.cycle/
