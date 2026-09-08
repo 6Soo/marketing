@@ -1485,6 +1485,7 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
 - 원문 첨부사진 9장을 `_stage/naver-blog/yakushima-cafe-record/images/01.jpg`부터 `09.jpg`까지 저장했다.
 - 사진별 해시와 원문 주소는 `_stage/naver-blog/yakushima-cafe-record/source-manifest.json`에 기록했다.
 - 발행 초안은 `_stage/naver-blog/yakushima-cafe-record/post.txt`에 만들었다. `사진 → 글` 9쌍, `-해요`체, 예정 여행의 관찰·안내형 시제를 적용했다.
+- 원고 본문과 내부 검수 요약은 추적 가능한 `naver-blog/drafts/2026-09-08-yakushima-cafe-record.md`에도 보존했다.
 - 공개 본문에는 출처·권리·작성 과정 설명을 넣지 않았고, 마지막에는 카페 원문 링크만 남겼다.
 - 사진 04부터 09까지 이미지에 `Trip.com` 표시가 있어, 회사 자산 승인 범위가 확인되지 않으면 발행하지 않는다.
 

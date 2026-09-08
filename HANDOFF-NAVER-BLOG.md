@@ -655,6 +655,7 @@ npm run naver-blog:growth:record -- \
 - 실제 소재 원문은 `https://cafe.daum.net/sixsungwon/fNhN/2`로 확정했어요.
 - 원문 일정은 2026-11-27부터 2026-11-30까지의 야쿠시마 원시숲길 예정 여행이며, 직접 체험 후기처럼 쓰지 않아요.
 - 원문 첨부사진 9장과 해시는 `_stage/naver-blog/yakushima-cafe-record/source-manifest.json`에 기록했고, 초안은 `_stage/naver-blog/yakushima-cafe-record/post.txt`에 있어요.
+- 같은 원고 본문과 검수 요약은 추적 가능한 `naver-blog/drafts/2026-09-08-yakushima-cafe-record.md`에도 보존했어요.
 - 초안 구조는 `사진 01 → 글 01`부터 `사진 09 → 글 09`까지 반복하고, 문체는 `-해요`체예요. 작성 과정·출처·메모 설명은 공개 본문에서 제외했어요.
 - 사진 04~09에는 `Trip.com` 표시가 있어 회사 자산 승인 범위가 확인되지 않으면 발행하지 않아요.
 - 네이버 세션은 만료되어 로그인 화면으로 이동했어요. 인증 완료 전까지 상태는 `draft-ready / unpublished / login-required`예요.
