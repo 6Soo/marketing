@@ -9,9 +9,9 @@ import { createHash } from 'node:crypto';
 import { homedir } from 'node:os';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const REPO_ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DEFAULT_QUEUE = resolve(REPO_ROOT, 'naver-blog/publish-queue.json');
 const DEFAULT_REGISTRY = resolve(REPO_ROOT, 'naver-blog/published.json');
 const DEFAULT_LOG = resolve(REPO_ROOT, '_stage/naver-blog/daily-publish.log');
@@ -222,7 +222,7 @@ export async function loadContent(entry) {
 function browserPrefix(args, publicSession = false) {
   const session = publicSession
     ? (args.get('--public-session') || 'naver-blog-public-verify')
-    : (args.get('--session') || process.env.NAVER_BLOG_DAILY_SESSION || 'naver-blog-wsl');
+    : (args.get('--session') || process.env.NAVER_BLOG_DAILY_SESSION || 'naver-blog');
   const profile = publicSession
     ? (args.get('--public-profile') || resolve(homedir(), '.agent-browser/profiles/naver-blog-public'))
     : (args.get('--profile') || process.env.NAVER_BLOG_BROWSER_PROFILE || resolve(homedir(), '.agent-browser/profiles/naver-blog'));
@@ -249,7 +249,7 @@ function postwriteUrl(blogId) {
 
 function loginError(url) {
   if (String(url).includes('nid.naver.com/nidlogin')) {
-    return new Error('LOGIN_REQUIRED: 네이버 WSL headless 프로필의 세션이 만료되었습니다.');
+    return new Error('LOGIN_REQUIRED: 네이버 headless 프로필의 세션이 만료되었습니다.');
   }
   return null;
 }

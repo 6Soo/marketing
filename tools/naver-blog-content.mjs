@@ -756,7 +756,7 @@ function runAgentBrowser(args) {
 }
 
 function browserPrefix(args) {
-  const session = args.get('--session') || 'naver-blog-wsl';
+  const session = args.get('--session') || 'naver-blog';
   const profile = args.get('--profile')
     || process.env.NAVER_BLOG_BROWSER_PROFILE
     || resolve(homedir(), '.agent-browser/profiles/naver-blog');
@@ -836,7 +836,7 @@ async function listCommand(args) {
 async function openCommand(args) {
   const packagePath = args.get('--package');
   if (!packagePath) throw new Error('open에는 --package=<package.json>이 필요합니다.');
-  if (!args.has('--open')) throw new Error('WSL 브라우저를 열려면 --open을 명시하세요.');
+  if (!args.has('--open')) throw new Error('브라우저를 열려면 --open을 명시하세요.');
   requireUserBrowserApproval(args, 'SmartEditor 열기');
   await readPackage(packagePath, args);
   const blogId = parseBlogId(args);
@@ -845,12 +845,12 @@ async function openCommand(args) {
   runAgentBrowser([...prefix, 'wait', '1200']);
   const currentUrl = runAgentBrowser([...prefix, 'get', 'url']);
   if (currentUrl.includes('nid.naver.com/nidlogin')) {
-    throw new Error('LOGIN_REQUIRED: WSL 네이버 전용 프로필에서 먼저 로그인해야 합니다.');
+    throw new Error('LOGIN_REQUIRED: 네이버 전용 프로필에서 먼저 로그인해야 합니다.');
   }
   if (!currentUrl.includes('/postwrite')) {
     throw new Error(`SmartEditor 진입을 확인하지 못했습니다: ${currentUrl}`);
   }
-  console.log(`✓ WSL의 네이버 SmartEditor 열기 완료 · ${currentUrl}`);
+  console.log(`✓ 네이버 SmartEditor 열기 완료 · ${currentUrl}`);
   console.log(`  본문 파일: ${resolve(dirname(packagePath), 'post.txt')}`);
   console.log('  자동 공개하지 않습니다. 원고·사진·출처를 확인한 뒤 네이버에서 임시저장하세요.');
 }
@@ -874,7 +874,7 @@ async function stageCommand(args) {
   runAgentBrowser([...prefix, 'wait', '1500']);
   const currentUrl = runAgentBrowser([...prefix, 'get', 'url']);
   if (currentUrl.includes('nid.naver.com/nidlogin')) {
-    throw new Error('LOGIN_REQUIRED: WSL 네이버 전용 프로필에서 먼저 로그인해야 합니다.');
+    throw new Error('LOGIN_REQUIRED: 네이버 전용 프로필에서 먼저 로그인해야 합니다.');
   }
   if (!currentUrl.includes('/postwrite')) throw new Error(`SmartEditor 진입을 확인하지 못했습니다: ${currentUrl}`);
 
@@ -911,7 +911,7 @@ async function stageCommand(args) {
     throw new Error(`SmartEditor 초안 검증 실패 · 누락 ${verification.missing.join(', ') || '없음'} · 사진 ${state.images}/${pkg.images.length}`);
   }
   if (state.paragraphs < 20) throw new Error(`SmartEditor 문단 구조가 사라졌습니다: ${state.paragraphs}개`);
-  console.log(`✓ WSL SmartEditor 초안 배치 완료 · 문단 ${state.paragraphs}개 · 사진 ${state.images}장`);
+  console.log(`✓ 네이버 SmartEditor 초안 배치 완료 · 문단 ${state.paragraphs}개 · 사진 ${state.images}장`);
   console.log('  저장·발행 버튼은 누르지 않았습니다. 화면에서 문단·사진·링크를 최종 확인하세요.');
 }
 

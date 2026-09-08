@@ -1494,6 +1494,8 @@ Pixabay를 고른 이유와 어긋나 쓰지 않았다.
 - 인증을 대신하거나 우회하지 않았으므로 발행하지 않았다.
 - 최종 상태는 `draft-ready / unpublished / login-required`다.
 
+- 윈도우에서 일일 발행 테스트가 저장소 경로를 `C:\\C:\\AX\\marketing`처럼 중복 해석하던 문제를 확인해 `fileURLToPath(import.meta.url)` 기반으로 고쳤다. 네이버 테스트 44개와 밴드 테스트 3개가 모두 통과했다.
+
 ### 다음 시작점
 
 1. 운영자가 네이버 계정에 로그인한다.
