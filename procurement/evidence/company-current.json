@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-10-20",
+  "company_name": "주식회사 숲길여행",
+  "business_number": "584-81-01471",
+  "corporation_number": "110111-7220611",
+  "incorporated_on": "2019-08-30",
+  "opened_on": "2020-01-01",
+  "address": "서울특별시 강서구 공항대로 525, 1501 나-318호(등촌동, 비원오피스텔)",
+  "registry_address": "서울특별시 강서구 공항대로 525, 1501 나-318호(공항동, 비엔오스텔)",
+  "address_conflict": true,
+  "address_correction": "사용자 확인: 아직 정정하지 않았음",
+  "relocated_on": "2026-09-15",
+  "relocation_registered_on": "2026-09-16",
+  "registry_issued_on": "2026-09-29",
+  "business_certificate_issued_on": "2026-10-01",
+  "tourism_category": "국내외여행업",
+  "tourism_registration_number": "2026-000025",
+  "tourism_certificate_issued_on": "2026-09-23",
+  "tourism_authority": "서울특별시 강서구청장",
+  "tourism_original_registration_date": null,
+  "company_phone": "02-6091-0977",
+  "company_email": "aslan@foresttour.kr",
+  "applicant_role": "대표자 본인",
+  "certificate": "회사 명의 사업자용 범용 공동인증서 보유(사용자 확인)",
+  "certificate_validity_checked": false,
+  "priority": "나라장터 회사 신규 등록",
+  "registration_submitted": false,
+  "registration_approved": false,
+  "evidence_ids": {
+    "business_certificate": "DOC-14",
+    "tourism_certificate": "DOC-07",
+    "corporate_registry": "DOC-10",
+    "relocation_resolution": "DOC-12"
+  },
+  "personal_member_account": "미가입: 개인회원 가입부터 필요",
+  "people_composition": {
+    "representative": 1,
+    "registered_director": 1,
+    "total": 2,
+    "regular_employees": null
+  },
+  "employee_count_note": "사용자 답변은 대표자 1명·등기임원 1명, 총 2명. 종업원수는 실제 신청 화면의 정의 확인 전 확정하지 않음"
+}
