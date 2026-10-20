@@ -1,0 +1,51 @@
+{
+  "verifiedAt": "2026-10-20",
+  "note": "공개 근거 원본은 로컬에만 보관하고 Git에서 제외. 요약 문서와 공식 URL을 사용",
+  "files": [
+    {
+      "file": "raw/g2b-individual-guide.txt",
+      "sha256": "9cfb2609068724ef74bdcd5ff08ca00233341702960c050e4f55964e256998ea",
+      "bytes": 6191
+    },
+    {
+      "file": "raw/g2b-vendor-guide.txt",
+      "sha256": "ea230bd71108c92990a0d3c66f6aae0bca9f2b1777faab16db58f31a623c514a",
+      "bytes": 5716
+    },
+    {
+      "file": "raw/g2b-registration-start.txt",
+      "sha256": "17afaf026b82e907a6fd452781b185c3a398c30e4977eb430c3628985b72a8c0",
+      "bytes": 3885
+    },
+    {
+      "file": "raw/g2b-login.txt",
+      "sha256": "802ac3fd47872224da44ce1fa005d618732622ac8b5f31afb901f7072368cd58",
+      "bytes": 4306
+    },
+    {
+      "file": "raw/seoul-high-official-detail.txt",
+      "sha256": "d6968a73e9117cd6369c3ce3a95aeb545f94c6e9fd319e7fa2fce89eff2e5494",
+      "bytes": 13215
+    },
+    {
+      "file": "raw/seoul-high-R26BK01770779.pdf",
+      "sha256": "f3f39229df246e382755159fb9a17c4d0713fa958332cb45f4df11dede1b2933",
+      "bytes": 679597
+    },
+    {
+      "file": "raw/seoul-high-R26BK01770779.txt",
+      "sha256": "00dd5abbe201e665231825065116573950a09fd9c8b358bb3d8a353b4948d48c",
+      "bytes": 37389
+    },
+    {
+      "file": "raw/seoul-high-task.hwp",
+      "sha256": "1aebe440b9fa33f9bda6e36c40f1f3345a425795484e650b1b8bc2c98fefdc4b",
+      "bytes": 186368
+    },
+    {
+      "file": "raw/seoul-high-task.txt",
+      "sha256": "04f2510691a1ed31e4c23300448cb832fb5edf0475605e312cc1a2602bf94208",
+      "bytes": 46655
+    }
+  ]
+}
