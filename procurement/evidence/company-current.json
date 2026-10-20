@@ -20,7 +20,7 @@
   "tourism_original_registration_date": null,
   "company_phone": "02-6091-0977",
   "company_email": "aslan@foresttour.kr",
-  "applicant_role": "대표자 본인",
+  "applicant_role": "등기임원 개인회원 계정",
   "certificate": "회사 명의 사업자용 범용 공동인증서 보유(사용자 확인)",
   "certificate_validity_checked": false,
   "priority": "나라장터 회사 신규 등록",
@@ -32,12 +32,20 @@
     "corporate_registry": "DOC-10",
     "relocation_resolution": "DOC-12"
   },
-  "personal_member_account": "미가입: 개인회원 가입부터 필요",
+  "personal_member_account": "가입·로그인 완료: 실제 로그인과 사용자 답변 확인",
   "people_composition": {
     "representative": 1,
     "registered_director": 1,
     "total": 2,
     "regular_employees": null
   },
-  "employee_count_note": "사용자 답변은 대표자 1명·등기임원 1명, 총 2명. 종업원수는 실제 신청 화면의 정의 확인 전 확정하지 않음"
+  "employee_count_note": "사용자 답변은 대표자 1명·등기임원 1명, 총 2명. 사용자 임시저장 신청서의 종업원수 2를 유지했으며 상시근로자 2명으로 확정한 것은 아님",
+  "registration_draft_saved": true,
+  "representative_identity_checked": true,
+  "registration_stage": "임시저장·재조회 검증 완료. 송신 확인 뒤 공동인증서 전자서명 대기. 하드디스크 사용에 MagicLine 업데이트 필요",
+  "registration_authority": "서울지방조달청",
+  "tourism_nara_industry_code": "1262",
+  "tourism_nara_registration_number": "서울강서제2026-000025호",
+  "tourism_nara_registration_date": "2026-09-23",
+  "tourism_nara_registration_date_note": "현재 강서구 등록증 DOC-07의 날짜를 입력. 최초 여행업 등록일로 확정한 값은 아님"
 }
