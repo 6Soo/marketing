@@ -47,8 +47,8 @@ def sheet(name, headers, rows, widths):
 
 sheet('읽기안내', ['구분', '내용'], [
     ['기준', '2026-10-20 / NARA-20261020 / 내부 신청 준비용'],
-    ['사용자 확인', '2026-10-21 기업금융인증서 발급 완료를 사용자 확인. 회사 신청서는 저장 상태이며 새 브라우저에서 재로그인 대기'],
-    ['확정 범위', '입력안·증빙 목록·실적·원가·자금·평가 양식 준비. 실제 신청서 저장·재조회 완료, 전자서명 대기. 투찰 미실행'],
+    ['사용자 확인', '2026-10-21 회사 금융인증서 서명·신청 송신·관광사업등록증 온라인 제출 완료. 서울지방조달청 심사 대기'],
+    ['확정 범위', '입력안·증빙 목록·실적·원가·자금·평가 양식 준비. 실제 신청 송신·증빙 제출 완료, 심사 대기. 투찰 미실행'],
     ['빈칸', '미확인 또는 미입력입니다. 비용 0원이나 요건 충족을 뜻하지 않습니다.'],
     ['수식', '초록 셀은 수식입니다. Excel에서 열면 재계산합니다. 모든 필수 입력 전에는 합계를 확정하지 않습니다.'],
     ['개인정보', '고객명·여권·주민번호·연락처·인증 비밀번호를 입력하지 마세요. 보안 보관 원본 참조만 기록합니다.'],
@@ -65,16 +65,16 @@ inputs = [
     ['우편번호',None,'주소 검색 결과로 확정','기존 우편번호 근거 불충분'],
     ['대표자',None,'최신 등기·사업자 원본','원본에서 직접 입력'],
     ['등록 구분','본사 신규 / 국내소재 법인 / 용역','사용자 미등록 확인','지사 신청 제외'],
-    ['업종','국내외여행업 1262','현재 관광사업등록증 DOC-07과 실제 업종 검색 결과 일치','신청서 저장·재조회 완료, 전자서명 대기'],
+    ['업종','국내외여행업 1262','현재 관광사업등록증 DOC-07과 실제 업종 검색 결과 일치','신청 송신·증빙 제출 완료, 심사 대기'],
     ['관광사업 등록번호',CURRENT['tourism_registration_number'],'현재 관광사업등록증 DOC-07','사업자번호와 구분'],
     ['관광사업 증서 날짜·관할청',CURRENT['tourism_certificate_issued_on']+' / '+CURRENT['tourism_authority'],'관광사업등록증 DOC-07','최초 등록일은 별도 확인'],
     ['현재 종업원수',None,'사용자: 대표자 1명·등기임원 1명, 총 2명','인원 구성을 종업원수 2명으로 자동 변환하지 않음. 화면 정의 확인 필요'],
     ['회사 업무 연락처',CURRENT['company_phone'],'사용자 직접 지정','회사 대표전화'],
     ['회사 업무 이메일',CURRENT['company_email'],'사용자 직접 지정','회사 업무 이메일'],
-    ['인증서 종류',CURRENT['certificate'],'기업금융인증서 발급 완료를 사용자 확인','이전 은행용 공동인증서와 구분. 새 금융인증서 실제 선택·서명은 미확인. 비밀번호 미수집'],
+    ['인증서 종류',CURRENT['certificate'],'YESKEY 회사명·사업자번호·유효기간 확인 및 사용자 서명','유효기간 2027-10-21. 비밀번호 미수집. 수수료 출금은 미확인'],
     ['신청자 역할',CURRENT['applicant_role'],'사용자 확인',CURRENT['personal_member_account']+' / 실제 대표자는 별도 입력'],
-    ['접수번호',None,'실제 송신 완료 뒤 기록','임시저장 완료, 회사 공동인증서 전자서명 대기'],
-    ['승인 상태',None,'조달청 승인 화면','등록증 확보 전 완료 표시 금지'],
+    ['신청 접수',CURRENT['registration_submitted_on'],'서울지방조달청 접수 안내문','별도 접수번호는 미확인. 중복 신청 금지'],
+    ['승인 상태',CURRENT['registration_status'],'온라인 증빙 제출 후 실제 화면','등록 승인·등록증은 아직 미확인'],
 ]
 sheet('등록입력', ['항목','입력값','근거','확인 메모'], inputs, {'A':25,'B':65,'C':36,'D':45})
 
@@ -147,16 +147,16 @@ def table(headers, rows):
     return '<table style="width:500pt"><thead><tr>'+''.join(cell('th',x,w) for x,w in zip(headers,widths))+'</tr></thead><tbody>'+''.join('<tr>'+''.join(cell('td',x,w) for x,w in zip(row,widths))+'</tr>' for row in rows)+'</tbody></table>'
 
 pages=[
-    ('신규 등록부터 준비합니다', '<p class="lead">숲길여행 나라장터 신청 준비</p><p>2026-10-20 · 내부 검토본 · 신청서 저장 완료, 전자서명 대기. 투찰은 하지 않았습니다.</p>'+table(['구분','판단'],[
-        ['현재 상태','회사 신청서 저장 완료. 2026-10-21 기업금융인증서 발급 완료를 사용자 확인했습니다. 새 브라우저에서 재로그인 대기입니다.'],
+    ('신청 접수와 서류 제출을 마쳤습니다', '<p class="lead">숲길여행 나라장터 신청 준비</p><p>최초 작성 2026-10-20 · 상태 확인 2026-10-21 · 신청 송신·증빙 제출 완료, 심사 대기. 투찰은 하지 않았습니다.</p>'+table(['구분','판단'],[
+        ['현재 상태','2026-10-21 회사 인증서 전자서명·신청서 송신·관광사업등록증 제출을 마쳤습니다. 서울지방조달청 심사 대기입니다.'],
         ['확인한 업종','국내외여행업. 현재 관광사업등록증 2026-000025와 나라장터 코드 1262를 대조해 신청서에 추가했습니다.'],
         ['준비 완료','입력안·증빙대장·실적표·견적표·자금표·공고 평가표'],
         ['확보한 자료','최신 사업자등록증·관광사업등록증·등기부 등 원본 17개를 비공개 보관'],
         ['확인할 주소','사업자·관광: 등촌동/비원오피스텔. 등기부: 공항동/비엔오스텔. 정정 전'],
-        ['다음 경로','개인회원 재로그인 → 저장 신청서 불러오기 → 기업금융인증서 서명·접수·승인 확인'],
+        ['다음 경로','기존 신청의 승인·반려·보완 확인 → 등록증의 회사정보·업종 확인'],
     ])+'<p class="note">회원 가입, 회사 등록 승인, 개별 공고 참가자격은 각각 확인합니다. 개인정보가 담긴 원본은 이 양식이나 Git에 넣지 않습니다.</p>'),
     ('회사 정보 입력안',table(['항목','준비값'],[(r[0],r[1]) for r in inputs[:10]])+'<p>모든 값은 최신 원본과 대조합니다. 대표자·사업 연락처·인증서·대리인은 원본과 실제 권한으로 입력합니다. 우편번호는 현재 주소검색으로 확정합니다. 전체 항목은 Excel 등록입력 시트를 사용합니다.</p>'),
-    ('등록과 증빙을 연결합니다','<p>개인회원과 업체의 인증은 구분합니다. 사내이사 기록만으로 대표자 권한을 대신하지 않습니다.</p>'+table(['서류','현재','용도'],[(r[0],r[2],r[1]) for r in docs[:10]])+'<p class="note">사업자용 금융인증서도 법인 후보입니다. 기존 인증서 사용 가능 여부를 먼저 확인합니다. 새 인증서·보증 발급·과금은 이번에 실행하지 않았습니다.</p>'),
+    ('등록과 증빙을 연결합니다','<p>개인회원과 업체의 인증은 구분합니다. 사내이사 기록만으로 대표자 권한을 대신하지 않습니다.</p>'+table(['서류','현재','용도'],[(r[0],r[2],r[1]) for r in docs[:10]])+'<p class="note">사업자용 금융인증서도 법인 후보입니다. 기존 인증서 사용 가능 여부를 먼저 확인합니다. 승인된 기업금융인증서 발급·서명은 완료했습니다. 추가 발급·응찰은 하지 않았습니다.</p>'),
     ('서울고 공고 검토',table(['항목','확인 내용'],[
         ['공고','R26BK01770779-000 / 일본 방문 체험학습'],
         ['금액·인원','공고 기초금액 46,860,650원 / 학생 26명·교직원 2명'],
@@ -184,11 +184,11 @@ pages=[
         ['공식 절차','pps.go.kr/kor/content.do?key=00170'],
         ['확인서 발급','sminfo.mss.go.kr'],
         ['나라장터','g2b.go.kr'],
-    ])+'<p>신청서 저장과 재조회 검증을 마쳤으며 회사 공동인증서 전자서명을 기다립니다. 실제 송신 완료·접수·승인·입찰 완료 증거는 없습니다.</p>'),
+    ])+'<p>2026-10-21 회사 인증서 서명·신청 송신·관광사업등록증 온라인 제출을 완료했습니다. 실제 상태는 대기이며 승인·등록증·입찰 완료는 아직 확인되지 않았습니다.</p>'),
 ]
 css='''@page{size:A4;margin:15mm}*{box-sizing:border-box}body{font-family:"Malgun Gothic",sans-serif;color:#151515;margin:0;font-size:11pt;line-height:1.6}.page{break-after:page;min-height:255mm;position:relative;padding-bottom:12mm}.page:last-child{break-after:auto}h1{font-size:25pt;letter-spacing:-1px;margin:10mm 0 8mm}h2{font-size:17pt}p{margin:5mm 0}.eyebrow{font-size:9pt;letter-spacing:1px;border-top:3px solid #222;padding-top:4mm}.lead{font-size:17pt;font-weight:bold}table{border-collapse:collapse;width:100%;font-size:9.5pt}th,td{border-bottom:1px solid #bbb;padding:3mm 2.5mm;text-align:left;vertical-align:top}th{border-top:1.5px solid #222;font-weight:bold}td:first-child{width:25%;font-weight:bold}.note{border-left:3px solid #333;padding-left:4mm;font-size:10pt}footer{position:absolute;bottom:0;font-size:8pt;color:#555;width:100%;border-top:1px solid #bbb;padding-top:3mm}.summary{width:820px;min-height:0;padding:40px;background:white}.summary h1{margin:12px 0 24px}.summary footer{position:static;margin-top:30px}@media screen{body{background:#e9ede9}.page{background:white;max-width:210mm;margin:20px auto;padding:15mm;min-height:297mm}.summary{margin:0}}'''
 def doc(content):return '<!doctype html><html lang="ko"><meta charset="utf-8"><title>나라장터 신청 준비</title><style>'+css+'</style><body>'+content+'</body></html>'
-html=''.join('<section class="page"><div class="eyebrow">FOREST TOUR · 신청 준비 · 2026-10-20</div><h1>'+escape(title)+'</h1>'+body+f'<footer>내부 검토본 · 신청서 저장 완료·전자서명 대기 · {i}/6</footer></section>' for i,(title,body) in enumerate(pages,1))
+html=''.join('<section class="page"><div class="eyebrow">FOREST TOUR · 신청 준비 · 2026-10-20</div><h1>'+escape(title)+'</h1>'+body+f'<footer>내부 검토본 · 신청 송신·증빙 제출 완료·심사 대기 · {i}/6</footer></section>' for i,(title,body) in enumerate(pages,1))
 (OUT/'나라장터-신청준비.html').write_text(doc(html),encoding='utf-8')
 (OUT/'나라장터-준비요약.html').write_text(doc('<section class="summary"><div class="eyebrow">FOREST TOUR · 2026-10-20</div><h1>'+pages[0][0]+'</h1>'+pages[0][1]+'<footer>상세 입력안·서류 목록·공고 분석은 신청준비 PDF와 Excel에 담았습니다.</footer></section>'),encoding='utf-8')
 
@@ -207,7 +207,7 @@ footer{font-size:8pt;margin-top:20pt;color:#555}'''
 pdf_path = OUT/'나라장터-신청준비.pdf'
 writer = pymupdf.DocumentWriter(str(pdf_path))
 for i,(title,body) in enumerate(pages,1):
-    fragment = '<div class="eyebrow">FOREST TOUR · 2026-10-20</div><h1>'+escape(title)+'</h1>'+body+f'<footer>내부 검토본 · 신청서 저장 완료·전자서명 대기 · {i}/6</footer>'
+    fragment = '<div class="eyebrow">FOREST TOUR · 2026-10-20</div><h1>'+escape(title)+'</h1>'+body+f'<footer>내부 검토본 · 신청 송신·증빙 제출 완료·심사 대기 · {i}/6</footer>'
     story = pymupdf.Story(fragment, user_css=print_css, archive=font_archive)
     box = pymupdf.Rect(0,0,595.28,841.89)
     more, filled = story.place(box+(42,42,-42,-42))

@@ -21,10 +21,10 @@
   "company_phone": "02-6091-0977",
   "company_email": "aslan@foresttour.kr",
   "applicant_role": "등기임원 개인회원 계정",
-  "certificate": "KB국민은행 기업금융인증서 발급 완료(2026-10-21 사용자 확인). 승인 범위는 1년·4,400원. 실제 인증서 선택·유효기간·전자서명은 미확인",
-  "certificate_validity_checked": false,
+  "certificate": "KB국민은행 금융공공용 1년 기업금융인증서. YESKEY에서 회사명·사업자번호 일치와 유효기간 2027-10-21 확인. 사용자가 전자서명 완료",
+  "certificate_validity_checked": true,
   "priority": "나라장터 회사 신규 등록",
-  "registration_submitted": false,
+  "registration_submitted": true,
   "registration_approved": false,
   "evidence_ids": {
     "business_certificate": "DOC-14",
@@ -32,8 +32,8 @@
     "corporate_registry": "DOC-10",
     "relocation_resolution": "DOC-12"
   },
-  "personal_member_account": "개인회원 가입 완료. 2026-10-21 새 Aside 세션에서 재로그인 대기",
-  "current_browser_session_login": false,
+  "personal_member_account": "등기임원 개인회원 가입·2026-10-21 재로그인 확인",
+  "current_browser_session_login": true,
   "people_composition": {
     "representative": 1,
     "registered_director": 1,
@@ -43,7 +43,7 @@
   "employee_count_note": "사용자 답변은 대표자 1명·등기임원 1명, 총 2명. 사용자 임시저장 신청서의 종업원수 2를 유지했으며 상시근로자 2명으로 확정한 것은 아님",
   "registration_draft_saved": true,
   "representative_identity_checked": true,
-  "registration_stage": "기업금융인증서 발급 완료를 사용자 확인. Aside 종료 후 재실행·나라장터 새 탭 개설. 개인회원 재로그인 후 임시저장 신청서 불러오기·금융인증서 송신 재개 예정",
+  "registration_stage": "2026-10-21 회사 금융인증서 전자서명·신청서 송신과 관광사업등록증 DOC-07 온라인 제출 완료. 진행상태 대기. 서울지방조달청 심사·승인 및 등록증 확인 전",
   "certificate_acquisition": {
     "proposed_type": "사업자용 금융인증서",
     "bank": "KB국민은행",
@@ -55,8 +55,10 @@
     "payment_confirmed": false,
     "issued": true,
     "issued_confirmation_source": "2026-10-21 사용자 답변: 인증서 발급 완료",
-    "issued_independently_verified": false,
-    "current_screen": "은행 발급 절차 종료를 사용자 확인. 나라장터 개인회원 로그인 화면"
+    "issued_independently_verified": true,
+    "current_screen": "나라장터 신청 송신·온라인 증빙 제출 완료. 서울지방조달청 심사 대기",
+    "certificate_expires_on": "2027-10-21",
+    "electronic_signature_completed": true
   },
   "observed_local_certificate_policy_oid": "1.2.410.200005.1.1.2",
   "observed_local_certificate_type": "사업자 은행보험용 공동인증서",
@@ -69,5 +71,14 @@
   "tourism_nara_industry_code": "1262",
   "tourism_nara_registration_number": "서울강서제2026-000025호",
   "tourism_nara_registration_date": "2026-09-23",
-  "tourism_nara_registration_date_note": "현재 강서구 등록증 DOC-07의 날짜를 입력. 최초 여행업 등록일로 확정한 값은 아님"
+  "tourism_nara_registration_date_note": "현재 강서구 등록증 DOC-07의 날짜를 입력. 최초 여행업 등록일로 확정한 값은 아님",
+  "certificate_expires_on": "2027-10-21",
+  "registration_submitted_on": "2026-10-21",
+  "registration_status": "대기",
+  "registration_receipt_number": null,
+  "registration_receipt_number_note": "접수 안내문과 상세 화면에서 별도 접수번호를 확인하지 못함. 신청일·사업자번호·접수기관으로 신청 식별",
+  "registration_evidence_submitted": true,
+  "registration_evidence_ids": [
+    "DOC-07"
+  ]
 }
