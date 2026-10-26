@@ -1,0 +1,235 @@
+{
+  "spec": "NARA-20261027-RESCAN",
+  "inherited_commit": "c1c520b",
+  "checked_on": "2026-10-27",
+  "evidence_root": "procurement/evidence/raw/rescan-20261027/",
+  "sources": [
+    {
+      "bid": "R26BK01782544-000",
+      "official_detail": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK01782544&bidPbancOrd=000",
+      "files": [
+        "tcm-detail.txt",
+        "tcm-notice-page4.png",
+        "tcm-notice.pdf",
+        "tcm-notice.txt",
+        "tcm-scope.hwpx",
+        "tcm-scope.txt"
+      ]
+    },
+    {
+      "bid": "R26BK01780209-000",
+      "official_detail": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK01780209&bidPbancOrd=000",
+      "files": [
+        "knue-detail.txt",
+        "knue-notice.pdf",
+        "knue-notice.txt",
+        "knue-request.hwp",
+        "knue-request.txt"
+      ]
+    },
+    {
+      "bid": "R26BK01782706-000",
+      "official_detail": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK01782706&bidPbancOrd=000",
+      "files": [
+        "gnu-detail.txt",
+        "gnu-notice.pdf",
+        "gnu-notice.txt"
+      ]
+    },
+    {
+      "bid": "R26BK01789272-000",
+      "official_detail": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK01789272&bidPbancOrd=000",
+      "files": [
+        "dangjin-notice.pdf",
+        "dangjin-notice.txt"
+      ]
+    },
+    {
+      "bid": "R26BK01781539-000",
+      "official_detail": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK01781539&bidPbancOrd=000",
+      "files": [
+        "smartfarm-notice.pdf",
+        "smartfarm-notice.txt"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "dangjin-notice.pdf",
+      "bytes": 440654,
+      "sha256": "33206817d832b2bc76101115cc42caa1b3c403db2c484a76e3b06a15ffea1678"
+    },
+    {
+      "path": "dangjin-notice.txt",
+      "bytes": 26922,
+      "sha256": "5c552f7568a0ff02d478170976aadc430d4bcbef88d0b9796f73f8328e5e75c5"
+    },
+    {
+      "path": "gnu-detail.txt",
+      "bytes": 13499,
+      "sha256": "7c05dda8bf131e9f8b87c72870c286514520066deb009b74d408eaa2b435336a"
+    },
+    {
+      "path": "gnu-notice.pdf",
+      "bytes": 216812,
+      "sha256": "ba9a868e51a07b07ad23e16705fe207cffb66b2e840be9c83536b5bc6a972139"
+    },
+    {
+      "path": "gnu-notice.txt",
+      "bytes": 18334,
+      "sha256": "462fe0bf176bfbd988e5aa8a121e184ab39f4d7c6ccb2a3366898254565c249b"
+    },
+    {
+      "path": "knue-detail.txt",
+      "bytes": 13937,
+      "sha256": "070c532dd705ca60ea2844ed579c13a2528b8ef4b1d9b95f46646bb621ba83ab"
+    },
+    {
+      "path": "knue-notice.pdf",
+      "bytes": 733978,
+      "sha256": "1f27ed255c9c214f80fcf793777dfed04130e0427334659d6ce73790de087191"
+    },
+    {
+      "path": "knue-notice.txt",
+      "bytes": 32980,
+      "sha256": "49e3f2939f6c842a515594350c7e445c23c2d3a667eed14d619c87d36cb597c5"
+    },
+    {
+      "path": "knue-request.hwp",
+      "bytes": 157696,
+      "sha256": "c834035e52c69f6b596f6fcdf506556e58e0a59b284cf2fac91028bace8b4c24"
+    },
+    {
+      "path": "knue-request.txt",
+      "bytes": 40720,
+      "sha256": "c3295d3fb223e3dcc2933d9aa3f3ea2662aa24327a597650561d74e437bbc5f0"
+    },
+    {
+      "path": "postponement-R26BK01770779.txt",
+      "bytes": 3485,
+      "sha256": "38532b6cc6f8113440d8ac1d97c3d617f3aa54e006e45feb83b454454ebdc6a1"
+    },
+    {
+      "path": "postponement-R26BK01780209.txt",
+      "bytes": 3485,
+      "sha256": "de777641efea1b556873f5e9ab14843f7b596e31976740749915187386fd58c7"
+    },
+    {
+      "path": "postponement-R26BK01782544-verified.txt",
+      "bytes": 3485,
+      "sha256": "401b523e88ae00f0157b198e7746ea38fc4b9e7485ae1badc0d061caaaf14ce0"
+    },
+    {
+      "path": "postponement-R26BK01782872.txt",
+      "bytes": 3485,
+      "sha256": "9d747798b3766728913d407d42bde91e047bc0720e46f2c8525729b7f16a787c"
+    },
+    {
+      "path": "postponement-R26BK01789063.txt",
+      "bytes": 3485,
+      "sha256": "29a4b01387bb1e4007d90aec9e3249302acc70d0c03575091588ea7c35ed9204"
+    },
+    {
+      "path": "recheck-kangwon.txt",
+      "bytes": 5278,
+      "sha256": "162d9aefddeaa778852a65eb7f91cb8f901bda42ceaa19dcd203dd95afbc4e68"
+    },
+    {
+      "path": "recheck-knue.txt",
+      "bytes": 6345,
+      "sha256": "aa39f5acd04950f184545323a7d4bb936a0ef0bc56796e7b46ce3b1a675bb8d6"
+    },
+    {
+      "path": "recheck-kyewon.txt",
+      "bytes": 5269,
+      "sha256": "e5b1efb0e8255df333118562400db7a1f73fe79d6c73470587f4ec42cde4c5a1"
+    },
+    {
+      "path": "recheck-seoul-high.txt",
+      "bytes": 5316,
+      "sha256": "99b285cb04069dbcffc3458f48457b41046e110da72702fdaa0d584d66b3df2d"
+    },
+    {
+      "path": "recheck-tcm.txt",
+      "bytes": 6382,
+      "sha256": "d25dd34f3ea2affcc5457f32ee1e07100326d5cfdc0e1ed8e0f7948b6d7759a9"
+    },
+    {
+      "path": "search-experience.txt",
+      "bytes": 6964,
+      "sha256": "dc7c1f2f80a2ba14261049469156464ca999c90dcff5e7c9d18d1173f72542f2"
+    },
+    {
+      "path": "search-exploration.txt",
+      "bytes": 10872,
+      "sha256": "b0f232c569ef3a833def83ddcdde047b1720399c47ffdb1e6a1bcdc5c3d6f0e8"
+    },
+    {
+      "path": "search-healing.txt",
+      "bytes": 10147,
+      "sha256": "4a0a274aa0dbbb36f92fb81e314de873eea92f7e9e4ffb77429f0ea7ed24b817"
+    },
+    {
+      "path": "search-training.txt",
+      "bytes": 10374,
+      "sha256": "557b611a35d0ca49ed94760be7cb1767250a49268b82e8717242d50db3018bc0"
+    },
+    {
+      "path": "search-visit.txt",
+      "bytes": 11300,
+      "sha256": "ba6a4e18762920fd97c1a538fb6ee470b01f7260d0f86dc80c4e05575aa0aebd"
+    },
+    {
+      "path": "search-workshop.txt",
+      "bytes": 11106,
+      "sha256": "cfb2727f1844cb2e77bce1b17ad44e9ea74d3913a28fc3ba035a4172a13b0a36"
+    },
+    {
+      "path": "smartfarm-notice.pdf",
+      "bytes": 85689,
+      "sha256": "7d4a5e9aea9a61d7dce2790cf49cc521c3dd96012b7d67d43a982f438608447e"
+    },
+    {
+      "path": "smartfarm-notice.txt",
+      "bytes": 18016,
+      "sha256": "7a2797bf68277bfa0cc2dd0a1626748ca075411a603f6b71df3692d2649babe9"
+    },
+    {
+      "path": "tcm-detail.txt",
+      "bytes": 13071,
+      "sha256": "abecebd7fb15dab94791621b9be30c1acd0a414df7a5506a0c08674a8a7b89da"
+    },
+    {
+      "path": "tcm-notice-page4.png",
+      "bytes": 161614,
+      "sha256": "e1d337f47a19574a494918ca30e7606071ba2229f34671c8dbc49e40ef2e5134"
+    },
+    {
+      "path": "tcm-notice.pdf",
+      "bytes": 343795,
+      "sha256": "0f5c4f237441ca77bbfb6abe0a0609f966989fe52c10c496100f2edc2a1619c2"
+    },
+    {
+      "path": "tcm-notice.txt",
+      "bytes": 18757,
+      "sha256": "26b513cf8d74d35b65d8daf16d8e848430a4859c688202ca109d1778919e167a"
+    },
+    {
+      "path": "tcm-scope.hwpx",
+      "bytes": 71439,
+      "sha256": "fb926e28523133498d77311552fa041be0b423b8ca05cd694db46242ebaac07a"
+    },
+    {
+      "path": "tcm-scope.txt",
+      "bytes": 6577,
+      "sha256": "c39dec8e7ac5a0145433777fc4f211f727623defe65a68c84002d4da76db56a9"
+    }
+  ],
+  "notes": [
+    "원문·스냅샷·추출문은 로컬 보관하며 저장소 깃 제외 규칙을 유지함",
+    "기존 일본 후보 첨부는 10월 24일·26일 조사 근거를 재사용하고 이번에는 번호 목록을 재조회함",
+    "TCM 연기공고 첫 스냅샷은 적용 전 다른 공고가 남아 제외하고 verified 사본만 보관 목록에 포함함",
+    "공식 엑셀 내보내기는 제목 셀만 반환해 검색 결과의 근거에서 제외함",
+    "실제 투찰·기관 연락·예약·결제·보증 발급을 실행하지 않음"
+  ]
+}
