@@ -37,6 +37,15 @@
       "blogId": "kkokko_hero",
       "logNo": "224372301821",
       "verifiedAt": "2026-08-11T11:49:02+09:00"
+    },
+    {
+      "slug": "yakushima-cafe-record",
+      "idempotencyKey": "yakushima-cafe-record:published:224410009539",
+      "contentDigest": "e33c529f811d6cfb08e23a82d99a68c20d4e0dab8c45a060f00eb908b576c7ac",
+      "url": "https://blog.naver.com/kkokko_hero/224410009539",
+      "blogId": "kkokko_hero",
+      "logNo": "224410009539",
+      "verifiedAt": "2026-09-15T15:10:00+09:00"
     }
   ]
 }

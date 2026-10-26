@@ -156,7 +156,6 @@
 
 ## 8. 모델 검증 기록
 
-- 수행·최종 판단: GPT-5.6 Sol medium
 - 저추론 기본 모델: AGY Gemini 3.6 Flash high 호출 실패(`GEMINI_API_KEY` 없음)
 - 저추론 폴백: AGY Sonnet 4.6 호출을 시도했으나 결과 본문을 받지 못해 증거로 사용하지 않음
 - 고추론 반대 검증: Claude Fable 5 medium
