@@ -1,0 +1,183 @@
+{
+  "checked_on": "2026-10-26",
+  "files": [
+    {
+      "bid": "R26BK01782872",
+      "path": "R26BK01782872/health-notice.pdf",
+      "bytes": 254575,
+      "sha256": "e0b96a6196163d7cb57159b663850d5c1521d032b4b859fba8e2bba8c204e5d1"
+    },
+    {
+      "bid": "R26BK01782872",
+      "path": "R26BK01782872/health-notice.txt",
+      "bytes": 14692,
+      "sha256": "0e39214d872c54ba02bd877ea04222a1130845dc0002fcf6e17c488c484bb67a"
+    },
+    {
+      "bid": "R26BK01782872",
+      "path": "R26BK01782872/health-request.hwpx",
+      "bytes": 317446,
+      "sha256": "151e3dc9aa0883eba8a7f24a11c7120b3feff1b4842fc5c416ce37b42d396d14"
+    },
+    {
+      "bid": "R26BK01782872",
+      "path": "R26BK01782872/health-request.txt",
+      "bytes": 56106,
+      "sha256": "360a00d1f982ff21c0f60bbbbc67af0045536737e2ca55d9c072eaf1ba5fc2e9"
+    },
+    {
+      "bid": "R26BK01782872",
+      "path": "R26BK01782872/health-scope.hwpx",
+      "bytes": 229074,
+      "sha256": "4b7365c1f5dc3c61fa958edd1d66349fee3ca030ca437b29b6ae3760fcd2456b"
+    },
+    {
+      "bid": "R26BK01782872",
+      "path": "R26BK01782872/health-scope.txt",
+      "bytes": 29491,
+      "sha256": "fcdbe7fb14320832063be80a90870416c46f7b0f9731ec93870fab83d0314860"
+    },
+    {
+      "bid": "R26BK01782634",
+      "path": "R26BK01782634/kyungsung-detail.txt",
+      "bytes": 5112,
+      "sha256": "ab5450fdb9882f853c2b1a1089f0b1f9c31ad1e1968b0c0c887b95f041228f8d"
+    },
+    {
+      "bid": "R26BK01782634",
+      "path": "R26BK01782634/kyungsung-notice.pdf",
+      "bytes": 337195,
+      "sha256": "4faf9117ed6aee91f331a26acb642a674eb1e40bb8c94979af307725d6282f36"
+    },
+    {
+      "bid": "R26BK01782634",
+      "path": "R26BK01782634/kyungsung-notice.txt",
+      "bytes": 59348,
+      "sha256": "d0426751ba32bca6dcc7a888a38a91731611ac7202cb1a06bdbaca7e013d59a5"
+    },
+    {
+      "bid": "R26BK01777370",
+      "path": "R26BK01777370/urban-detail.txt",
+      "bytes": 11746,
+      "sha256": "084c663b2ef18907b9cde45a40e7a98eb73e7c10ea9d50f2311aad264c617d99"
+    },
+    {
+      "bid": "R26BK01777370",
+      "path": "R26BK01777370/urban-notice.pdf",
+      "bytes": 1301007,
+      "sha256": "03930915766aab54fe80be2d13206309f8764c384ae17e06d0a87409d67c489d"
+    },
+    {
+      "bid": "R26BK01777370",
+      "path": "R26BK01777370/urban-notice.txt",
+      "bytes": 92086,
+      "sha256": "6e20d499b1fab5922baddf25fbce2c487fa7e36665686fcd3e1d76d0b9c164ce"
+    },
+    {
+      "bid": "R26BK01781002",
+      "path": "R26BK01781002/inchang-detail.txt",
+      "bytes": 11566,
+      "sha256": "f04be0cec041f8139f3385185fea228dbc5d699b1b9937c8c8c4d981b04f7ae6"
+    },
+    {
+      "bid": "R26BK01781002",
+      "path": "R26BK01781002/inchang-notice.pdf",
+      "bytes": 1068321,
+      "sha256": "7881b645733cfcdba474913f23917f1c2ab341e45079c9baa1f4f2a749ea48c9"
+    },
+    {
+      "bid": "R26BK01781002",
+      "path": "R26BK01781002/inchang-notice.txt",
+      "bytes": 72160,
+      "sha256": "72bbb53fcb8dcf6c021bd5b53c25b62268aa38d5c96164bf6b789182d1f3560b"
+    },
+    {
+      "bid": "R26BK01789063",
+      "path": "R26BK01789063/kyewon-notice.pdf",
+      "bytes": 66625,
+      "sha256": "a2b238d9fbf8acb4e0ec9ce9eac1f32502ea3d5b645e1da113f92324e82bae8e"
+    },
+    {
+      "bid": "R26BK01789063",
+      "path": "R26BK01789063/kyewon-notice.txt",
+      "bytes": 5173,
+      "sha256": "d4c2de1547ae3cd88d89e6692836b1749fd2dfb7cdf521c761f18828c51f3a95"
+    },
+    {
+      "bid": "R26BK01789063",
+      "path": "R26BK01789063/kyewon-request.hwp",
+      "bytes": 140800,
+      "sha256": "19810b7779ad11476bc159c84a9c3b9042768bb0fdb4a47b5d0b78ae2d10faaa"
+    },
+    {
+      "bid": "R26BK01789063",
+      "path": "R26BK01789063/kyewon-request.txt",
+      "bytes": 34511,
+      "sha256": "a34b9baf7a5e8b8d50f922a3565b1f8d214e04feb9a28ee6adb8e1e170367b5b"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-award-detail.txt",
+      "bytes": 13408,
+      "sha256": "9ba809c0607433b14657c373b5bc44ccb48b2e13f3b231e1def31ebafec00a00"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-notice.hwp",
+      "bytes": 134144,
+      "sha256": "34e09ac068f68f1d8e1fa574d3abed5607f27072a64550bac973bf2e2fbc0bd6"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-notice.txt",
+      "bytes": 28069,
+      "sha256": "a76c921a1491ddc2a4a5dc938175a27f70629eaaf189d5be670754981bfc9698"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-request.hwp",
+      "bytes": 118784,
+      "sha256": "cf4969c24f9829cf694a597a049485df021a816a10af6e1ed4be62fadf17cd7c"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-request.txt",
+      "bytes": 42308,
+      "sha256": "31a0017f4207e343318434b89dbd920539ba983f205528b95f6872a735678645"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-contract.hwp",
+      "bytes": 83456,
+      "sha256": "f16667d400590a1f4d0fc698fd86cf09720add5369588117392b5c57a9902779"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-contract.txt",
+      "bytes": 11364,
+      "sha256": "84946cbcfc345a1aac387f4cc5d5fb38541e2294b0e1d867e1886824caa99c98"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-scope-verified.hwp",
+      "bytes": 181760,
+      "sha256": "1239ba3fc26bd576dadd111142ae9a63381e78043a89ecb589e473f72cda76dc"
+    },
+    {
+      "bid": "R26BK01789879",
+      "path": "R26BK01789879/seoul-scope-verified.txt",
+      "bytes": 12118,
+      "sha256": "e835763b98aa6437799bcb371bcc83d793f7608eead4544fd824bd357cb0bc3b"
+    },
+    {
+      "bid": "R26BK01789063",
+      "path": "R26BK01789063/kyewon-detail.txt",
+      "bytes": 11202,
+      "sha256": "3607de106071cf86cc83e12f462b350eff6dfe440ba3301b753f6e741e0ec286"
+    }
+  ],
+  "notes": [
+    "이전 세션 공식 첨부와 이번 세션 추가 첨부를 구분해 보고서에 기록함",
+    "최초 seoul-scope.hwp 사본은 공고문과 동일한 해시였으므로 증거에서 제외하고 실제 다운로드된 181760바이트 과업지시서를 대조해 보관함"
+  ]
+}
